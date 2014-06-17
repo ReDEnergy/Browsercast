@@ -1,0 +1,71 @@
+#browsercast-editor {
+	width: 70%;
+	height: 30px;
+	position: absolute;
+	top: 60px;
+	left: 25%;
+	z-index: 2;
+}
+
+#browsercast-editor #stop-button {
+	width: 24px;
+	height: 24px;
+	background: #3FB58E;
+	border-radius: 50%;
+	border: 2px solid #CCC;
+	position: absolute;
+	left: -70px;
+	top: -3px;
+}
+
+#browsercast-editor #stop-button:before,
+#browsercast-editor #stop-button:after {
+	content: "";
+	width: 3px;
+	height: 60%;
+	background: #FFF;
+	position: absolute;
+	top: 20%;
+	left: 8px;
+}
+
+#browsercast-editor #stop-button:after {
+	left: 13px;
+}
+
+#browsercast-editor #stop-button:hover {
+	cursor: pointer;
+	background: #1A7E5D;
+}
+
+
+#browsercast-editor #play-button {
+	width: 24px;
+	height: 24px;
+	background: #3FB58E;
+	border-radius: 50%;
+	border: 2px solid #CCC;
+	position: absolute;
+	left: -40px;
+	top: -3px;
+}
+
+#browsercast-editor #play-button:before {
+	content: "";
+	width: 40%;
+	height: 40%;
+	background: #FFF;
+	border-radius: 50%;
+	position: absolute;
+	top: 30%;
+	left: 30%;
+}
+
+#browsercast-editor #play-button:hover {
+	cursor: pointer;
+	background: #1A7E5D;
+}
+
+#browsercast-editor .timeline {
+	border-color: #777;
+}

@@ -1,0 +1,70 @@
+#browsercast {
+	width: 100%;
+	position: absolute;
+	top: 5px; left: 5px;
+	z-index: 100;
+}
+
+#browsercast #bc-audio-tracks {
+
+}
+
+#browsercast #bc-markers {
+	width: 90%;
+	margin: 0 5%;
+	padding: 2px;
+	height: 12px;
+	background-color: #999;
+	position: absolute;
+	top: 10px;
+
+	transition: all 0.3s;
+}
+
+#browsercast #bc-markers[data-hidden='true'] {
+	width: 50%;
+	margin: 0 25%;
+	top: -20px;
+}
+
+#browsercast #bc-markers .cue {
+	height: 100%;
+	padding: 1px;
+	background: #EEE;
+	cursor: pointer;
+	position: relative;
+	float: left;
+
+	transition: all 0.5s;
+
+	box-sizing: -webkit-border-box;
+	box-sizing: -moz-border-box;
+	box-sizing: border-box;
+}
+
+#browsercast #bc-markers .cue[data-active='true'] {
+	background: #CCC;
+}
+
+#browsercast #bc-markers .cue:hover {
+	background: #999;
+	cursor: pointer;
+}
+
+/*
+ * TODO - works but would be better with another element inside (JS)
+ */
+
+#browsercast #bc-markers .cue:after {
+	content: "";
+	height: 100%;
+	position: absolute;
+	width: 2px;
+	background: #999;
+	top: 0;
+	left: 0;
+}
+
+#browsercast #bc-markers .cue:first-child:after {
+	display: none;
+}
