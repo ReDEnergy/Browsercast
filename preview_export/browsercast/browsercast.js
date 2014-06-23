@@ -105,7 +105,7 @@
 		// Stop when after last slide
 		// Do not start automaticaly - add an option
 //		console.log("Auto advance in", this.playback_time);
-		Audio.registerEvent(nextSlide, this.playback_time);
+		// Audio.registerEvent(nextSlide, this.playback_time);
 	};
 
 	Slide.prototype.blur = function blur() {
