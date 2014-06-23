@@ -84,6 +84,14 @@ function(EditorView, EditorModel, lls, URLCache) {
     	var editor = new EditorView({model: model, registry: registry});
     	editor.render();
     	$('body').append(editor.$el);
+
+		// TODO - hack for demo loading
+		window.hackLoad = function hackLoad(file) {
+			var importer = registry.get('strut.importer')[0];
+			console.log(model, importer);
+			importer.service().import(file, model, function() {});
+		};
+
     	return model;
 	}
 
@@ -111,7 +119,7 @@ function(EditorView, EditorModel, lls, URLCache) {
 	return {
 		initialize: function(reg) {
 			registry = reg;
-			
+
 			// TODO - Starting the project should be more direct not using a register and interfaces and so on...
 			registry.register({
 				interfaces: 'strut.StartupTask'

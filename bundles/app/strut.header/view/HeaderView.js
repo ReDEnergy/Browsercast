@@ -18,7 +18,7 @@ function(Backbone, LogoView, PreviewButton, ThemeProviderView, Tablets, empty, S
 
 			this.model.editorModel().on('change:activeMode', this._modeChanged, this);
 
-			this._bc_sync = new SyncView(this.model.editorModel().deck());
+			this._BrowsercastView = new SyncView({editorModel: this.model.editorModel()});
 
 			this._tablets = new Tablets(this.model.editorModel());
 		},
@@ -57,8 +57,11 @@ function(Backbone, LogoView, PreviewButton, ThemeProviderView, Tablets, empty, S
 			this._tablets.render();
 			this.$el.append(this._tablets.$el);
 
-			this._bc_sync.render();
-			this.$el.append(this._bc_sync.$el);
+			/**
+			 * Browsercast Menu
+			 */
+			this._BrowsercastView.render();
+			this.$el.append(this._BrowsercastView.$el);
 
 			return this;
 		},

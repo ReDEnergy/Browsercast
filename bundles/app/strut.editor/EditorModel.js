@@ -47,7 +47,7 @@ define(['libs/backbone',
 					var self = this;
 					storageInterface = adaptStorageInterfaceForSavers(storageInterface);
 					this._exitSaver = savers.exitSaver(this.exportable, {
-						identifier: 'strut-exitsave', 
+						identifier: 'strut-exitsave',
 						cb: function() {
 							window.sessionMeta.lastPresentation = self.exportable.identifier();
 						}
@@ -145,7 +145,7 @@ define(['libs/backbone',
 				// A higher genid means its a newer version of the presentation.
 				this._deck.set('__genid', genid);
 				var obj = this._deck.toJSON(false, true);
-				delete obj.activeSlide; 
+				delete obj.activeSlide;
 				return obj;
 			},
 
@@ -188,6 +188,7 @@ define(['libs/backbone',
 			},
 
 			addComponent: function(data, slide) {
+				console.log("ADD COMPOENENT", data, slide);
 				slide = slide || this._deck.get('activeSlide');
 				if (slide) {
 					if (typeof data.src == 'object' && data.src.file != null) {

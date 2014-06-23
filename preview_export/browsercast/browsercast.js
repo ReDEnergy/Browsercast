@@ -1,10 +1,12 @@
+// TODO - autoplay feature + stop on space + resume
+
 (function Browsercast(global, document) {
 	"use strict";
 
 	var slide_map = {};
 	var last_marker;
 	var last_slide;
-	var markers = document.getElementById('bc-markers');
+	var markers;
 
 	var Config = {
 		reveal: false,
@@ -32,6 +34,11 @@
 		init : function init(obj) {
 			console.log(obj);
 
+			markers = document.createElement('div');
+			markers.id = "bc-markers";
+			var browsercast = document.getElementById("browsercast");
+			browsercast.appendChild(markers);
+
 			if (obj.framework === 'reveal.js')
 				this.reveal = true;
 			if (obj.framework === 'impress.js')
@@ -45,6 +52,12 @@
 
 	//*************************************************************************
 	//*************************************************************************
+
+	var nextSlide = function nextSlide() {
+		Audio.clearEvents();
+		if (Config.reveal) Reveal.next();
+		if (Config.impress) impress().next();
+	};
 
 	/*
 	 * Slide Object
@@ -92,17 +105,10 @@
 		// Stop when after last slide
 		// Do not start automaticaly - add an option
 //		console.log("Auto advance in", this.playback_time);
-//		Audio.registerEvent(this.next, this.playback_time);
-	};
-
-	Slide.prototype.next = function next() {
-		Audio.clearEvents();
-		if (Config.reveal) Reveal.next();
-		if (Config.impress) impress().next();
+		Audio.registerEvent(nextSlide, this.playback_time);
 	};
 
 	Slide.prototype.blur = function blur() {
-//		console.log('BLUR', this);
 		Audio.clearEvents();
 		this.marker.setInactive();
 	};

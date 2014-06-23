@@ -1,71 +1,83 @@
 #browsercast-editor {
-	width: 70%;
+	width: 60%;
 	height: 30px;
-	position: absolute;
-	top: 60px;
-	left: 25%;
-	z-index: 2;
+	margin: 8px 0 0 370px;
+	float: left;
+	position: relative;
 }
 
-#browsercast-editor #stop-button {
+#browsercast-editor #bc-menu {
+	width: 120px;
+	position: absolute;
+	left: -120px;
+	top: -3px;
+}
+
+#browsercast-editor .button {
 	width: 24px;
 	height: 24px;
 	background: #3FB58E;
 	border-radius: 50%;
 	border: 2px solid #CCC;
-	position: absolute;
-	left: -70px;
-	top: -3px;
+	float: left;
 }
 
-#browsercast-editor #stop-button:before,
-#browsercast-editor #stop-button:after {
-	content: "";
-	width: 3px;
-	height: 60%;
-	background: #FFF;
-	position: absolute;
-	top: 20%;
-	left: 8px;
-}
-
-#browsercast-editor #stop-button:after {
-	left: 13px;
-}
-
-#browsercast-editor #stop-button:hover {
+#browsercast-editor .button:hover {
 	cursor: pointer;
 	background: #1A7E5D;
 }
 
-
-#browsercast-editor #play-button {
-	width: 24px;
-	height: 24px;
-	background: #3FB58E;
-	border-radius: 50%;
-	border: 2px solid #CCC;
-	position: absolute;
-	left: -40px;
-	top: -3px;
-}
-
-#browsercast-editor #play-button:before {
-	content: "";
-	width: 40%;
-	height: 40%;
-	background: #FFF;
-	border-radius: 50%;
-	position: absolute;
-	top: 30%;
-	left: 30%;
-}
-
-#browsercast-editor #play-button:hover {
-	cursor: pointer;
-	background: #1A7E5D;
+#browsercast-editor .button span {
+	width: 16px;
+	height: 16px;
+	margin: 3px 0 0 5px;
 }
 
 #browsercast-editor .timeline {
-	border-color: #777;
+	border-color: #999;
+}
+
+#browsercast-editor .timeline .tooltip-left,
+#browsercast-editor .timeline .tooltip-right {
+	top: 17px;
+}
+
+#browsercast-editor #bc-audio-tracks {
+	display: none;
+}
+
+#browsercast-editor #bc-load-panel .fade {
+	top: -125%;
+}
+
+#browsercast-editor #bc-sync-panel {
+	width: 50%;
+	padding: 5px 10px 5px;
+	position: absolute;
+	background: #CCC;
+	border-radius: 0 0 5px 5px;
+	border-width: 1px;
+	border-color: red;
+	top: 24px;
+	left: -90px;
+	z-index: 2;
+	display: none;
+}
+
+#browsercast-editor #bc-sync-panel .btn {
+	background: #3FB58E;
+}
+
+#browsercast-editor #bc-sync-panel span {
+	width: 100%;
+	display: block;
+}
+
+#browsercast-editor #bc-sync-audio {
+	width: 100%;
+	margin: 10px 0 0;
+}
+
+#browsercast-editor #bc-sync-finish {
+	float: right;
 }

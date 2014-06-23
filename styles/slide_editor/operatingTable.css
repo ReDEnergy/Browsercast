@@ -7,7 +7,7 @@
   position: absolute;
   left: 150px;
   z-index: 1;
-  top: 86px;
+  top: 100px;
   bottom: 0px;
   right: 0px;
 }
@@ -17,7 +17,7 @@
 	transform-origin: 0 0;
 	-o-transform-origin: 0 0;
 	-moz-transform-origin: 0 0;
-	
+
 	margin: 10px auto;
 	-webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.8);
 	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.8);

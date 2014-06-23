@@ -304,16 +304,16 @@ define(["libs/backbone",
 				SpatialObject.prototype.constructor.apply(this, arguments);
 			},
 
-			// Browsercast
+			/**
+			 * Browsercast
+			 */
 			updateBcSync : function updateBcSync() {
 				var bc = this.get('browsercast');
-				console.log('setting Browsercast', bc);
 				BcSync.set(bc);
 			},
 
-			setBrowsercast : function setBrowsercast(bc) {
+			assignAudioFragment : function assignAudioFragment(bc) {
 				this.set('browsercast', bc);
-				console.log('update Browsercast props', bc);
 			}
 		});
 	});

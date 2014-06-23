@@ -11,14 +11,12 @@ define(function() {
 			if (window.previewWind)
 				window.previewWind.close();
 
+			BcAudio.stop();
 			this._editorModel.trigger('launch:preview', null);
 
 			var previewStr = generator.generate(this._editorModel.deck());
 
-			localStorage.setItem('preview-string', previewStr);
-			localStorage.setItem('preview-config', JSON.stringify({
-				surface: this._editorModel.deck().get('surface')
-			}));
+			localStorage.setItem('preview-presentation', JSON.stringify(previewStr));
 
 			window.previewWind = window.open(
 				'preview_export/' + (generator.file || generator.id) + '.html' + generator.getSlideHash(this._editorModel),

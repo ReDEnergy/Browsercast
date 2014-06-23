@@ -1,5 +1,6 @@
-define(['./ImpressGenerator'],
-function(ImpressGenerator) {
+define(['./ImpressGenerator',
+		'browsercast/BrowsercastGenerator'],
+function(ImpressGenerator, BrowsercastGenerator) {
 	'use strict';
 
 	var service = {
@@ -9,7 +10,10 @@ function(ImpressGenerator) {
 			freeformStepping: true
 		},
 		generate: function(deck) {
-			return ImpressGenerator.render(deck);
+			return {
+				impress: ImpressGenerator.render(deck),
+				browsercast: BrowsercastGenerator.render(deck)
+			};
 		},
 
 		getSlideHash: function(editorModel) {

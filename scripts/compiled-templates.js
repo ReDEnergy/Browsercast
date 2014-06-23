@@ -2,13 +2,27 @@ define(['handlebars'], function(Handlebars) {
 
 this["JST"] = this["JST"] || {};
 
+this["JST"]["browsercast/export_browsercast"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div id=\"bc-audio-tracks\">\r\n	<audio preload data-name=\"experiments\">\r\n		<source src=\"";
+  if (helper = helpers.source) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.source); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" type=\"audio/ogg\">\r\n	</audio>\r\n</div>\r\n";
+  return buffer;
+  });
+
 this["JST"]["browsercast/sync"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div id=\"stop-button\"></div>\r\n<div id=\"play-button\"></div>";
+  return "<div id=\"bc-audio-tracks\">\r\n	<audio id=\"bc-audiocast-source\" class=\"span12\" preload></audio>\r\n</div>\r\n\r\n<div id=\"bc-menu\">\r\n	<div id=\"load-button\" class=\"button\">\r\n		<span class=\"icon-music icon-white\"></span>\r\n	</div>\r\n	<div id=\"sync-button\" class=\"button\">\r\n		<span class=\"icon-refresh icon-white\"></span>\r\n	</div>\r\n	<div id=\"stop-button\" class=\"button\">\r\n		<span class=\"icon-pause icon-white\"></span>\r\n	</div>\r\n	<div id=\"play-button\" class=\"button\">\r\n		<span class=\"icon-play icon-white\"></span>\r\n	</div>\r\n</div>\r\n\r\n<div id=\"bc-load-panel\" class=\"modal fade\">\r\n	<div class=\"modal-header\">\r\n		<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\r\n		<h3>Load audio</h3>\r\n	</div>\r\n	<div class=\"modal-body\">\r\n		<div class=\"input-prepend span12\">\r\n			<span class=\"add-on span3\">Audio URL</span>\r\n			<input class=\"span9\" id=\"bc-load-input-url\" type=\"text\" placeholder=\"audio/audio.ogg\">\r\n		</div>\r\n		<hr/>\r\n		<div class=\"span12\">\r\n			<audio id=\"bc-audiocast-preview\" preload controls></audio>\r\n		</div>\r\n	</div>\r\n	<div class=\"modal-footer\">\r\n		<a href=\"#\" id=\"bc-load-audiocast\" class=\"btn btn-primary ok btn-inverse disabled\">Load</a>\r\n	</div>\r\n</div>\r\n\r\n<div id=\"bc-sync-panel\">\r\n	<audio id=\"bc-sync-audio\" preload controls></audio>\r\n	<a href=\"#\" id=\"bc-sync-reset\" class=\"btn btn-primary\">Reset</a>\r\n	<a href=\"#\" id=\"bc-sync-finish\" class=\"btn btn-primary\">Finish</a>\r\n	<div class=\"instructions\">\r\n		<span>Press <b>Reset</b> to reset all slide transitions</span>\r\n		<span>Start <b>playing</b> the audio file</span>\r\n		<span>During playback press <b>R</b> key (keyboard) to set a new transition</span>\r\n		<span>After setting a transition the next slide will be selected automaticaly</span>\r\n		<span>All transitions are saved automaticaly for each slide</span>\r\n		<span>You can fine tune the transitions afterwards using the range input from each slide</span>\r\n	</div>\r\n	<div id=\"bc-sync-transitions\"></div>\r\n</div>";
   });
 
 this["JST"]["strut.etch_extension/align"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -229,47 +243,47 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data,depth1) {
   
   var buffer = "", stack1, helper;
-  buffer += "\r\n<style type=\"text/css\">\r\n";
+  buffer += "\r\n	<style type=\"text/css\">\r\n		";
   if (helper = helpers.customStylesheet) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.customStylesheet); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</style>\r\n\r\n<div class=\"notes-handout\">\r\n";
+  buffer += "\r\n	</style>\r\n\r\n	<div class=\"notes-handout\">\r\n		";
   stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.slides)),stack1 == null || stack1 === false ? stack1 : stack1.models)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data}));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</div>\r\n";
+  buffer += "\r\n	</div>\r\n";
   return buffer;
   }
 function program2(depth0,data,depth2) {
   
   var buffer = "", stack1, helper, options;
-  buffer += "\r\n";
+  buffer += "\r\n		";
   options={hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0, depth2),data:data}
   if (helper = helpers.attributes) { stack1 = helper.call(depth0, options); }
   else { helper = (depth0 && depth0.attributes); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
   if (!helpers.attributes) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0, depth2),data:data}); }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</div>\r\n<div class=\"notes\">\r\n	Notes:\r\n</div>\r\n</div>\r\n";
+  buffer += "\r\n		";
   return buffer;
   }
 function program3(depth0,data,depth1,depth3) {
   
   var buffer = "", stack1, helper, options;
-  buffer += "\r\n<div class=\"slide-and-notes\">\r\n<div class=\"slide ";
+  buffer += "\r\n		<div class=\"slide-and-notes\">\r\n			<div class=\"slide ";
   stack1 = (helper = helpers.determineBG || (depth1 && depth1.determineBG),options={hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data},helper ? helper.call(depth0, depth1, depth3, options) : helperMissing.call(depth0, "determineBG", depth1, depth3, options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += " slideContainer\" style=\"";
   stack1 = (helper = helpers.slideBGImg || (depth1 && depth1.slideBGImg),options={hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data},helper ? helper.call(depth0, depth1, options) : helperMissing.call(depth0, "slideBGImg", depth1, options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\">\r\n<div class=\"reveal themedArea\">\r\n";
+  buffer += "\">\r\n				<div class=\"reveal themedArea\">\r\n					";
   stack1 = (helper = helpers.marked || (depth0 && depth0.marked),options={hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.markdown), options) : helperMissing.call(depth0, "marked", (depth0 && depth0.markdown), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</div>\r\n";
+  buffer += "\r\n				</div>\r\n				";
   options={hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data}
   if (helper = helpers.components) { stack1 = helper.call(depth0, options); }
   else { helper = (depth0 && depth0.components); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
   if (!helpers.components) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data}); }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n";
+  buffer += "\r\n			</div>\r\n			<div class=\"notes\">\r\n				Notes:\r\n			</div>\r\n		</div>\r\n		";
   return buffer;
   }
 function program4(depth0,data) {
@@ -281,10 +295,10 @@ function program4(depth0,data) {
 function program6(depth0,data) {
   
   var buffer = "", stack1, helper, options;
-  buffer += "\r\n";
+  buffer += "\r\n					";
   stack1 = (helper = helpers.renderComponent || (depth0 && depth0.renderComponent),options={hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data},helper ? helper.call(depth0, depth0, options) : helperMissing.call(depth0, "renderComponent", depth0, options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n";
+  buffer += "\r\n				";
   return buffer;
   }
 
@@ -437,51 +451,45 @@ this["JST"]["strut.presentation_generator.impress/ImpressTemplate"] = Handlebars
 helpers = this.merge(helpers, Handlebars.helpers); partials = this.merge(partials, Handlebars.partials); data = data || {};
   var buffer = "", stack1, helper, options, self=this, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, blockHelperMissing=helpers.blockHelperMissing;
 
-function program1(depth0,data) {
-  
-  
-  return "\r\n	<script>\r\n		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { \r\n		// Detect mobile browsers & use memory optimized styling if on mobile (hide all but the previous & next slides). \r\n		// Can prevent crashes when presentation contains many images and/or 3d elements.\r\n		  	var root = document.documentElement;\r\n			root.className += ' mobile';\r\n		} else {\r\n			var root = document.documentElement;\r\n			root.className += ' desktop';\r\n		}\r\n\r\n		function getPreviousSibling(element){\r\n			var p = element;\r\n			do p = p.previousSibling;\r\n			while (p && p.nodeType != 1);\r\n			return p;\r\n		}\r\n		\r\n		document.addEventListener('impress:stepleave',function(event) {\r\n			prev = document.getElementsByClassName('prev')[0];\r\n			if(typeof prev != 'undefined')\r\n				prev.classList.remove('prev'); // Remove prev class from old prev slide\r\n			current = document.getElementsByClassName('active')[0]; // Get current slide\r\n			prev = getPreviousSibling(current); // Get prev slide\r\n			prev.className += ' prev'; // Mark prev slide with class\r\n		});\r\n	</script>\r\n\r\n	<style>\r\n		.step { display:none; } /* Start by not showing slides to prevent mobile Crash at the start */\r\n		.desktop .step { display:block; } /* Desktops should be able to handle all slides */\r\n		.step.active,.step.present,.step.active + .step,.step.prev { display:block; } /* Limit mobile to only show the current slide, the next slide, and the previous slide */\r\n	</style>\r\n";
-  }
-
-function program3(depth0,data,depth1) {
+function program1(depth0,data,depth1) {
   
   var buffer = "", stack1, helper, options;
-  buffer += "\r\n<style type=\"text/css\">\r\n";
+  buffer += "\r\n<style type=\"text/css\">\r\n	";
   if (helper = helpers.customStylesheet) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.customStylesheet); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</style>\r\n<style>\r\n";
-  stack1 = ((stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.customBackgrounds)),stack1 == null || stack1 === false ? stack1 : stack1.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.bgs)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data}));
+  buffer += "\r\n</style>\r\n\r\n<style>\r\n	";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.customBackgrounds)),stack1 == null || stack1 === false ? stack1 : stack1.attributes)),stack1 == null || stack1 === false ? stack1 : stack1.bgs)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data}));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</style>\r\n";
+  buffer += "\r\n</style>\r\n\r\n";
   stack1 = self.invokePartial(partials.PerSlideSurfaceStylesheet, 'PerSlideSurfaceStylesheet', depth0, helpers, partials, data);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n<!-- This is a work around / hack to get the user's browser to download the fonts \r\n if they decide to save the presentation. -->\r\n<div style=\"visibility: hidden; width: 0px; height: 0px\">\r\n<img src=\"css/Lato-Bold.woff\" />\r\n<img src=\"css/HammersmithOne.woff\" />\r\n<img src=\"css/Droid-Sans-Mono.woff\" />\r\n<img src=\"css/Gorditas-Regular.woff\" />\r\n<img src=\"css/FredokaOne-Regular.woff\" />\r\n<img src=\"css/Ubuntu.woff\" />\r\n<img src=\"css/Ubuntu-Bold.woff\" />\r\n<img src=\"css/PressStart2P-Regular.woff\" />\r\n<img src=\"css/Lato-BoldItalic.woff\" />\r\n<img src=\"css/AbrilFatface-Regular.woff\" />\r\n<img src=\"css/Lato-Regular.woff\" />\r\n</div>\r\n\r\n<div class=\"fallback-message\">\r\n    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>\r\n    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>\r\n</div>\r\n\r\n<div class=\"bg ";
-  stack1 = (helper = helpers.isBGClass || (depth0 && depth0.isBGClass),options={hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.surface), options) : helperMissing.call(depth0, "isBGClass", (depth0 && depth0.surface), options));
+  buffer += "\r\n<!-- This is a work around / hack to get the user's browser to download the fonts\r\n if they decide to save the presentation. -->\r\n<div style=\"visibility: hidden; width: 0px; height: 0px\">\r\n<img src=\"css/Lato-Bold.woff\" />\r\n<img src=\"css/HammersmithOne.woff\" />\r\n<img src=\"css/Droid-Sans-Mono.woff\" />\r\n<img src=\"css/Gorditas-Regular.woff\" />\r\n<img src=\"css/FredokaOne-Regular.woff\" />\r\n<img src=\"css/Ubuntu.woff\" />\r\n<img src=\"css/Ubuntu-Bold.woff\" />\r\n<img src=\"css/PressStart2P-Regular.woff\" />\r\n<img src=\"css/Lato-BoldItalic.woff\" />\r\n<img src=\"css/AbrilFatface-Regular.woff\" />\r\n<img src=\"css/Lato-Regular.woff\" />\r\n</div>\r\n\r\n<div class=\"fallback-message\">\r\n    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>\r\n    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>\r\n</div>\r\n\r\n<div class=\"bg ";
+  stack1 = (helper = helpers.isBGClass || (depth0 && depth0.isBGClass),options={hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.surface), options) : helperMissing.call(depth0, "isBGClass", (depth0 && depth0.surface), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "strut-surface\">\r\n<div class=\"bg innerBg\">\r\n<div id=\"impress\">\r\n	";
-  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.slides)),stack1 == null || stack1 === false ? stack1 : stack1.models)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(8, program8, data, depth1),data:data}));
+  buffer += "strut-surface\">\r\n	<div class=\"bg innerBg\">\r\n		<div id=\"impress\">\r\n			";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.slides)),stack1 == null || stack1 === false ? stack1 : stack1.models)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(6, program6, data, depth1),data:data}));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n	<div id=\"overview\" class=\"step\" data-state=\"strut-slide-overview\" data-x=\"";
-  stack1 = (helper = helpers.scaleX || (depth0 && depth0.scaleX),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.overviewX), options) : helperMissing.call(depth0, "scaleX", (depth0 && depth0.overviewX), options));
+  buffer += "\r\n			<div id=\"overview\" class=\"step\" data-state=\"strut-slide-overview\" data-x=\"";
+  stack1 = (helper = helpers.scaleX || (depth0 && depth0.scaleX),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.overviewX), options) : helperMissing.call(depth0, "scaleX", (depth0 && depth0.overviewX), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\" data-y=\"";
-  stack1 = (helper = helpers.scaleY || (depth0 && depth0.scaleY),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.overviewY), options) : helperMissing.call(depth0, "scaleY", (depth0 && depth0.overviewY), options));
+  stack1 = (helper = helpers.scaleY || (depth0 && depth0.scaleY),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.overviewY), options) : helperMissing.call(depth0, "scaleY", (depth0 && depth0.overviewY), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\" data-scale=\"9\"></div>\r\n	";
+  buffer += "\" data-scale=\"9\"></div>\r\n		</div>\r\n		<div class=\"hint\">\r\n		    <p>Use a spacebar or arrow keys to navigate</p>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
   return buffer;
   }
-function program4(depth0,data) {
+function program2(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n	";
+  buffer += "\r\n		";
   stack1 = self.invokePartial(partials.CustomBgStylesheet, 'CustomBgStylesheet', depth0, helpers, partials, data);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n";
+  buffer += "\r\n	";
   return buffer;
   }
 
-function program6(depth0,data) {
+function program4(depth0,data) {
   
   var buffer = "", stack1, helper;
   if (helper = helpers.surface) { stack1 = helper.call(depth0, {hash:{},data:data}); }
@@ -491,84 +499,94 @@ function program6(depth0,data) {
   return buffer;
   }
 
-function program8(depth0,data,depth2) {
+function program6(depth0,data,depth2) {
   
   var buffer = "", stack1, helper, options;
-  buffer += "\r\n		";
-  options={hash:{},inverse:self.noop,fn:self.programWithDepth(9, program9, data, depth0, depth2),data:data}
+  buffer += "\r\n				";
+  options={hash:{},inverse:self.noop,fn:self.programWithDepth(7, program7, data, depth0, depth2),data:data}
   if (helper = helpers.attributes) { stack1 = helper.call(depth0, options); }
   else { helper = (depth0 && depth0.attributes); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
-  if (!helpers.attributes) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(9, program9, data, depth0, depth2),data:data}); }
+  if (!helpers.attributes) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(7, program7, data, depth0, depth2),data:data}); }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n	";
+  buffer += "\r\n			";
   return buffer;
   }
-function program9(depth0,data,depth1,depth3) {
+function program7(depth0,data,depth1,depth3) {
   
   var buffer = "", stack1, helper, options;
-  buffer += "\r\n			<div class=\"step\" \r\n				data-state=\"strut-slide-";
+  buffer += "\r\n					<div class=\"step\"\r\n						data-state=\"strut-slide-";
   if (helper = helpers.index) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.index); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1);
-  stack1 = (helper = helpers.determineSurface || (depth1 && depth1.determineSurface),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, depth1, depth3, options) : helperMissing.call(depth0, "determineSurface", depth1, depth3, options));
+  stack1 = (helper = helpers.determineSurface || (depth1 && depth1.determineSurface),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, depth1, depth3, options) : helperMissing.call(depth0, "determineSurface", depth1, depth3, options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\"\r\n				data-x=\"";
-  stack1 = (helper = helpers.scaleX || (depth0 && depth0.scaleX),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.x), options) : helperMissing.call(depth0, "scaleX", (depth0 && depth0.x), options));
+  buffer += "\"\r\n						data-x=\"";
+  stack1 = (helper = helpers.scaleX || (depth0 && depth0.scaleX),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.x), options) : helperMissing.call(depth0, "scaleX", (depth0 && depth0.x), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\"\r\n				data-y=\"";
-  stack1 = (helper = helpers.scaleY || (depth0 && depth0.scaleY),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.y), options) : helperMissing.call(depth0, "scaleY", (depth0 && depth0.y), options));
+  buffer += "\"\r\n						data-y=\"";
+  stack1 = (helper = helpers.scaleY || (depth0 && depth0.scaleY),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.y), options) : helperMissing.call(depth0, "scaleY", (depth0 && depth0.y), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\" \r\n				";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.rotateX), {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data});
+  buffer += "\"\r\n						";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.rotateX), {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " \r\n				";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.rotateY), {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
+  buffer += "\r\n						";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.rotateY), {hash:{},inverse:self.noop,fn:self.program(12, program12, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " \r\n				";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.rotateZ), {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data});
+  buffer += "\r\n						";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.rotateZ), {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " \r\n				";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.z), {hash:{},inverse:self.noop,fn:self.program(18, program18, data),data:data});
+  buffer += "\r\n						";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.z), {hash:{},inverse:self.noop,fn:self.program(16, program16, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " \r\n				";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.impScale), {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data});
+  buffer += "\r\n						";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.impScale), {hash:{},inverse:self.noop,fn:self.program(18, program18, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += ">\r\n				";
-  options={hash:{},inverse:self.noop,fn:self.program(22, program22, data),data:data}
+  buffer += ">\r\n						";
+  options={hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data}
   if (helper = helpers.browsercast) { stack1 = helper.call(depth0, options); }
   else { helper = (depth0 && depth0.browsercast); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
-  if (!helpers.browsercast) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(22, program22, data),data:data}); }
+  if (!helpers.browsercast) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data}); }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "  \r\n				<div class=\"";
-  stack1 = (helper = helpers.determineBG || (depth1 && depth1.determineBG),options={hash:{},inverse:self.noop,fn:self.program(24, program24, data),data:data},helper ? helper.call(depth0, depth1, depth3, options) : helperMissing.call(depth0, "determineBG", depth1, depth3, options));
+  buffer += "\r\n						<div class=\"";
+  stack1 = (helper = helpers.determineBG || (depth1 && depth1.determineBG),options={hash:{},inverse:self.noop,fn:self.program(22, program22, data),data:data},helper ? helper.call(depth0, depth1, depth3, options) : helperMissing.call(depth0, "determineBG", depth1, depth3, options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += " slideContainer strut-slide-";
   if (helper = helpers.index) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.index); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" \r\n					style=\"width: 1024px; height: 768px;\">\r\n					<div class=\"themedArea\">\r\n						";
-  stack1 = (helper = helpers.marked || (depth0 && depth0.marked),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.markdown), options) : helperMissing.call(depth0, "marked", (depth0 && depth0.markdown), options));
+    + "\"\r\n							style=\"width: 1024px; height: 768px;\">\r\n							<div class=\"themedArea\">\r\n								";
+  stack1 = (helper = helpers.marked || (depth0 && depth0.marked),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.markdown), options) : helperMissing.call(depth0, "marked", (depth0 && depth0.markdown), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n					</div>\r\n					";
-  options={hash:{},inverse:self.noop,fn:self.program(26, program26, data),data:data}
+  buffer += "\r\n							</div>\r\n							";
+  options={hash:{},inverse:self.noop,fn:self.program(24, program24, data),data:data}
   if (helper = helpers.components) { stack1 = helper.call(depth0, options); }
   else { helper = (depth0 && depth0.components); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
-  if (!helpers.components) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(26, program26, data),data:data}); }
+  if (!helpers.components) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(24, program24, data),data:data}); }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n				</div>\r\n			</div>\r\n		";
+  buffer += "\r\n						</div>\r\n					</div>\r\n				";
   return buffer;
   }
-function program10(depth0,data) {
+function program8(depth0,data) {
   
   var buffer = "";
+  return buffer;
+  }
+
+function program10(depth0,data) {
+  
+  var buffer = "", stack1, helper, options;
+  buffer += " data-rotate-x=\"";
+  stack1 = (helper = helpers.toDeg || (depth0 && depth0.toDeg),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.rotateX), options) : helperMissing.call(depth0, "toDeg", (depth0 && depth0.rotateX), options));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\"";
   return buffer;
   }
 
 function program12(depth0,data) {
   
   var buffer = "", stack1, helper, options;
-  buffer += " data-rotate-x=\"";
-  stack1 = (helper = helpers.toDeg || (depth0 && depth0.toDeg),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.rotateX), options) : helperMissing.call(depth0, "toDeg", (depth0 && depth0.rotateX), options));
+  buffer += " data-rotate-y=\"";
+  stack1 = (helper = helpers.toDeg || (depth0 && depth0.toDeg),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.rotateY), options) : helperMissing.call(depth0, "toDeg", (depth0 && depth0.rotateY), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\"";
   return buffer;
@@ -577,24 +595,14 @@ function program12(depth0,data) {
 function program14(depth0,data) {
   
   var buffer = "", stack1, helper, options;
-  buffer += " data-rotate-y=\"";
-  stack1 = (helper = helpers.toDeg || (depth0 && depth0.toDeg),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.rotateY), options) : helperMissing.call(depth0, "toDeg", (depth0 && depth0.rotateY), options));
+  buffer += " data-rotate-z=\"";
+  stack1 = (helper = helpers.toDeg || (depth0 && depth0.toDeg),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.rotateZ), options) : helperMissing.call(depth0, "toDeg", (depth0 && depth0.rotateZ), options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\"";
   return buffer;
   }
 
 function program16(depth0,data) {
-  
-  var buffer = "", stack1, helper, options;
-  buffer += " data-rotate-z=\"";
-  stack1 = (helper = helpers.toDeg || (depth0 && depth0.toDeg),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.rotateZ), options) : helperMissing.call(depth0, "toDeg", (depth0 && depth0.rotateZ), options));
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\"";
-  return buffer;
-  }
-
-function program18(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += " data-z=\"";
@@ -605,7 +613,7 @@ function program18(depth0,data) {
   return buffer;
   }
 
-function program20(depth0,data) {
+function program18(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += " data-scale=\"";
@@ -616,10 +624,10 @@ function program20(depth0,data) {
   return buffer;
   }
 
-function program22(depth0,data) {
+function program20(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\r\n				<div class=\"bc\" data-cue=\"";
+  buffer += "\r\n						<div class=\"bc\" data-cue=\"";
   if (helper = helpers.start) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.start); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -627,42 +635,32 @@ function program22(depth0,data) {
   if (helper = helpers.length) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.length); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" delta-delay=\"";
-  if (helper = helpers.delay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.delay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\"></div>\r\n				";
+    + "\"></div>\r\n						";
   return buffer;
   }
 
-function program24(depth0,data) {
+function program22(depth0,data) {
   
   
   return " ";
   }
 
-function program26(depth0,data) {
+function program24(depth0,data) {
   
   var buffer = "", stack1, helper, options;
-  buffer += "\r\n						";
-  stack1 = (helper = helpers.renderComponent || (depth0 && depth0.renderComponent),options={hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data},helper ? helper.call(depth0, depth0, options) : helperMissing.call(depth0, "renderComponent", depth0, options));
+  buffer += "\r\n								";
+  stack1 = (helper = helpers.renderComponent || (depth0 && depth0.renderComponent),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, depth0, options) : helperMissing.call(depth0, "renderComponent", depth0, options));
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n					";
+  buffer += "\r\n							";
   return buffer;
   }
 
-  options={hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data}
-  if (helper = helpers.mobileVersion) { stack1 = helper.call(depth0, options); }
-  else { helper = (depth0 && depth0.mobileVersion); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
-  if (!helpers.mobileVersion) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data}); }
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n\r\n";
-  options={hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0),data:data}
+  options={hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data}
   if (helper = helpers.attributes) { stack1 = helper.call(depth0, options); }
   else { helper = (depth0 && depth0.attributes); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
-  if (!helpers.attributes) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(3, program3, data, depth0),data:data}); }
+  if (!helpers.attributes) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data}); }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</div>\r\n<div class=\"hint\">\r\n    <p>Use a spacebar or arrow keys to navigate</p>\r\n</div>\r\n</div>\r\n</div>";
+  buffer += "\r\n";
   return buffer;
   });
 

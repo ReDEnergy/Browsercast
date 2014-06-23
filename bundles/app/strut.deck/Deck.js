@@ -7,6 +7,7 @@ define(["common/Calcium",
 	"./SlideCommands",
 	'tantaman/web/undo_support/CmdListFactory',
 	'strut/deck/Slide',
+	'browsercast/model/SyncModel',
 	"strut/editor/GlobalEvents",
 	'./DeckUpgrade',
 	'./CustomBackgrounds'],
@@ -15,6 +16,7 @@ define(["common/Calcium",
 			 SlideCommands,
 			 CmdListFactory,
 			 Slide,
+			 SyncModel,
 			 key,
 			 DeckUpgrade,
 			 CustomBackgrounds) {
@@ -41,6 +43,10 @@ define(["common/Calcium",
 				slides.on("remove", this._slideRemoved, this);
 				slides.on("reset", this._slidesReset, this);
 				this.set('background', 'bg-default');
+				this.on("change:audiocast", this._changeAudioCast, this);
+
+				// # Browsercast
+				this._BrowsercastModel = new SyncModel();
 			},
 
 			/**
@@ -125,6 +131,8 @@ define(["common/Calcium",
 				this.set('customStylesheet', rawObj.customStylesheet);
 				this.set('deckVersion', rawObj.deckVersion);
 				this.set('cannedTransition', rawObj.cannedTransition);
+				// Browsercast
+				this.set('audiocast', rawObj.audiocast);
 				var bgs = new CustomBackgrounds(rawObj.customBackgrounds);
 				this.set('customBackgrounds', bgs);
 				this.undoHistory.clear();
@@ -248,10 +256,24 @@ define(["common/Calcium",
 			_slideActivated: function(slide, value, options) {
 				if (value) {
 					this.set("activeSlide", slide, options);
-					// Browsercast
+					// # Browsercast
 					BcAudio.stop();
 					slide.updateBcSync();
 				}
+			},
+
+			activateSlideByIndex: function activateSlideByIndex(index) {
+				var slides = this.get('slides');
+				if (slides.at(index))
+					this.set('activeSlide', slides.at(index));
+			},
+
+			nextSlide: function nextSlide() {
+				var slides = this.get('slides');
+				var active = this.get('activeSlide');
+				var index = slides.indexOf(active);
+				if (slides.at(index + 1))
+					this.set('activeSlide', slides.at(index + 1));
 			},
 
 			/**
@@ -437,6 +459,16 @@ define(["common/Calcium",
 			 */
 			redo: function() {
 				this.undoHistory.redo();
+			},
+
+			/**
+			 * Browsercast
+			 */
+
+			_changeAudioCast: function changeAudioCast() {
+				if (this.get('audiocast')) {
+					this._BrowsercastModel.set('audiocast', this.get('audiocast'));
+				}
 			}
 		});
 	})

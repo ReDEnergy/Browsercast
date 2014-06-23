@@ -233,9 +233,8 @@ require([
 
 		StrutLoader.start(registry, function() {}, function() {});
 
-		// BROWSERCAST
-		BcSync.onResize();
-		BcAudio.init();
-		var track = BcAudio.getTrackInfo(0);
-		BcSync.set({scale: track.audio.duration});
+		window.importer = registry.get('strut.importer');
+		console.log("IMPORTER", importer);
+		//importer[0].service().import('./demo/Browsercast v0.1.json')
+
 	});

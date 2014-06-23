@@ -9,6 +9,7 @@ define(['strut/deck/Component',
 		 */
 		return Component.extend({
 			initialize: function() {
+				console.log('WebFrame');
 				Component.prototype.initialize.apply(this, arguments);
 				this.set('type', 'WebFrame');
 			},

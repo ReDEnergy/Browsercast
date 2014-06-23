@@ -1,14 +1,12 @@
+'use strict';
 var loadPresentation = function(callback) {
-	var presentation = localStorage.getItem('preview-string');
+	var presentation = JSON.parse(localStorage.getItem('preview-presentation'));
 	console.log("Presentation:", presentation);
-
-	// This seems to do ... well nothing
-	// var config = JSON.parse(localStorage.getItem('preview-config'));
-	// console.log("Config:", config);
-
 	if (presentation) {
-		container = document.getElementById('impress');
-		container.innerHTML = presentation;
+		var impress = document.getElementById('impress');
+		var browsercast = document.getElementById('browsercast');
+		impress.innerHTML = presentation.impress;
+		browsercast.innerHTML = presentation.browsercast;
 		callback();
 	}
 };

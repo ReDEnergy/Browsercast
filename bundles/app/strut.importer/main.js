@@ -25,6 +25,7 @@ function(MenuItem, ServiceCollection, HiddenOpen, Iterator, lang) {
 		var iter = new Iterator(importerCollection);
 		function next() {
 			if (iter.hasNext()) {
+				console.log(file);
 				iter.next().import(file, editorModel, next);
 			}
 		}
@@ -34,7 +35,7 @@ function(MenuItem, ServiceCollection, HiddenOpen, Iterator, lang) {
 
 	var menuProvider = {
 		createMenuItems: function(editorModel) {
-			return new MenuItem({ title: lang.import, handler: fileBrowserLauncher, model: editorModel});	
+			return new MenuItem({ title: lang.import, handler: fileBrowserLauncher, model: editorModel});
 		}
 	};
 

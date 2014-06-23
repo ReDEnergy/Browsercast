@@ -44,48 +44,56 @@
 	 */
 
 	var AudioManager = (function AudioManager() {
-		var AudioManagercasts = [];
-		var AudioManager_map = {};
-		var AudioManager_events = [];
+		var audiocasts = [];
+		var audiocast_map = {};
+		var events = [];
+
+		var reset = function reset() {
+			audiocasts = [];
+			audiocast_map = {};
+			events = [];
+		};
 
 		var getCast = function getCast(id, name) {
-			if (AudioManagercasts[id] instanceof Popcorn)
-				return AudioManagercasts[id];
-			if (AudioManager_map[name] instanceof Popcorn)
-				return AudioManagercasts[id];
-			return AudioManagercasts[0];
+			if (audiocasts[id] instanceof Popcorn)
+				return audiocasts[id];
+			if (audiocast_map[name] instanceof Popcorn)
+				return audiocasts[id];
+			return audiocasts[0];
 		};
 
 		var init = function init() {
+			clearEvents();
 			var container = document.getElementById('bc-audio-tracks');
 			var elems = container.querySelectorAll('audio');
 			for (var i=0; i<elems.length; i++) {
-				AudioManagercasts.push(Popcorn(elems[i]));
+				console.log("AUDIO SRC", elems[i].src);
+				audiocasts.push(Popcorn(elems[i]));
 				var name = elems[i].getAttribute('data-name');
 				if (name) {
-					AudioManager_map[name] = i;
+					audiocast_map[name] = i;
 				}
 			}
 		};
 
 		var pauseAll = function pauseAll() {
-			for (var i=0; i<AudioManagercasts.length; i++) {
-				AudioManagercasts[i].pause();
+			for (var i=0; i<audiocasts.length; i++) {
+				audiocasts[i].pause();
 			}
 		};
 
 		var registerEvent = function(callback, delay) {
 			var event = window.setTimeout(callback, delay);
-			AudioManager_events.push(event);
+			events.push(event);
 			console.log("Event: ID", event, "trigger in:", delay);
 		};
 
 		var clearEvents = function() {
 			pauseAll();
-			for (var i=0; i<AudioManager_events.length; i++) {
-				clearTimeout(AudioManager_events[i]);
+			for (var i=0; i<events.length; i++) {
+				clearTimeout(events[i]);
 			}
-			AudioManager_events = [];
+			events = [];
 		};
 
 		return {
@@ -102,11 +110,11 @@
 	/**
 	 * Start Browsercast
 	 */
-	var TestFragment;
+	var WorkingFragment;
 
 	var init = function init() {
 		AudioManager.init();
-		TestFragment = new AudioFragment(0, 5, 0);
+		WorkingFragment = new AudioFragment(0, 5, 0);
 	};
 
 	var getTrackInfo = function getTrackInfo(id) {
@@ -114,12 +122,12 @@
 	};
 
 	var set = function set(start, length, delay) {
-		TestFragment.update(start, length, delay);
+		WorkingFragment.update(start, length, delay);
 	};
 
 	var play = function play() {
 		AudioManager.clearEvents();
-		TestFragment.play();
+		WorkingFragment.play();
 	};
 
 	var stop = function stop() {
@@ -131,8 +139,7 @@
 		init: init,
 		play: play,
 		stop: stop,
-		getTrackInfo: getTrackInfo,
-		Fragment: AudioFragment
+		getTrackInfo: getTrackInfo
 	};
 
 })(window, window.document);

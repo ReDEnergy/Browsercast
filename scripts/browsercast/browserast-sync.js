@@ -59,8 +59,8 @@ var BcSync = (function BrowsercastSync() {
 		if (posX + size > 100)
 			posX = 100 - size;
 		selected.style.left = posX + '%';
-		tooltip_left.textContent = (scale * posX).toFixed(2);
-		tooltip_right.textContent = (scale * (posX + sizeX)).toFixed(2);
+		updateTooltip(tooltip_left, scale * posX);
+		updateTooltip(tooltip_right, scale * (posX + sizeX));
 	};
 
 	var updateLeftHandle = function updateLeftHandle(e) {
@@ -78,7 +78,7 @@ var BcSync = (function BrowsercastSync() {
 		}
 		selected.style.left = posX + '%';
 		selected.style.width = sizeX + '%';
-		tooltip_left.textContent = (scale * posX).toFixed(2);
+		updateTooltip(tooltip_left, scale * posX);
 	};
 
 	var updateRightHandle = function updateRightHandle(e) {
@@ -89,7 +89,7 @@ var BcSync = (function BrowsercastSync() {
 		if (sizeX < 0)
 			sizeX = 0;
 		selected.style.width = sizeX + '%';
-		tooltip_right.textContent = (scale * (startX + sizeX)).toFixed(2);
+		updateTooltip(tooltip_right, scale * (startX + sizeX));
 	};
 
 	var update = function update() {
@@ -97,8 +97,14 @@ var BcSync = (function BrowsercastSync() {
 		sizeX = size;
 		selected.style.left = startX + '%';
 		selected.style.width = size + '%';
-		tooltip_left.textContent = (scale * startX).toFixed(2);
-		tooltip_right.textContent = (scale * (startX + size)).toFixed(2);
+		updateTooltip(tooltip_left, scale * startX);
+		updateTooltip(tooltip_right, scale * (startX + size));
+	};
+
+	var updateTooltip = function updateTooltip(elem, value) {
+		var minutes = (value / 60) | 0;
+		var seconds = (value % 60).toFixed(2);
+		elem.textContent = minutes ? (minutes + ':' + seconds) : seconds;
 	};
 
 	var ClipSection = {};
@@ -120,9 +126,11 @@ var BcSync = (function BrowsercastSync() {
 		}
 		if (options.hasOwnProperty('start')) {
 			startX = parseFloat(options.start) / scale;
+			if (startX > (100 * size)) startX = 0;
 		}
 		if (options.hasOwnProperty('length')) {
 			size = parseFloat(options.length) / scale;
+			if (startX + size > (100 * size)) size = 100 - startX;
 		}
 		update();
 	};
@@ -135,7 +143,6 @@ var BcSync = (function BrowsercastSync() {
 	};
 
 	var onResize = function onResize() {
-		console.log('resize');
 		var bounding = timeline.getBoundingClientRect();
 		size_px = bounding.right - bounding.left;
 	};
@@ -153,7 +160,6 @@ var BcSync = (function BrowsercastSync() {
 		selected.appendChild(handle_right);
 		timeline.appendChild(selected);
 
-		onResize();
 		window.addEventListener('resize', onResize);
 
 		trackMouse(selected, updateSelectionPosition, ClipSection.mouseDown, ClipSection.mouseUp);
