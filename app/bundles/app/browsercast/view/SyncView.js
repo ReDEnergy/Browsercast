@@ -76,7 +76,24 @@ function(Backbone) {
 			var fragment = BcSync.get();
 			BcAudio.set(fragment.start, fragment.length, 0);
 			BcAudio.play();
-			this._deck.get('activeSlide').assignAudioFragment(fragment);
+
+			// TODO: Move logic to slides model ?!
+			var slides = this._deck.getNearSlides();
+			var active = slides.active.get('browsercast');
+			if (slides.prev) {
+				var prev = slides.prev.get('browsercast');
+				prev.length = fragment.start - prev.start;
+				slides.prev.assignAudioFragment(prev);
+			}
+			if (slides.next) {
+				var next = slides.next.get('browsercast');
+				var start = parseFloat(fragment.start) + parseFloat(fragment.length);
+				next.length += parseFloat(next.start) - start;
+				next.start = start;
+				slides.next.assignAudioFragment(next);
+			}
+			slides.active.assignAudioFragment(fragment);
+
 		},
 
 		// Sync AudioCast with presentation
@@ -88,6 +105,7 @@ function(Backbone) {
 		finishSync: function finishSync() {
 			this.$sync_panel.hide();
 			this.$sync_audio[0].pause();
+			this._deck.activateSlideByIndex(0);
 		},
 
 		setTransition: function setTransition(e) {
@@ -97,7 +115,7 @@ function(Backbone) {
 				this.model.addSlideTransition(transitionTime);
 				var fragment = this.model.getLastFragment();
 				this._deck.get('activeSlide').assignAudioFragment(fragment);
-				this._deck.nextSlide();
+				this._deck.advanceNextSlide();
 			}
 		},
 
@@ -109,8 +127,10 @@ function(Backbone) {
 		},
 
 		offerSaveSync: function offerSaveSync() {
-			if (this.model.get('transitions').length === this._deck.get('slides').length)
+			if (this.model.get('transitions').length === this._deck.get('slides').length) {
 				this.$sync_finish.show();
+				this.$sync_audio[0].pause();
+			}
 			else
 				this.$sync_finish.hide();
 		},
