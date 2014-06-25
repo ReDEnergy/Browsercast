@@ -36,6 +36,7 @@ var BcSync = (function BrowsercastSync() {
 	var timeline;
 	var prop;
 	var selected;
+	var ghost;
 	var tooltip_left;
 	var tooltip_right;
 	var mouseX;
@@ -150,6 +151,7 @@ var BcSync = (function BrowsercastSync() {
 	var create = function create() {
 		timeline = Node('div', {class: 'timeline'});
 		selected = Node('div', {class: 'section'});
+		ghost = Node('div', {class: 'ghost'});
 		var handle_left = Node('div', {class: 'handle-left'});
 		var handle_right = Node('div', {class: 'handle-right'});
 		tooltip_left = Node('div', {class: 'tooltip-left'});
@@ -159,17 +161,26 @@ var BcSync = (function BrowsercastSync() {
 		selected.appendChild(handle_left);
 		selected.appendChild(handle_right);
 		timeline.appendChild(selected);
+		timeline.appendChild(ghost);
 
 		window.addEventListener('resize', onResize);
 
-		trackMouse(selected, updateSelectionPosition, ClipSection.mouseDown, ClipSection.mouseUp);
+		// trackMouse(selected, updateSelectionPosition, ClipSection.mouseDown, ClipSection.mouseUp);
 		trackMouse(handle_left, updateLeftHandle, ClipSection.mouseDown, ClipSection.mouseUp);
 		trackMouse(handle_right, updateRightHandle, ClipSection.mouseDown, ClipSection.mouseUp);
 		return timeline;
 	};
 
+	var setGhost = function setGhost(start, length) {
+		var startG = parseFloat(start) / scale;
+		var lengthG = parseFloat(length) / scale;
+		ghost.style.left = startG + '%';
+		ghost.style.width = lengthG + '%';
+	};
+
 	return {
 		set : set,
+		setGhost: setGhost,
 		get : get,
 		onResize : onResize,
 		create : create
