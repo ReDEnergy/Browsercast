@@ -4,6 +4,7 @@
 	margin: 0 auto;
 	border: dashed 1px #CCC;
 	border-radius: 3px;
+	position: relative;
 	float: left;
 }
 
@@ -13,12 +14,12 @@
 	background: linear-gradient(180deg, #AAA 0%, #777 100%);
 	border: 1px solid #3FB58E;
 	border-radius: 3px;
-	position: relative;
+	position: absolute;
 	top: -1px;
 }
 
 .timeline .section:hover {
-	cursor: move;
+	/*cursor: move;*/
 }
 
 .timeline .section .handle-left,
@@ -63,4 +64,16 @@
 
 .timeline .section .tooltip-right {
 	right: -15px;
+}
+
+.timeline .ghost {
+	height: 100%;
+	width: 30px;
+	background: #C60;
+	background: linear-gradient(180deg, #F6CA97 0%, #F8DDBD 100%);
+	border: 1px solid #3FB58E;
+	position: relative;
+	top: -1px;
+	z-index: -1;
+	left: -100%;
 }

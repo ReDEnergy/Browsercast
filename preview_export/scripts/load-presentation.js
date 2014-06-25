@@ -7,6 +7,6 @@ var loadPresentation = function(callback) {
 		var browsercast = document.getElementById('browsercast');
 		impress.innerHTML = presentation.impress;
 		browsercast.innerHTML = presentation.browsercast;
-		callback();
 	}
+	callback();
 };

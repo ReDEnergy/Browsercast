@@ -7,12 +7,15 @@
 	var last_marker;
 	var last_slide;
 	var markers;
+	var overlay;
+	var slides = [];
 
-	var Config = {
+	var Browsercast = {
 		reveal: false,
 		impress: false,
 		hide_marker: true,
 		hide_marker_after: 2000, // (hide slide marker in miliseconds)
+		playback: true,
 
 		// Add fade effect for markers
 		setFadeMarker : function setFadeMarker() {
@@ -21,7 +24,7 @@
 				clearTimeout(timeout);
 				timeout = setTimeout(function() {
 					markers.setAttribute('data-hidden', true);
-				}, Config.hide_marker_after);
+				}, Browsercast.hide_marker_after);
 			}
 
 			document.addEventListener('mousemove', function(e) {
@@ -30,14 +33,96 @@
 			});
 		},
 
-		// TODO add config obj
-		init : function init(obj) {
-			console.log(obj);
+		// TODO - If no audio is present it will skip the slide
+		advance : function advance() {
+			if (slides[slides.length - 1] == last_slide)
+				return;
+			Audio.clearEvents();
+			if (Browsercast.reveal) Reveal.next();
+			if (Browsercast.impress) impress().next();
+		},
+
+		initSlides : function initSlides() {
+			var i;
+			if (Browsercast.impress) {
+				var impress = document.getElementById('impress');
+				var slide_elems = impress.querySelectorAll('.step');
+				for (i = 0; i < slide_elems.length; i++)
+					slides[i] = new Slide(slide_elems[i], i);
+			}
+
+			if (Browsercast.reveal) {
+				Reveal.navigateTo(0);
+				while(true) {
+					slides.push(new Slide(Reveal.getCurrentSlide(), 0));
+					if (Reveal.isLastSlide()) break;
+					Reveal.next();
+				}
+				Reveal.navigateTo(0);
+			}
+
+			console.log("Slides", slides);
+
+			var len = slides.length;
+			for (i = 0; i <len; i++)
+				slides[i].marker.setSize(100 / len);
+		},
+
+		createOverlay : function createOverlay() {
+			overlay = document.getElementById('bc-overlay');
+			if (overlay) return;
+
+			overlay = document.createElement('div');
+			overlay.id = 'bc-overlay';
+
+			var state = document.createElement('div');
+			state.className = 'state';
+
+			var stateinfo = document.createElement('div');
+			stateinfo.className = 'stateinfo';
+			stateinfo.textContent = 'Paused';
+
+			var help = document.createElement('div');
+			help.className = 'help';
+			help.textContent = 'Press P to resume';
+
+			state.appendChild(stateinfo);
+			state.appendChild(help);
+			overlay.appendChild(state);
+
+			var browsercast = document.getElementById("browsercast");
+			browsercast.appendChild(overlay);
+		},
+
+		createMarkers : function createMarkers() {
+			markers = document.getElementById('bc-markers');
+			if (markers) {
+				markers.textContent = null;
+				return;
+			}
 
 			markers = document.createElement('div');
 			markers.id = "bc-markers";
 			var browsercast = document.getElementById("browsercast");
 			browsercast.appendChild(markers);
+		},
+		pause: function pause() {
+			Audio.pause();
+			overlay.setAttribute('active', 'true');
+			this.playback = false;
+		},
+
+		resume: function resume() {
+			Audio.resume();
+			overlay.removeAttribute('active');
+			this.playback = true;
+		},
+
+		// TODO add config obj
+		init : function init(obj) {
+			console.log(obj);
+			this.createOverlay();
+			this.createMarkers();
 
 			if (obj.framework === 'reveal.js')
 				this.reveal = true;
@@ -46,24 +131,23 @@
 			if (this.hide_marker)
 				this.setFadeMarker();
 
-			console.log(Config);
-		},
+			document.addEventListener('keydown', function(e) {
+				if (e.keyCode === 80) {
+					Browsercast.playback ? Browsercast.pause() : Browsercast.resume();
+				}
+			});
+			console.log(this);
+		}
 	};
 
 	//*************************************************************************
 	//*************************************************************************
-
-	var nextSlide = function nextSlide() {
-		Audio.clearEvents();
-		if (Config.reveal) Reveal.next();
-		if (Config.impress) impress().next();
-	};
 
 	/*
 	 * Slide Object
 	 */
 	function Slide(slide_dom, index) {
-//		console.log("========================== Slide ", index, "==========================");
+		// console.log("================= Slide ", index, "==================");
 		this.index = index;
 		this.elem = slide_dom;
 		this.marker = new Marker(this);
@@ -71,11 +155,11 @@
 
 		// TODO treat fragments
 
-		if (Config.impress) {
+		if (Browsercast.impress) {
 			slide_map[this.elem.id] = this;
 		}
 
-		if (Config.reveal) {
+		if (Browsercast.reveal) {
 			this.reveal = Reveal.getIndices();
 			slide_map['' + this.reveal.h + this.reveal.v] = this;
 			while(Reveal.nextFragment());
@@ -83,9 +167,9 @@
 	}
 
 	Slide.prototype.navigateTo = function navigateTo() {
-		if (Config.impress)
+		if (Browsercast.impress)
 			impress().goto(this.index);
-		if (Config.reveal)
+		if (Browsercast.reveal)
 			Reveal.navigateTo(this.reveal.h, this.reveal.v);
 	};
 
@@ -100,12 +184,10 @@
 			this.fragments[i].play();
 		}
 
-		// TODO - Auto playback
-		// If no audio is present it loops between all slides
-		// Stop when after last slide
-		// Do not start automaticaly - add an option
-//		console.log("Auto advance in", this.playback_time);
-		// Audio.registerEvent(nextSlide, this.playback_time);
+		Audio.registerEvent(Browsercast.advance, this.playback_time);
+		if (Browsercast.playback === false) {
+			Browsercast.pause();
+		}
 	};
 
 	Slide.prototype.blur = function blur() {
@@ -206,17 +288,85 @@
 			this.audiocast.pause();
 		}.bind(this);
 
-		Audio.registerEvent(start, this.delay);
+		if (this.delay)
+			Audio.registerEvent(start, this.delay);
+		else
+			start();
 	};
+
+	//*************************************************************************
+	//*************************************************************************
+
+	/**
+	 * Timeout Event Class
+	 * allows to pause setTimeout events and resume them after
+	 * TODO: can we trust JavaScript timing ?
+	 * TODO: does it works for multiple audios ? Need to test
+	 * TODO - what if I share the startTime between same class Events
+	 */
+
+	function Event(callback, delay) {
+		// TODO - this.callback blocks GC from freeing memory
+		this.callback = callback;
+		this.delay = delay;
+		this.startTime = new Date();
+		this.ID = window.setTimeout(callback, delay);
+		this.paused = false;
+		this.triggered = false;
+	}
+
+	Event.prototype.pause = function pause() {
+		if (this.paused || this.triggered) return;
+		window.clearTimeout(this.ID);
+		this.pauseTime = new Date();
+		this.delay -= (this.pauseTime - this.startTime);
+		this.paused = true;
+	};
+
+	Event.prototype.resume = function resume() {
+		if (this.paused === false || this.triggered) return;
+		this.startTime = new Date();
+		this.ID = window.setTimeout(this.callback, this.delay);
+		this.paused = false;
+	};
+
+	Event.prototype.stop = function stop() {
+		clearTimeout(this.ID);
+		this.callback = null;
+	};
+
+	Event.prototype.isTriggered = function isTriggered() {
+		if (this.paused)
+			return false;
+		if (this.triggered === false) {
+			var currentTime = new Date();
+			var deltaTime = currentTime - this.startTime;
+			if (deltaTime > this.delay) {
+				this.triggered = true;
+				this.callback = null;
+			}
+		}
+		return this.triggered;
+	};
+
+	Event.prototype.log = function log() {
+		console.log('Event ', this);
+	};
+
+	global.Event = Event;
+
+	//*************************************************************************
+	//*************************************************************************
 
 	/**
 	 * Browsercast Audio Manager
 	 */
 
 	var Audio = (function Audio() {
+		var events = [];
 		var audiocasts = [];
 		var audio_map = {};
-		var audio_events = [];
+		var paused_tracks = [];
 
 		var getCast = function getCast(id, name) {
 			if (audiocasts[id] instanceof Popcorn)
@@ -224,6 +374,45 @@
 			if (audio_map[name] instanceof Popcorn)
 				return audiocasts[id];
 			return audiocasts[0];
+		};
+
+		var pause = function pause() {
+			for (var i=0; i<events.length; i++) {
+				events[i].pause();
+			}
+			for (var i=0; i<audiocasts.length; i++) {
+				if (audiocasts[i].paused() === false) {
+					audiocasts[i].pause();
+					paused_tracks.push(audiocasts[i]);
+				}
+			}
+			console.log('Pause: ', events, audiocasts);
+		};
+
+		var resume = function resume() {
+			for (var i=0; i<events.length; i++) {
+				events[i].resume();
+			}
+			for (var i=0; i<paused_tracks.length; i++) {
+				paused_tracks[i].play();
+			}
+			paused_tracks = [];
+			console.log('Resume: ', events, audiocasts);
+		};
+
+		var registerEvent = function(callback, delay) {
+			events.push(new Event(callback, delay));
+		};
+
+		var clearEvents = function() {
+			for (var i=0; i<audiocasts.length; i++) {
+				audiocasts[i].pause();
+			}
+			for (var i=0; i<events.length; i++) {
+				events[i].stop();
+			}
+			events = [];
+			paused_tracks = [];
 		};
 
 		var init = function init() {
@@ -238,28 +427,10 @@
 			}
 		};
 
-		var pauseAll = function pauseAll() {
-			for (var i=0; i<audiocasts.length; i++) {
-				audiocasts[i].pause();
-			}
-		};
-
-		var registerEvent = function(callback, delay) {
-			var event = window.setTimeout(callback, delay);
-			audio_events.push(event);
-			console.log("Event: ID", event, "trigger in:", delay);
-		};
-
-		var clearEvents = function() {
-			pauseAll();
-			for (var i=0; i<audio_events.length; i++) {
-				clearTimeout(audio_events[i]);
-			}
-			audio_events = [];
-		};
-
 		return {
 			init : init,
+			pause : pause,
+			resume : resume,
 			getCast : getCast,
 			registerEvent : registerEvent,
 			clearEvents : clearEvents
@@ -273,10 +444,10 @@
 	 * Event listeners
 	 */
 
-	var Events = (function Events() {
+	var FrameworkEvents = (function FrameworkEvents() {
 
 		var init = function init() {
-			if (Config.impress) {
+			if (Browsercast.impress) {
 				document.addEventListener("impress:stepenter", function (event) {
 					if (slide_map[event.target.id] instanceof Slide)
 						slide_map[event.target.id].focus();
@@ -287,7 +458,7 @@
 				});
 			}
 
-			if (Config.reveal) {
+			if (Browsercast.reveal) {
 				Reveal.addEventListener("slidechanged", function (event) {
 					var info = Reveal.getIndices();
 					var slide = slide_map[''+info.h+info.v];
@@ -307,37 +478,10 @@
 	 */
 
 	function initPresentation(config) {
-
-		Config.init(config);
 		Audio.init();
-
-		var i;
-		var slides = [];
-
-		if (Config.impress) {
-			var impress = document.getElementById('impress');
-			var slide_elems = impress.querySelectorAll('.step');
-			for (i = 0; i < slide_elems.length; i++)
-				slides[i] = new Slide(slide_elems[i], i);
-		}
-
-		if (Config.reveal) {
-			Reveal.navigateTo(0);
-			while(true) {
-				slides.push(new Slide(Reveal.getCurrentSlide(), 0));
-				if (Reveal.isLastSlide()) break;
-				Reveal.next();
-			}
-			Reveal.navigateTo(0);
-		}
-
-		console.log("Slides", slides);
-		var len = slides.length;
-		for (i = 0; i <len; i++)
-			slides[i].marker.setSize(100 / len);
-
-		Events.init();
-		slides[0].focus();
+		Browsercast.init(config);
+		Browsercast.initSlides();
+		FrameworkEvents.init();
 	}
 
 	global.Browsercast = {
