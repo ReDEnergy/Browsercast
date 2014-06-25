@@ -258,22 +258,56 @@ define(["common/Calcium",
 					this.set("activeSlide", slide, options);
 					// # Browsercast
 					BcAudio.stop();
+
+					// Just for Demo
+					// monkey patching for ghost slides (left and right slides)
+					var slides = this.get('slides');
+					var index = slides.indexOf(slide);
+					var prev = slides.at(index-1);
+					var next = slides.at(index+1);
+					var bc = slide.get('browsercast');
+					var startG = parseFloat(bc.start);
+					var lengthG = parseFloat(bc.length);
+					if (prev != undefined) {
+						var bcp = prev.get('browsercast');
+						startG = parseFloat(bcp.start);
+						lengthG += parseFloat(bcp.length);
+					}
+					if (next != undefined) {
+						lengthG += parseFloat(next.get('browsercast').length);
+					}
+
+					BcSync.setGhost(startG, lengthG);
 					slide.updateBcSync();
 				}
 			},
 
+			// Browsercast
+			// TODO : too much monkey patching - need to save slide indexes and an easy way of gettting previous and next slides
+			// holding a linkedlist of slides might be the best solution
 			activateSlideByIndex: function activateSlideByIndex(index) {
 				var slides = this.get('slides');
 				if (slides.at(index))
 					this.set('activeSlide', slides.at(index));
 			},
 
-			nextSlide: function nextSlide() {
+			advanceNextSlide: function advanceNextSlide() {
 				var slides = this.get('slides');
 				var active = this.get('activeSlide');
 				var index = slides.indexOf(active);
 				if (slides.at(index + 1))
 					this.set('activeSlide', slides.at(index + 1));
+			},
+
+			getNearSlides : function getNearSlides() {
+				var slides = this.get('slides');
+				var active = this.get('activeSlide');
+				var index = slides.indexOf(active);
+				return {
+					prev: slides.at(index-1),
+					active: slides.at(index),
+					next: slides.at(index+1)
+				};
 			},
 
 			/**
