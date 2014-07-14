@@ -1,45 +1,230 @@
-<!DOCTYPE html>
-<html manifest="cache.manifest">
-	<head>
-		<META charset="UTF-8">
-		<title> Browsercast - GSoC </title>
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title> Browsercast Experiment </title>
+	<link rel="stylesheet" href="fonts/roboto.css">
 
-		<!-- TOOD : load CSS from components on demand or here -->
-		<!-- CSS to load later -->
-		<link rel="stylesheet" href="styles/browsercast/browsercast-editor.css">
-		<link rel="stylesheet" href="styles/browsercast/browsercast-sync.css">
+	<link rel="stylesheet" href="styles/style.css">
+	<link rel="stylesheet" href="styles/nav.css">
+	<link rel="stylesheet" href="styles/import-panel.css">
+	<link rel="stylesheet" href="styles/scene.css">
+	<link rel="stylesheet" href="styles/code-editor.css">
+	<link rel="stylesheet" href="styles/slides-panel.css">
+	<link rel="stylesheet" href="styles/sync-panel.css">
+	<link rel="stylesheet" href="styles/text.css">
+	<link rel="stylesheet" href="styles/app-mode.css">
+	<!-- libs styles -->
+		<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
+		<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
+	<!-- End -->
+	<link rel="stylesheet" href="styles/reveal.css">
 
-		<!-- build:css styles/main.css -->
-		<!-- Bootstrap 2 -->
-		<link rel="stylesheet" href="components/bootstrap/css/bootstrap.css">
-		<link rel="stylesheet" href="components/bootstrap/css/bootstrap-responsive.css">
-		<!-- Bootstrap 3 - not working -->
-		<!--
-			<link rel="stylesheet" href="components/bootstrap3/css/bootstrap.css">
-			<link rel="stylesheet" href="components/bootstrap3/css/bootstrap-theme.css">
-		-->
-		<link href='preview_export/css/web-fonts.css' rel='stylesheet' type='text/css'>
-		<link href='components/etch/etch.css' rel='stylesheet' type='text/css'>
-		<link href='components/spectrum/spectrum.css' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" type="text/css" href="styles/close-btn.css" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" href="preview_export/css/themes/default-reset.css">
-		<!-- endbuild -->
+</head>
+<body>
 
-		<!-- can't build this in due to font imports -->
-		<link rel="stylesheet" href="preview_export/css/themes/default.css">
-		<link rel="shortcut icon" href="img/strut-icon.png">
-		<link rel="apple-touch-icon-precomposed" href="img/strut-touch.png">
-		<script type="text/javascript" src="preview_export/download_assist/swfobject.js"></script>
-	</head>
-	<body>
-		<script type="text/javascript" src="scripts/shim.js"></script>
-		<!-- endbuild -->
-		<script type="text/javascript" src="scripts/browsercast/popcorn.js"></script>
-		<script type="text/javascript" src="scripts/browsercast/browsercast-audio-manager.js"></script>
-		<script type="text/javascript" src="scripts/browsercast/browserast-sync.js"></script>
-		<!-- build:js scripts/amd-app.js -->
-		<script type="text/javascript" data-main="scripts/main" src="scripts/libs/require.js"></script>
-		<div id="modals"></div>
-	</body>
+	<div id="app" data-mode="editor" data-sync-audio="">
+		<section id="nav">
+			<div class="button" data-panel="properties-panel">
+				<span class="glyphicon glyphicon-cog"></span>
+				Properties
+			</div>
+			<div class="button" data-panel="import-panel">
+				<span class="glyphicon glyphicon-import"></span>
+				Import
+			</div>
+			<div class="button" data-panel="export-panel">
+				<span class="glyphicon glyphicon-export"></span>
+				Export
+			</div>
+			<div class="button" data-panel="save-panel">
+				<span class="glyphicon glyphicon-save"></span>
+				Save
+			</div>
+			<!-- <div class="button" data-panel="slides-panel">Slides</div> -->
+			<div class="button" id="toggle-editor">
+				<span class="glyphicon glyphicon-list-alt"></span>
+				Code Editor
+			</div>
+			<div class="button" id="toggle-sync">
+				<span class="glyphicon glyphicon-refresh"></span>
+				Sync Audio
+			</div>
+			<div class="button" id="enter-preview">
+				<span class="glyphicon glyphicon-eye-open"></span>
+				Preview
+			</div>
+
+			<!-- Absolute position -->
+			<div id="leave-preview">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</div>
+		</section>
+		<!-- Functional panels -->
+		<section id="nav-panels">
+			<div id="import-panel" class="menu-expand">
+				<div class="info"> Paste the HTML source of a reveal.js presentation below to import all contained slides. </div>
+				<div id="import-editor"></div>
+				<div id="import-info">
+					<span class="glyphicon glyphicon-ok"></span>
+					<div id="import-slides-count"></div>
+					<div id="import-slides" class="button import"> import </div>
+				</div>
+			</div>
+			<div id="export-panel" class="menu-expand"></div>
+			<div id="save-panel" class="menu-expand"></div>
+			<div id="properties-panel" class="menu-expand"></div>
+			<div id="slides-panel" class="menu-expand">
+				<div id="slides-container">
+					<div class="slide" style="top: 0px"> </div>
+					<div class="slide" style="top: 135px"> </div>
+					<div class="slide" style="top: 270px"> </div>
+					<div class="slide" style="top: 405px"> </div>
+					<div class="slide" style="top: 540px"> </div>
+<!--
+					<div class="slide" style="top: 675px"></div>
+					<div class="slide" style="top: 810px"></div>
+					<div class="slide" style="top: 945px"></div>
+-->
+				</div>
+			</div>
+		</section>
+
+		<section id="app-area">
+			<section id="app-space">
+				<div id="scene">
+					<div class="reveal">
+						<div class="slides">
+							<section>
+								<br />
+								<h2>Browsercast</h2>
+								<br />
+								<br />
+								<p>Click on the slide to start editing</p>
+								<br />
+								<p>You can also use the HTML code editor provided</p>
+								<br />
+								<p>Add an audiocast and syncronized it with the slides</p>
+								<br />
+								<p class="fragment"> Yes it does support fragments !!!</p>
+
+							</section>
+							<section>
+								<h2>Heads Up</h2>
+								<p>
+									reveal.js is a framework for easily creating beautiful presentations using HTML. You'll need a browser with
+									support for CSS 3D transforms to see it in its full glory.
+								</p>
+
+								<aside class="notes">
+									Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+								</aside>
+							</section>
+
+							<!-- Example of nested vertical slides -->
+							<section>
+								<section>
+									<h2>Vertical Slides</h2>
+									<p>
+										Slides can be nested inside of other slides,
+										try pressing <a href="#" class="navigate-down">down</a>.
+									</p>
+									<a href="#" class="navigate-down">
+										<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+									</a>
+								</section>
+								<section>
+									<h2>Basement Level 1</h2>
+									<p>Press down or up to navigate.</p>
+								</section>
+								<section>
+									<h2>Basement Level 2</h2>
+									<p>Cornify</p>
+									<a class="test" href="http://cornify.com">
+										<img width="280" height="326" src="https://s3.amazonaws.com/hakim-static/reveal-js/cornify.gif" alt="Unicorn">
+									</a>
+								</section>
+								<section>
+									<h2>Basement Level 3</h2>
+									<p>That's it, time to go back up.</p>
+									<a href="#/2">
+										<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg);">
+									</a>
+								</section>
+							</section>
+
+							<section>
+								<h2>Slides</h2>
+								<p>
+									Not a coder? No problem! Click on the slide and start editing</a>.
+								</p>
+							</section>
+
+						</div>
+					</div>
+
+					<div id="delete-slide" class="ui-overlay delete-slide" data-visible>
+						<span class="glyphicon glyphicon-trash"></span>
+						<div id="confirm-delete">
+							<div class="info">Are you sure you want to delete this slide?</div>
+							<div id="confirm-delete-cancel" class="button cancel">Cancel</div>
+							<div id="confirm-delete-ok" class="button delete">Delete</div>
+						</div>
+					</div>
+					<div id="add-horizontal-slide" class="ui-overlay add-slide" data-action="right">
+						<span class="glyphicon glyphicon-plus"></span>
+					</div>
+					<div id="add-vertical-slide" class="ui-overlay add-slide" data-action="down">
+						<span class="glyphicon glyphicon-plus"></span>
+					</div>
+				</div>
+				<div id="editor-panel">
+					<div id="slide-editor-html"> </div>
+					<div id="slide-editor-css"> </div>
+				</div>
+				<div id="sync-panel">
+					<div id="audio-tracks">
+						<audio id="audiocast-source" preload> </audio>
+					</div>
+					<div id="load-audio" class="button">
+						<span class="glyphicon glyphicon-music"> </span>
+						<div class="info"> Add audio </div>
+						<div id="load-audio-body">
+							<input id="load-audio-source" type="text" placeholder="audio url">
+							<div id="load-audio-ok"> Use </div>
+							<audio id="load-audio-preview" preload controls> </audio>
+						</div>
+					</div>
+					<div id="sync-audio" class="button">
+						<span class="glyphicon glyphicon-refresh"> </span>
+						<div class="info"> Sync </div>
+						<div id="sync-area">
+							<div class="info">
+								To sincronize with an audio stream you need to mark transition events.
+								Press T to set a new transition point and advance to the next slide or fragment.
+							</div>
+							<div class="button"> Start </div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</section>
+	</div>
+
+	<!-- Scripts -->
+	<script type="text/javascript" src="libs/reveal/lib/js/head.min.js"></script>
+	<script type="text/javascript" src="libs/reveal/js/reveal.js"></script>
+	<script type="text/javascript" src="libs/ace-editor/ace.js"></script>
+	<script type="text/javascript" src="libs/js-beautify/beautify-html.js"></script>
+
+	<script type="text/javascript" src="scripts/load-reveal.js"></script>
+	<script type="text/javascript" src="scripts/script.js"></script>
+	<script type="text/javascript" src="scripts/nav-menu.js"></script>
+	<script type="text/javascript" src="scripts/import-panel.js"></script>
+	<script type="text/javascript" src="scripts/slide-manipulation.js"></script>
+	<script type="text/javascript" src="scripts/slide-editor.js"></script>
+	<script type="text/javascript" src="scripts/sync-panel.js"></script>
+	<script type="text/javascript" src="scripts/init.js"></script>
+</body>
 </html>
