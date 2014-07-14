@@ -1,0 +1,65 @@
+/*
+ * Preview Mode
+ */
+
+#app[data-mode="preview"] #nav {
+	left: -140px;
+}
+
+#app[data-mode="preview"] #nav-panels {
+	left: -140px;
+}
+
+#app[data-mode="preview"] #app-area {
+	padding: 0;
+}
+
+#app[data-mode="preview"] #scene {
+	height: 100%;
+}
+
+#app[data-mode="preview"] #editor-panel {
+	height: 0;
+}
+
+#app[data-mode="preview"] #leave-preview {
+	top: 30px;
+}
+
+#app[data-mode="preview"] #delete-slide {
+	top: -50px;
+}
+
+#app[data-mode="preview"] #add-horizontal-slide {
+	right: -50px;
+}
+
+#app[data-mode="preview"] #add-vertical-slide {
+	bottom: -50px;
+}
+
+
+/*
+ * Editor Mode
+ * This solution is not good because these properties can't be modified
+ */
+
+#app[data-code-editor] #editor-panel {
+	top: 60% !important;
+}
+
+#app[data-code-editor] #scene {
+	height: 60% !important;
+}
+
+/*
+ * Sync Mode
+ */
+
+#app[data-sync-audio] #sync-panel {
+	top: 80%;
+}
+
+#app[data-sync-audio] #scene {
+	height: 80%;
+}

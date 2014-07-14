@@ -1,0 +1,25 @@
+
+z = 1
+
+box-shadow: 2px 0 10px 0 rgba(0, 0, 0, .16),
+			2px 0 5px 0 rgba(0, 0, 0, .26);
+
+z = 2
+
+box-shadow: 6px 0 20px 0 rgba(0, 0, 0, .19),
+			8px 0 17px 0 rgba(0, 0, 0, .2);
+
+z = 3
+
+box-shadow: 17px 0 50px 0 rgba(0, 0, 0, .19),
+			12px 0 15px 0 rgba(0, 0, 0, .24);
+
+z = 4
+
+box-shadow: 25px 0 55px 0 rgba(0, 0, 0, .21),
+			16px 0 28px 0 rgba(0, 0, 0, .22);
+
+z = 5
+
+box-shadow: 40px 0 77px 0 rgba(0, 0, 0, .22),
+			27px 0 24px 0 rgba(0, 0, 0, .2);

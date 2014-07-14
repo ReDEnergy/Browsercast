@@ -1,0 +1,77 @@
+/*
+ * Import Panel
+ */
+
+#import-panel {
+	width: 400px !important;
+	color: #FFF;
+	left: -400px !important;
+	z-index: 10;
+}
+
+#import-panel #import-editor {
+	width: 100%;
+	min-height: 200px;
+	max-height: 600px;
+}
+
+#import-panel .info {
+	padding: 20px 0;
+	color: rgba(255, 255, 255, 0.84);
+	font-family: "Segoe UI";
+}
+
+#import-info {
+	width: 100%;
+	height: 36px;
+	margin: 10px 0 0 0;
+	background: #E0F2F1;
+	line-height: 32px;
+	color: rgba(0, 0, 0, .75);
+	display: none;
+}
+
+#import-info[state] {
+	display: block;
+}
+
+#import-info > * {
+	height: 100%;
+	float: left;
+}
+
+#import-info span {
+	padding: 8px 0 0 0;
+}
+
+#import-info .import {
+	margin: 0;
+	display: none;
+}
+
+#import-info .button:hover {
+	background: #197F75 !important;
+	box-shadow: none !important;
+}
+
+#import-info[state='ok'] .import {
+	display: block;
+}
+
+#import-info[state='error'] {
+	padding: 0 20px;
+	background: #EA9861;
+	color: #FFF;
+}
+
+#import-info[state='error'] .import {
+	display: none;
+}
+
+#import-info[state='error'] span {
+	display: none;
+}
+
+#import-info > span {
+	margin: 0 10px;
+}
