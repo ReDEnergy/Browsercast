@@ -53,9 +53,9 @@
 
 			if (Browsercast.reveal) {
 				Reveal.navigateTo(0);
-				while(true) {
-					slides.push(new Slide(Reveal.getCurrentSlide(), 0));
-					if (Reveal.isLastSlide()) break;
+				var length = Reveal.getTotalSlides();
+				for (i = 0; i < length; i++) {
+					slides[i] = new Slide(Reveal.getCurrentSlide(), i);
 					Reveal.next();
 				}
 				Reveal.navigateTo(0);
@@ -132,6 +132,7 @@
 				this.setFadeMarker();
 
 			document.addEventListener('keydown', function(e) {
+				console.log(e.keyCode);
 				if (e.keyCode === 80) {
 					Browsercast.playback ? Browsercast.pause() : Browsercast.resume();
 				}
@@ -257,16 +258,12 @@
 	function AudioFragment(elem) {
 		this.startTime = parseFloat(elem.getAttribute('data-cue'));
 		this.length = parseFloat(elem.getAttribute('data-length')) * 1000;
-		this.delay = parseFloat(elem.getAttribute('data-delay')) * 1000;
 
 		if (isNaN(this.startTime) || isNaN(this.length)) {
 			return;
 		}
-		if (isNaN(this.delay)) {
-			this.delay = 0;
-		}
 
-		this.total = this.length + this.delay;
+		this.total = this.length;
 
 		var trackID = elem.getAttribute('data-track') | 0;
 		var name = elem.getAttribute('data-trackname');
@@ -288,10 +285,7 @@
 			this.audiocast.pause();
 		}.bind(this);
 
-		if (this.delay)
-			Audio.registerEvent(start, this.delay);
-		else
-			start();
+		start();
 	};
 
 	//*************************************************************************
