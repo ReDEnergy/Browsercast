@@ -1,8 +1,0 @@
-CACHE MANIFEST
-
-CACHE:
-# no cache
-
-# Resources that require the user to be online.
-NETWORK:
-*
