@@ -3,72 +3,114 @@
 (function Browsercast(global, document) {
 	"use strict";
 
-	var slide_map = {};
+	var slide_map = [];
 	var last_marker;
 	var last_slide;
 	var markers;
 	var overlay;
+	var overview;
 	var slides = [];
 
-	var Browsercast = {
-		reveal: false,
-		impress: false,
-		hide_marker: true,
-		hide_marker_after: 2000, // (hide slide marker in miliseconds)
-		playback: true,
+	var Browsercast = (function() {
+		var reveal = false;
+		var impress = false;
+		var hide_marker = true;
+		var nr_slides = 0;
+		var hide_marker_after = 2000; // (hide slide marker in miliseconds)
+		var playback = true;
 
 		// Add fade effect for markers
-		setFadeMarker : function setFadeMarker() {
+		var setFadeMarker = function setFadeMarker() {
 			var timeout = null;
 			function resetTimeout() {
 				clearTimeout(timeout);
 				timeout = setTimeout(function() {
 					markers.setAttribute('data-hidden', true);
-				}, Browsercast.hide_marker_after);
+				}, hide_marker_after);
 			}
 
-			document.addEventListener('mousemove', function(e) {
+			var handleMouseMove = function handleMouseMove(e) {
 				markers.removeAttribute('data-hidden');
 				resetTimeout();
-			});
-		},
+			};
 
-		// TODO - If no audio is present it will skip the slide
-		advance : function advance() {
-			if (slides[slides.length - 1] == last_slide)
-				return;
-			Audio.clearEvents();
-			if (Browsercast.reveal) Reveal.next();
-			if (Browsercast.impress) impress().next();
-		},
+			document.addEventListener('mousemove', handleMouseMove);
+		};
 
-		initSlides : function initSlides() {
-			var i;
-			if (Browsercast.impress) {
-				var impress = document.getElementById('impress');
-				var slide_elems = impress.querySelectorAll('.step');
-				for (i = 0; i < slide_elems.length; i++)
-					slides[i] = new Slide(slide_elems[i], i);
+		// Events
+
+		var handleKeyDown = function handleKeyDown(e) {
+			if (e.keyCode === 19) {
+				togglePlayback();
+			}
+		};
+
+		// Init presentation
+		var initImpress = function initImpress() {
+			var impress = document.getElementById('impress');
+			var slide_elems = impress.querySelectorAll('.step');
+			for (var i = 0; i < slide_elems.length; i++)
+				slides[i] = new Slide(slide_elems[i]);
+
+			checkForErrors();
+		};
+
+		var initReveal = function initReveal() {
+			function listenSlideEvents() {
+				Reveal.addEventListener("slidechanged", recordSlide);
+				Reveal.addEventListener("fragmentshown", recordFragment);
 			}
 
-			if (Browsercast.reveal) {
-				Reveal.navigateTo(0);
-				var length = Reveal.getTotalSlides();
-				for (i = 0; i < length; i++) {
-					slides[i] = new Slide(Reveal.getCurrentSlide(), i);
-					Reveal.next();
-				}
-				Reveal.navigateTo(0);
+			function unlistenSlideEvents() {
+				Reveal.removeEventListener("slidechanged", recordSlide);
+				Reveal.removeEventListener("fragmentshown", recordFragment);
 			}
+
+			function recordSlide(event) {
+				slides.push(new Slide(event.currentSlide));
+			}
+
+			function recordFragment(event) {
+				slides.push(new Slide(event.fragment));
+			}
+
+			Reveal.slide(10000);
+			listenSlideEvents();
+			Reveal.slide(0, 0, -1);
+			while(1) {
+				while(Reveal.nextFragment());
+				if (Reveal.isLastSlide())
+					break;
+				Reveal.next();
+			}
+			unlistenSlideEvents();
+			Reveal.slide(0, 0, -1);
+
+			checkForErrors();
+		};
+
+		var checkForErrors = function checkForErrors() {
+			var len = slides.length;
+			for (var i = 0; i <len - 1; i++)
+				if (isNaN(slides[i].end))
+					slides[i].end = slides[i+1].start;
+		};
+
+		var initSlides = function initSlides() {
+			if (impress)
+				initImpress();
+			if (reveal)
+				initReveal();
 
 			console.log("Slides", slides);
+			console.log("Slides MAP", slide_map);
 
 			var len = slides.length;
-			for (i = 0; i <len; i++)
+			for (var i = 0; i <len; i++)
 				slides[i].marker.setSize(100 / len);
-		},
+		};
 
-		createOverlay : function createOverlay() {
+		var createOverlay = function createOverlay() {
 			overlay = document.getElementById('bc-overlay');
 			if (overlay) return;
 
@@ -92,9 +134,9 @@
 
 			var browsercast = document.getElementById("browsercast");
 			browsercast.appendChild(overlay);
-		},
+		};
 
-		createMarkers : function createMarkers() {
+		var createMarkers = function createMarkers() {
 			markers = document.getElementById('bc-markers');
 			if (markers) {
 				markers.textContent = null;
@@ -105,41 +147,103 @@
 			markers.id = "bc-markers";
 			var browsercast = document.getElementById("browsercast");
 			browsercast.appendChild(markers);
-		},
-		pause: function pause() {
+		};
+
+		// Control presentation
+		var pause = function pause() {
 			Audio.pause();
 			overlay.setAttribute('active', 'true');
-			this.playback = false;
-		},
+			playback = false;
+			if (reveal)
+				Reveal.removeEventListeners();
+		};
 
-		resume: function resume() {
-			Audio.resume();
+		var resume = function resume() {
+			playback = true;
 			overlay.removeAttribute('active');
-			this.playback = true;
-		},
+			if (reveal)
+				Reveal.addEventListeners();
+			if (!overview)
+				Audio.resume();
+		};
+
+		var togglePlayback = function togglePlayback() {
+			playback ? pause() : resume();
+			return playback;
+		};
+
+		var toggleOverview = function toggleOverview(state) {
+			if(state !== undefined)
+				state = !overview;
+			overview = state;
+			overview ? Audio.pause() : Audio.resume();
+		};
+
+		// TODO - If no audio is present it will skip the slide
+		var advance = function advance() {
+			if (slides[slides.length - 1] == last_slide)
+				return;
+			if (reveal) Reveal.next();
+			if (impress) impress().next();
+		};
+
+		var canPlay = function canPlay() {
+			return playback && !overview;
+		};
+
+		var reset = function reset() {
+			playback = true;
+			overview = true;
+			Audio.stop();
+			if (reveal) {
+				overview = Reveal.isOverview();
+				Reveal.addEventListeners();
+			}
+			if (overlay)
+				overlay.removeAttribute('active');
+			slides = [];
+			slide_map = [];
+			document.removeEventListener('keydown', handleKeyDown);
+
+		};
 
 		// TODO add config obj
-		init : function init(obj) {
+		var init = function init(obj) {
+			if (obj.framework === 'reveal.js')	reveal = true;
+			if (obj.framework === 'impress.js')	impress = true;
+
+			reset();
+			createOverlay();
+			createMarkers();
+
+			if (hide_marker)
+				setFadeMarker();
+
+			document.addEventListener('keydown', handleKeyDown);
+
+			initSlides();
 			console.log(obj);
-			this.createOverlay();
-			this.createMarkers();
+		};
 
-			if (obj.framework === 'reveal.js')
-				this.reveal = true;
-			if (obj.framework === 'impress.js')
-				this.impress = true;
-			if (this.hide_marker)
-				this.setFadeMarker();
+		return {
+			init : init,
+			reset : reset,
+			pause : pause,
+			resume : resume,
+			advance : advance,
+			isReveal : function isReveal() {
+				return reveal;
+			},
+			isImpress : function isImpress() {
+				return impress;
+			},
+			canPlay : function canPlay() {
+				return playback && !overview;
+			},
+			toggleOverview : toggleOverview
+		};
 
-			document.addEventListener('keydown', function(e) {
-				console.log(e.keyCode);
-				if (e.keyCode === 80) {
-					Browsercast.playback ? Browsercast.pause() : Browsercast.resume();
-				}
-			});
-			console.log(this);
-		}
-	};
+	})();
 
 	//*************************************************************************
 	//*************************************************************************
@@ -147,79 +251,57 @@
 	/*
 	 * Slide Object
 	 */
-	function Slide(slide_dom, index) {
-		// console.log("================= Slide ", index, "==================");
-		this.index = index;
-		this.elem = slide_dom;
+	function Slide(elem) {
+		this.index = elem.id;
+		this.elem = elem;
 		this.marker = new Marker(this);
-		this.getAudioFragments();
+		this.getAudioInfo();
 
-		// TODO treat fragments
-
-		if (Browsercast.impress) {
+		if (Browsercast.isImpress()) {
 			slide_map[this.elem.id] = this;
 		}
-
-		if (Browsercast.reveal) {
-			this.reveal = Reveal.getIndices();
-			slide_map['' + this.reveal.h + this.reveal.v] = this;
-			while(Reveal.nextFragment());
+		if (Browsercast.isReveal()) {
+			this.index = Reveal.getIndices();
+			console.log(this.index);
+			slide_map[[this.index.h, this.index.v, this.index.f]] = this;
 		}
 	}
 
-	Slide.prototype.navigateTo = function navigateTo() {
-		if (Browsercast.impress)
+	Slide.prototype.goto = function goto() {
+		if (Browsercast.isImpress())
 			impress().goto(this.index);
-		if (Browsercast.reveal)
-			Reveal.navigateTo(this.reveal.h, this.reveal.v);
+		if (Browsercast.isReveal())
+			Reveal.slide(this.index.h, this.index.v, this.index.f);
+		console.log(Browsercast.isReveal());
 	};
 
-	Slide.prototype.focus = function focus() {
+	Slide.prototype.focus = function focus(state) {
 		if (last_slide instanceof Slide)
 			last_slide.blur();
 
 		last_slide = this;
 		this.marker.setActive();
+		if (state !== false)
+			this.goto();
+		this.playAudio();
+	};
 
-		for (var i=0; i<this.fragments.length; i++) {
-			this.fragments[i].play();
-		}
-
-		Audio.registerEvent(Browsercast.advance, this.playback_time);
-		if (Browsercast.playback === false) {
-			Browsercast.pause();
+	Slide.prototype.playAudio = function playAudio() {
+		Audio.stop();
+		if (Browsercast.canPlay()) {
+			if (isNaN(this.start) === false && isNaN(this.end) === false && (this.end - this.start) > 0)
+				Audio.play(this.start, this.end);
 		}
 	};
 
 	Slide.prototype.blur = function blur() {
-		Audio.clearEvents();
 		this.marker.setInactive();
 	};
 
-	Slide.prototype.getAudioFragments = function getAudioFragments() {
-		var frags = this.elem.children;
-		this.fragments = [];
-		for (var i=0; i<frags.length; i++) {
-			if (frags[i].className != 'bc')
-				continue;
-			this.fragments.push(new AudioFragment(frags[i]));
-		}
-
-		// Compute Slide Playback Length
-		this.playback_time = 0;
-		for (var i=0; i<this.fragments.length; i++) {
-			if (this.fragments[i].total > this.playback_time)
-				this.playback_time = this.fragments[i].total;
-		}
+	Slide.prototype.getAudioInfo = function getAudioInfo() {
+		this.start = parseFloat(this.elem.getAttribute('data-bc-start'));
+		this.end = parseFloat(this.elem.getAttribute('data-bc-end'));
 	};
-
-	/**
-	 * TODO: Slide Fragment
-	 */
-
-	function SlideFragment() {
-
-	}
 
 	/**
 	 * Marker Object - UI element
@@ -229,7 +311,7 @@
 		this.marker = document.createElement('div');
 		this.marker.className = 'cue';
 		this.marker.addEventListener('click', function focus() {
-			slide.navigateTo();
+			slide.focus();
 		});
 		markers.appendChild(this.marker);
 	}
@@ -270,23 +352,6 @@
 
 		this.audiocast = Audio.getCast(trackID, name);
 	}
-
-	AudioFragment.prototype.play = function play() {
-
-		var start = function start() {
-			console.log("Play Fragment", this);
-			this.audiocast.currentTime(this.startTime);
-			this.audiocast.play();
-			Audio.registerEvent(stop, this.length);
-		}.bind(this);
-
-		var stop = function stop() {
-			console.log("Stop Fragment", this);
-			this.audiocast.pause();
-		}.bind(this);
-
-		start();
-	};
 
 	//*************************************************************************
 	//*************************************************************************
@@ -347,7 +412,6 @@
 		console.log('Event ', this);
 	};
 
-	global.Event = Event;
 
 	//*************************************************************************
 	//*************************************************************************
@@ -357,77 +421,68 @@
 	 */
 
 	var Audio = (function Audio() {
-		var events = [];
 		var audiocasts = [];
 		var audio_map = {};
 		var paused_tracks = [];
-
-		var getCast = function getCast(id, name) {
-			if (audiocasts[id] instanceof Popcorn)
-				return audiocasts[id];
-			if (audio_map[name] instanceof Popcorn)
-				return audiocasts[id];
-			return audiocasts[0];
-		};
+		var event = null;
 
 		var pause = function pause() {
-			for (var i=0; i<events.length; i++) {
-				events[i].pause();
-			}
 			for (var i=0; i<audiocasts.length; i++) {
-				if (audiocasts[i].paused() === false) {
+				if (audiocasts[i].paused === false) {
 					audiocasts[i].pause();
 					paused_tracks.push(audiocasts[i]);
 				}
 			}
-			console.log('Pause: ', events, audiocasts);
+			if (event instanceof Event)
+				event.pause();
 		};
 
 		var resume = function resume() {
-			for (var i=0; i<events.length; i++) {
-				events[i].resume();
-			}
 			for (var i=0; i<paused_tracks.length; i++) {
 				paused_tracks[i].play();
 			}
 			paused_tracks = [];
-			console.log('Resume: ', events, audiocasts);
+			if (event instanceof Event)
+				event.resume();
 		};
 
-		var registerEvent = function(callback, delay) {
-			events.push(new Event(callback, delay));
-		};
-
-		var clearEvents = function() {
+		var stop = function stop() {
 			for (var i=0; i<audiocasts.length; i++) {
 				audiocasts[i].pause();
 			}
-			for (var i=0; i<events.length; i++) {
-				events[i].stop();
-			}
-			events = [];
-			paused_tracks = [];
+			if (event instanceof Event)
+				event.stop();
+		};
+
+		var play = function play(start, end) {
+			if (event instanceof Event)
+				event.stop();
+			audiocasts[0].currentTime = start;
+			audiocasts[0].play();
+			event = new Event(function() {
+				audiocasts[0].pause();
+				Browsercast.advance();
+			}, (end - start) * 1000);
 		};
 
 		var init = function init() {
 			var container = document.getElementById('bc-audio-tracks');
 			var elems = container.querySelectorAll('audio');
 			for (var i=0; i<elems.length; i++) {
-				audiocasts.push(Popcorn(elems[i]));
-				var name = elems[i].getAttribute('data-name');
+				var len = audiocasts.push(elems[i]);
+				var name = elems[i].getAttribute('data-bc-name');
 				if (name) {
-					audio_map[name] = i;
+					audio_map[name] = audiocasts[len - 1];
 				}
 			}
 		};
 
 		return {
 			init : init,
+			stop : stop,
+			play : play,
 			pause : pause,
-			resume : resume,
-			getCast : getCast,
-			registerEvent : registerEvent,
-			clearEvents : clearEvents
+			resume : resume
 		};
 	})();
 
@@ -440,30 +495,66 @@
 
 	var FrameworkEvents = (function FrameworkEvents() {
 
-		var init = function init() {
-			if (Browsercast.impress) {
-				document.addEventListener("impress:stepenter", function (event) {
-					if (slide_map[event.target.id] instanceof Slide)
-						slide_map[event.target.id].focus();
-				});
+		// Impress events
+		function stepEnter(event) {
+			if (slide_map[event.target.id] instanceof Slide)
+				slide_map[event.target.id].focus();
+		}
 
-				document.addEventListener("impress:stepleave", function (event) {
-					last_slide.blur();
-				});
+		function stepLeave(event) {
+			last_slide.blur();
+		}
+
+		// Reveal events
+		function getSlideInfo() {
+			var indices = Reveal.getIndices();
+			var slide = slide_map[[indices.h, indices.v, indices.f]];
+			if (slide instanceof Slide)
+				slide.focus(false);
+		}
+
+		function overviewShown(event) {
+			Browsercast.toggleOverview(true);
+		}
+
+		function overviewHidden(event) {
+			Browsercast.toggleOverview(false);
+			getSlideInfo();
+		}
+
+		var init = function init() {
+			if (Browsercast.isImpress()) {
+				document.addEventListener("impress:stepenter", stepEnter);
+				document.addEventListener("impress:stepleave", stepLeave);
 			}
 
-			if (Browsercast.reveal) {
-				Reveal.addEventListener("slidechanged", function (event) {
-					var info = Reveal.getIndices();
-					var slide = slide_map[''+info.h+info.v];
-					if (slide instanceof Slide)
-						slide.focus();
-				});
+			if (Browsercast.isReveal()) {
+				Reveal.addEventListener("slidechanged", getSlideInfo);
+				Reveal.addEventListener("fragmentshown", getSlideInfo);
+				Reveal.addEventListener("fragmenthidden", getSlideInfo);
+				Reveal.addEventListener("overviewshown", overviewShown);
+				Reveal.addEventListener("overviewhidden", overviewHidden);
+			}
+		};
+
+		var stop = function stop() {
+			if (Browsercast.isImpress()) {
+				document.removeEventListener("impress:stepenter", stepEnter);
+				document.removeEventListener("impress:stepleave", stepLeave);
+			}
+
+			if (Browsercast.isReveal()) {
+				Reveal.removeEventListener("slidechanged", getSlideInfo);
+				Reveal.removeEventListener("fragmentshown", getSlideInfo);
+				Reveal.removeEventListener("fragmenthidden", getSlideInfo);
+				Reveal.removeEventListener("overviewshown", overviewShown);
+				Reveal.removeEventListener("overviewhidden", overviewHidden);
 			}
 		};
 
 		return {
-			init:  init
+			init : init,
+			stop : stop
 		};
 	})();
 
@@ -474,12 +565,18 @@
 	function initPresentation(config) {
 		Audio.init();
 		Browsercast.init(config);
-		Browsercast.initSlides();
 		FrameworkEvents.init();
 	}
 
+	function uninitialize() {
+		Audio.stop();
+		FrameworkEvents.stop();
+		Browsercast.reset();
+	}
+
 	global.Browsercast = {
-		initialize: initPresentation
+		initialize: initPresentation,
+		uninitialize: uninitialize
 	};
 
 })(window, window.document);
