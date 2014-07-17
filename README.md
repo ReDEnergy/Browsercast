@@ -1,4 +1,4 @@
-<div align="center" style="margin: 0 0 -30px 0">
+<div align="center" style="margin: 0 0 -30px 0;">
   <img src="./Design/logo.png" height="120px" alt="Browsercast" title="Browsercast">
 </div>
 
