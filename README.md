@@ -1,10 +1,10 @@
 Browsercast
 ===========
-HTML5 composition tool with audio voiceover
-#### Under Development
 
-Demo
-	http://redenergy.github.io/Browsercast
+The Browsercast project aims to offer a web based slideshow composition tool with support for voice-over synchronization
 
-Based on Strut.io authoring Tool for ImpressJS
-	https://github.com/tantaman/Strut
+Presentation will offer full playback functionality: play/stop/pause/resume with perfect voice-over synchronization but still maintain the same rich web environment: text, images, links, interactivity.
+
+##Demo
+http://redenergy.github.io/Browsercast
+
