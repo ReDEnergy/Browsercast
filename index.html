@@ -18,13 +18,26 @@
 		<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
 		<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
+		<link rel="stylesheet" href="libs/browsercast/browsercast.css">
 	<!-- End -->
+
+	<link rel="stylesheet" href="components/timeline/timeline.css">
+
 	<link rel="stylesheet" href="styles/reveal.css">
 
 </head>
 <body>
-
 	<div id="app" data-mode="editor">
+
+		<div id="browsercast">
+			<div id="bc-markers"></div>
+			<div id="bc-audio-tracks">
+				<audio data-bc-name="brave" preload="">
+					<source src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg" type="audio/mpeg">
+				</audio>
+			</div>
+		</div>
+
 		<section id="nav">
 			<div class="button" data-panel="properties-panel">
 				<span class="glyphicon glyphicon-cog"></span>
@@ -108,59 +121,53 @@
 								<p>Add an audiocast and syncronized it with the slides</p>
 								<br />
 								<p class="fragment"> Yes it does support fragments !!!</p>
-
-							</section>
-							<section>
-								<h2>Heads Up</h2>
-								<p>
-									reveal.js is a framework for easily creating beautiful presentations using HTML. You'll need a browser with
-									support for CSS 3D transforms to see it in its full glory.
-								</p>
-
-								<aside class="notes">
-									Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-								</aside>
-							</section>
-
-							<!-- Example of nested vertical slides -->
-							<section>
-								<section>
-									<h2>Vertical Slides</h2>
-									<p>
-										Slides can be nested inside of other slides,
-										try pressing <a href="#" class="navigate-down">down</a>.
-									</p>
-									<a href="#" class="navigate-down">
-										<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-									</a>
-								</section>
-								<section>
-									<h2>Basement Level 1</h2>
-									<p>Press down or up to navigate.</p>
-								</section>
-								<section>
-									<h2>Basement Level 2</h2>
-									<p>Cornify</p>
-									<a class="test" href="http://cornify.com">
-										<img width="280" height="326" src="https://s3.amazonaws.com/hakim-static/reveal-js/cornify.gif" alt="Unicorn">
-									</a>
-								</section>
-								<section>
-									<h2>Basement Level 3</h2>
-									<p>That's it, time to go back up.</p>
-									<a href="#/2">
-										<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="-webkit-transform: rotate(180deg); -moz-transform: rotate(180deg);">
-									</a>
-								</section>
 							</section>
 
 							<section>
-								<h2>Slides</h2>
-								<p>
-									Not a coder? No problem! Click on the slide and start editing</a>.
-								</p>
+								<p style="color: red"> This slide has no audio</p>
+								<p>Navigate with <b>arrows</b></p>
+								<p><b>ESC</b> to go to overview mode</p>
+								<p><b>Pause/Break</b> (yes the actual key on your keyboard)</p>
 							</section>
 
+							<section>
+								<section>
+									<img src="images/haiku.jpg" />
+									<p>The Japanese wrote haikus...</p>
+								</section>
+
+								<section>
+									<img src="images/sonnet.jpg" />
+									<p>Shakespeare wrote sonnets...</p>
+								</section>
+							</section>
+							<section>
+								<img src="images/worst-powerpoint.jpg" />
+								<br/>
+								<p>And we... write PowerPoint</p>
+							</section>
+
+							<section>
+								<img src="images/tufte.jpg" />
+								<p>A lot of people blame PowerPoint for bad presentations...</p>
+							</section>
+
+							<section>
+								<img src="images/fountain-pen.jpg" />
+								<p>...but that's like blaming fountain pens for bad poetry.</p>
+							</section>
+
+							<section>
+								<div style="vertical-align: middle">
+									<img src="images/powerpoint.png" />
+									<img src="images/libreoffice.png" />
+								</div>
+								<p>The <em>real</em> problem with tools like PowerPoint...</p>
+								<div class="fragment">
+									<img src="images/internet-cat.jpg" />
+									<p>...is that they aren't web-friendly.</p>
+								</div>
+							</section>
 						</div>
 					</div>
 
@@ -190,10 +197,14 @@
 					<div id="load-audio" class="button">
 						<span class="glyphicon glyphicon-music"> </span>
 						<div class="info"> Add audio </div>
-						<div id="load-audio-body">
+						<div id="load-audio-body" class="body">
 							<input id="load-audio-source" type="text" placeholder="audio url">
 							<div id="load-audio-ok"> Use </div>
 							<audio id="load-audio-preview" preload controls> </audio>
+							<div class="state">
+								<div class="loading"> Loading </div>
+								<div class="error"> Error loading resource. Check again </div>
+							</div>
 						</div>
 					</div>
 					<div id="sync-audio" class="button">
@@ -204,7 +215,14 @@
 								To sincronize with an audio stream you need to mark transition events.
 								Press T to set a new transition point and advance to the next slide or fragment.
 							</div>
-							<div class="button"> Start </div>
+							<div id="sync-reset" class="button"> Reset </div>
+							<div id="sync-save" class="button"> Save </div>
+							<div id="sync-play" class="play-btn">
+								<span class="glyphicon glyphicon-play"> </span>
+								<span class="glyphicon glyphicon-pause"> </span>
+							</div>
+							<div id="sync-timeline"></div>
+							<audio id="sync-audio-source" preload> </audio>
 						</div>
 					</div>
 				</div>
@@ -217,6 +235,10 @@
 	<script type="text/javascript" src="libs/reveal/js/reveal.js"></script>
 	<script type="text/javascript" src="libs/ace-editor/ace.js"></script>
 	<script type="text/javascript" src="libs/js-beautify/beautify-html.js"></script>
+	<script type="text/javascript" src="libs/browsercast/browsercast.js"></script>
+
+	<script type="text/javascript" src="components/timeline/EventEmiter.js"></script>
+	<script type="text/javascript" src="components/timeline/timeline.js"></script>
 
 	<script type="text/javascript" src="scripts/load-reveal.js"></script>
 	<script type="text/javascript" src="scripts/script.js"></script>

@@ -47,25 +47,42 @@
 	position: relative;
 }
 
-#sync-panel #load-audio[data-ok] #load-audio-body {
+#sync-panel #load-audio[data-state="ok"] .body {
 	height: 100px !important;
 }
 
-#sync-panel #load-audio[data-ok] #load-audio-source {
+#sync-panel #load-audio[data-state="error"] .body {
+	height: 80px !important;
+}
+
+#sync-panel #load-audio[data-state="loading"] .body {
+	height: 80px !important;
+}
+
+#sync-panel #load-audio[data-state="ok"] #load-audio-source {
 	width: 80%;
 }
 
-#sync-panel #load-audio[data-ok] #load-audio-ok {
+#sync-panel #load-audio[data-state="ok"] #load-audio-ok {
 	width: 20%;
 }
 
-#sync-panel #load-audio[data-ok] #load-audio-preview {
+#sync-panel #load-audio[data-state="ok"] #load-audio-preview {
 	width: 100%;
 	height: auto;
 	margin: 20px 0 0 0;
 }
 
-#sync-panel #load-audio-body {
+#sync-panel #load-audio[data-state="error"] .error {
+	display: block;
+}
+
+#sync-panel #load-audio[data-state="loading"] .loading {
+	display: block;
+}
+
+
+#sync-panel .body {
 	width: 0;
 	height: 0;
 	background: #009688;
@@ -77,14 +94,14 @@
 	transition: all 0.3s ease-out;
 }
 
-#sync-panel #load-audio[data-active] #load-audio-body {
+#sync-panel #load-audio[data-active] .body {
 	height: 50px;
 	width: 400px;
 	padding: 10px;
 	top: 30px;
 }
 
-#sync-panel #load-audio-body:hover {
+#sync-panel .body:hover {
 	cursor: default;
 }
 
@@ -118,6 +135,22 @@
 	width: 0;
 }
 
+#load-audio .error {
+	display: none;
+}
+
+#load-audio .loading {
+	display: none;
+}
+
+#load-audio .body .state {
+	margin: 5px 0 0 0;
+}
+
+
+/*
+ * Sync audio
+ */
 #sync-panel #sync-audio {
 	width: 75px;
 }
@@ -142,8 +175,55 @@
 	text-align: left;
 }
 
+#sync-panel #sync-area:hover {
+	cursor: default;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
 #sync-panel #sync-area .button {
 	width: 60px;
 	float: left;
+}
+
+#sync-panel #sync-area #sync-reset {
+	position: absolute;
+	right: 100px;
+	top: 0;
+}
+
+#sync-panel #sync-area #sync-save {
+	position: absolute;
+	right: 200px;
+	top: 0;
+}
+
+#sync-panel #sync-area .play-btn {
+	position: absolute;
+	top: 66px;
+	left: 120px;
+}
+
+#sync-panel #sync-area .play-btn .glyphicon-pause {
+	display: none;
+}
+
+#sync-panel #sync-area .play-btn[data-active] .glyphicon-play {
+	display: none;
+}
+
+#sync-panel #sync-area .play-btn[data-active] .glyphicon-pause {
+	display: block;
+}
+
+#sync-panel #sync-area #sync-timeline {
+	width: 80%;
+	margin: 0 10%;
+	position: absolute;
+	top: 80px;
+}
+
+#sync-panel #sync-area #sync-timeline .play {
+	display: none;
 }
 

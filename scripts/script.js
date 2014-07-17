@@ -21,7 +21,6 @@ function ToggleButton(elem, on, off) {
 		onCallback();
 	};
 	this.off = function () {
-		console.log('off');
 		this.state = false;
 		this.elem.removeAttribute('data-active');
 		offCallback();

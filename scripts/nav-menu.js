@@ -64,17 +64,31 @@ for (var i=0; i < nav.children.length; i++) {
 
 function enterPreview() {
 	app.setAttribute('data-mode', 'preview');
-	toggle_editor_btn.toggle(false);
-	toggle_sync.toggle(false);
+	document.removeEventListener('click', handleContentEditable);
+
+	// Should I be doing these ?
+//	toggle_editor_btn.toggle(false);
+//	toggle_sync_btn.toggle(false);
 	panels[0].hideAll();
 	triggerLayoutChange();
+
 	// TODO - do not like this
 	Reveal.getCurrentSlide().removeAttribute('contenteditable');
+	var indices = Reveal.getIndices();
+
+	window.setTimeout(function() {
+		Browsercast.initialize({
+			framework: 'reveal.js'
+		});
+		Reveal.slide(indices.h, indices.v, indices.f);
+	}, 600);
 }
 
 function leavePreview() {
 	app.setAttribute('data-mode', 'editor');
 	triggerLayoutChange();
+	Browsercast.uninitialize();
+	document.addEventListener('click', handleContentEditable);
 }
 
 var app = document.getElementById('app');
@@ -100,13 +114,11 @@ var toggle_editor_btn = new ToggleButton(toggle_editor, showEditor, hideEditor);
 
 // Sync Panel button
 var openSyncPanel = function openSyncPanel() {
-	console.log('try to open SyncPanel');
 	app.setAttribute('data-sync-audio', '');
 	triggerLayoutChange();
 };
 
 var hideSyncPanel = function hideSyncPanel() {
-	console.log('try to close SyncPanel');
 	app.removeAttribute('data-sync-audio');
 	triggerLayoutChange();
 };

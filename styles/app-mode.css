@@ -1,4 +1,14 @@
 /*
+ * Editor Mode
+ */
+
+#app[data-mode="editor"] #browsercast #bc-markers {
+	width: 50%;
+	margin: 0 25%;
+	top: -20px;
+}
+
+/*
  * Preview Mode
  */
 
@@ -15,11 +25,7 @@
 }
 
 #app[data-mode="preview"] #scene {
-	height: 100%;
-}
-
-#app[data-mode="preview"] #editor-panel {
-	height: 0;
+	height: 100% !important;
 }
 
 #app[data-mode="preview"] #leave-preview {
@@ -38,18 +44,13 @@
 	bottom: -50px;
 }
 
-
-/*
- * Editor Mode
- * This solution is not good because these properties can't be modified
- */
-
-#app[data-code-editor] #editor-panel {
-	top: 60% !important;
+/* Pannels */
+#app[data-mode="preview"] #editor-panel {
+	top: 100% !important;
 }
 
-#app[data-code-editor] #scene {
-	height: 60% !important;
+#app[data-mode="preview"] #sync-panel {
+	top: 100% !important;
 }
 
 /*
@@ -62,4 +63,16 @@
 
 #app[data-sync-audio] #scene {
 	height: 80%;
+}
+
+/*
+ * Editor Mode
+ */
+
+#app[data-code-editor] #editor-panel {
+	top: 60%;
+}
+
+#app[data-code-editor] #scene {
+	height: 60%;
 }

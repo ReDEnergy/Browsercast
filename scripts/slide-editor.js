@@ -1,38 +1,45 @@
 "use strict";
 
-var last_contenteditable_container = null;
+var ce_container = null;
+var app = document.getElementById('app');
 
-document.addEventListener('click', function(e) {
-	var app = document.getElementById('app');
-	if (app.getAttribute('data-mode') === 'preview') {
-		return;
-	}
+function setContenteEditable(target) {
+	ce_container = target;
 
+	target.setAttribute('contenteditable', 'true');
+	target.addEventListener('input', updateHtmlEditor);
+	html_editor.removeEventListener('change', updateSlidePreview);
+	document.removeEventListener('keydown', listenKeyDeleteEvent);
+	Reveal.removeEventListeners();
+};
+
+function unsetContentEditable() {
+	ce_container.removeAttribute('contenteditable');
+	ce_container.removeEventListener('input', updateHtmlEditor);
+	ce_container = null;
+	html_editor.addEventListener('change', updateSlidePreview);
+	Reveal.addEventListeners();
+};
+
+function handleContentEditable(e) {
 	// If section enter edit mode
 	var target = e.target;
 	while(target) {
 		if (target.tagName === 'SECTION' && target.className === 'present') {
-			last_contenteditable_container = target;
 			e.stopPropagation();
-			target.setAttribute('contenteditable', 'true');
-			target.addEventListener('input', updateHtmlEditor);
-			html_editor.removeEventListener('change', updateSlidePreview);
-			document.removeEventListener('keydown', listenKeyDeleteEvent);
-			Reveal.removeEventListeners();
+			setContenteEditable(target);
 			return;
 		}
 		target = target.parentElement;
 	}
 
-	// If not section exit edit mode
-	if (last_contenteditable_container) {
-		last_contenteditable_container = null;
-		Reveal.addEventListeners();
-		Reveal.getCurrentSlide().removeAttribute('contenteditable');
-		Reveal.getCurrentSlide().removeEventListener('input', updateHtmlEditor);
-		html_editor.addEventListener('change', updateSlidePreview);
+	// If not a section try to exit edit mode
+	if (ce_container) {
+		unsetContentEditable();
 	}
-});
+};
+
+document.addEventListener('click', handleContentEditable);
 
 /**
  * Code Editor
@@ -63,6 +70,7 @@ function updateSlidePreview() {
 }
 
 function updateHtmlEditor() {
+	console.log('updateHtmlEditor');
 	ignore_change = new Date();
 	html_editor.setValue(html_beautify(Reveal.getCurrentSlide().innerHTML));
 }
