@@ -7,7 +7,7 @@ define(
 function() {
 	function EventEmitter() {
 		if (!(this instanceof EventEmitter)) return new EventEmitter();
-		
+
 		this._events = null;
 
 		if (typeof(process) !== 'undefined' && typeof(process.nextTick) !== 'undefined') {
@@ -26,14 +26,14 @@ function() {
 			var events = this._events || (this._events = {});
 			return events[type] || (events[type] = []);
 		},
-		
-		_emit: function(topic, args) {	
+
+		_emit: function(topic, args) {
 			if (topic instanceof Array)
 				topic = JSON.stringify(topic);
 			if (!this._events) return;
 			var subs = this._events[topic];
 			if (!subs) return;
-			
+
 			var len = subs.length;
 			while(len--){
 				var sub = subs[len];
@@ -45,18 +45,18 @@ function() {
 				// }
 			}
 		},
-		
+
 		_splice: function(args, start, end) {
 			args = Array.prototype.slice.call(args);
 			return args.splice(start, end);
 		},
-		
+
 		_indexOfSub: function(arr, cb, context) {
 			for (var i = 0; i < arr.length; ++i) {
 				if (arr[i].cb === cb && arr[i].context === context)
 					return i;
 			}
-			
+
 			return -1;
 		},
 
@@ -67,13 +67,13 @@ function() {
 			var args = arguments.length > 1 ? this._splice(arguments, 1, arguments.length) : [];
 			this._emit(topic, args);
 		},
-		
+
 		trigger: function() {
 			this.emit.apply(this, arguments);
 		},
-		
+
 		/**
-		Publish an event on the given topic on the next iteration 
+		Publish an event on the given topic on the next iteration
 		through the event loop
 		*/
 		emitDeferred: function(topic) {
@@ -91,7 +91,7 @@ function() {
 				throw "Undefined callback provided";
 			if (topic instanceof Array)
 				topic = JSON.stringify(topic);
-			
+
 			var subs = this._listeners(topic);
 			var index = this._indexOfSub(subs, callback, context);
 			if (index < 0) {
@@ -104,7 +104,7 @@ function() {
 				self.removeListener(topic, callback, context);
 			}};
 		},
-		
+
 		/**
 		Register a callback that will be removed after
 		its first notification
@@ -115,7 +115,7 @@ function() {
 				holder.sub.dispose();
 				callback.apply(context, arguments);
 			});
-			
+
 			return holder.sub;
 		},
 
@@ -125,41 +125,36 @@ function() {
 		*/
 		removeListener: function(topic, callback, context) {
 			var subs = this._listeners(topic);
-			
+
 			var index = this._indexOfSub(subs, callback, context);
-			
+
 			if (0 <= index)
 			  subs.splice(index, 1);
-			
+
 			if (subs.length == 0)
 				delete this._events[topic];
 		},
-		
+
 		getNumListeners: function(topic){
-			
+
 			var numListeners = 0;
-			
+
 			if (this._events[topic]){
 				numListeners = this._events[topic].length;
 			}
-			
+
 			return numListeners;
 		},
 
-		
+
 		off: function(topic, callback, context) {
 			this.removeListener(topic, callback, context);
 		},
-		
+
 		removeAllListeners: function() {
 			this._events = null;
 		}
 	};
-	
+
 	return EventEmitter;
 });
-
-//try {
-//if (exports) {
-//exports.EventBus = EventBus;
-//}} catch (e) {}
