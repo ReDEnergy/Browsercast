@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title> Browsercast Experiment </title>
+	<link rel="stylesheet" href="fonts/roboto.css">
+
+	<link rel="stylesheet" href="styles/style.css">
+	<link rel="stylesheet" href="styles/nav.css">
+	<link rel="stylesheet" href="styles/import-panel.css">
+	<link rel="stylesheet" href="styles/scene.css">
+	<link rel="stylesheet" href="styles/code-editor.css">
+	<link rel="stylesheet" href="styles/slides-panel.css">
+	<link rel="stylesheet" href="styles/sync-panel.css">
+	<link rel="stylesheet" href="styles/text.css">
+	<link rel="stylesheet" href="styles/app-mode.css">
+	<!-- libs styles -->
+		<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
+		<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
+		<link rel="stylesheet" href="libs/browsercast/browsercast.css">
+	<!-- End -->
+
+	<link rel="stylesheet" href="components/timeline/timeline.css">
+
+	<link rel="stylesheet" href="styles/reveal.css">
+
+</head>
+<body>
+	<div id="app" data-mode="editor" data-sync-audio="">
+
+		<div id="browsercast">
+			<div id="bc-markers"></div>
+			<div id="bc-audio-tracks">
+				<audio data-bc-name="brave" preload="">
+					<source src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg" type="audio/mpeg">
+				</audio>
+			</div>
+		</div>
+
+		<section id="nav">
+			<div class="button" data-panel="properties-panel">
+				<span class="glyphicon glyphicon-cog"></span>
+				Properties
+			</div>
+			<div class="button" data-panel="import-panel">
+				<span class="glyphicon glyphicon-import"></span>
+				Import
+			</div>
+			<div class="button" data-panel="export-panel">
+				<span class="glyphicon glyphicon-export"></span>
+				Export
+			</div>
+			<div class="button" data-panel="save-panel">
+				<span class="glyphicon glyphicon-save"></span>
+				Save
+			</div>
+			<!-- <div class="button" data-panel="slides-panel">Slides</div> -->
+			<div class="button" id="toggle-editor">
+				<span class="glyphicon glyphicon-list-alt"></span>
+				Code Editor
+			</div>
+			<div class="button" id="toggle-sync">
+				<span class="glyphicon glyphicon-refresh"></span>
+				Sync Audio
+			</div>
+			<div class="button" id="enter-preview">
+				<span class="glyphicon glyphicon-eye-open"></span>
+				Preview
+			</div>
+
+			<!-- Absolute position -->
+			<div id="leave-preview">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</div>
+		</section>
+		<!-- Functional panels -->
+		<section id="nav-panels">
+			<div id="import-panel" class="menu-expand">
+				<div class="info"> Paste the HTML source of a reveal.js presentation below to import all contained slides. </div>
+				<div id="import-editor"></div>
+				<div id="import-info">
+					<span class="glyphicon glyphicon-ok"></span>
+					<div id="import-slides-count"></div>
+					<div id="import-slides" class="button import"> import </div>
+				</div>
+			</div>
+			<div id="export-panel" class="menu-expand"></div>
+			<div id="save-panel" class="menu-expand"></div>
+			<div id="properties-panel" class="menu-expand"></div>
+			<div id="slides-panel" class="menu-expand">
+				<div id="slides-container">
+					<div class="slide" style="top: 0px"> </div>
+					<div class="slide" style="top: 135px"> </div>
+					<div class="slide" style="top: 270px"> </div>
+					<div class="slide" style="top: 405px"> </div>
+					<div class="slide" style="top: 540px"> </div>
+<!--
+					<div class="slide" style="top: 675px"></div>
+					<div class="slide" style="top: 810px"></div>
+					<div class="slide" style="top: 945px"></div>
+-->
+				</div>
+			</div>
+		</section>
+
+		<section id="app-area">
+			<section id="app-space">
+				<div id="scene">
+					<div class="reveal">
+						<div class="slides">
+							<section>
+								<br />
+								<h2>Browsercast</h2>
+								<br />
+								<br />
+								<p>Click on the slide to start editing</p>
+								<br />
+								<p>You can also use the HTML code editor provided</p>
+								<br />
+								<p>Add an audiocast and syncronized it with the slides</p>
+								<br />
+								<p class="fragment"> Yes it does support fragments !!!</p>
+							</section>
+
+							<section>
+								<p style="color: red"> This slide has no audio</p>
+								<p>Navigate with <b>arrows</b></p>
+								<p><b>ESC</b> to go to overview mode</p>
+								<p><b>Pause/Break</b> (yes the actual key on your keyboard)</p>
+							</section>
+
+							<section>
+								<section>
+									<img src="images/haiku.jpg" />
+									<p>The Japanese wrote haikus...</p>
+								</section>
+
+								<section>
+									<img src="images/sonnet.jpg" />
+									<p>Shakespeare wrote sonnets...</p>
+								</section>
+							</section>
+							<section>
+								<img src="images/worst-powerpoint.jpg" />
+								<br/>
+								<p>And we... write PowerPoint</p>
+							</section>
+
+							<section>
+								<img src="images/tufte.jpg" />
+								<p>A lot of people blame PowerPoint for bad presentations...</p>
+							</section>
+
+							<section>
+								<img src="images/fountain-pen.jpg" />
+								<p>...but that's like blaming fountain pens for bad poetry.</p>
+							</section>
+
+							<section>
+								<div style="vertical-align: middle">
+									<img src="images/powerpoint.png" />
+									<img src="images/libreoffice.png" />
+								</div>
+								<p>The <em>real</em> problem with tools like PowerPoint...</p>
+								<div class="fragment">
+									<img src="images/internet-cat.jpg" />
+									<p>...is that they aren't web-friendly.</p>
+								</div>
+							</section>
+						</div>
+					</div>
+
+					<div id="delete-slide" class="ui-overlay delete-slide" data-visible>
+						<span class="glyphicon glyphicon-trash"></span>
+						<div id="confirm-delete">
+							<div class="info">Are you sure you want to delete this slide?</div>
+							<div id="confirm-delete-cancel" class="button cancel">Cancel</div>
+							<div id="confirm-delete-ok" class="button delete">Delete</div>
+						</div>
+					</div>
+					<div id="add-horizontal-slide" class="ui-overlay add-slide" data-action="right">
+						<span class="glyphicon glyphicon-plus"></span>
+					</div>
+					<div id="add-vertical-slide" class="ui-overlay add-slide" data-action="down">
+						<span class="glyphicon glyphicon-plus"></span>
+					</div>
+				</div>
+				<div id="editor-panel">
+					<div id="slide-editor-html"> </div>
+					<div id="slide-editor-css"> </div>
+				</div>
+				<div id="sync-panel">
+					<div id="audio-tracks">
+						<audio id="audiocast-source" preload> </audio>
+					</div>
+					<div id="load-audio" class="button">
+						<span class="glyphicon glyphicon-music"> </span>
+						<div class="info"> Add audio </div>
+						<div id="load-audio-body" class="body">
+							<input id="load-audio-source" type="text" placeholder="audio url">
+							<div id="load-audio-ok"> Use </div>
+							<audio id="load-audio-preview" preload controls> </audio>
+							<div class="state">
+								<div class="loading"> Loading </div>
+								<div class="error"> Error loading resource. Check again </div>
+							</div>
+						</div>
+					</div>
+					<div id="sync-audio" class="button">
+						<span class="glyphicon glyphicon-refresh"> </span>
+						<div class="info"> Sync </div>
+						<div id="sync-area">
+							<div class="info">
+								To sincronize with an audio stream you need to mark transition events.
+								Press T to set a new transition point and advance to the next slide or fragment.
+							</div>
+							<div id="sync-reset" class="button"> Reset </div>
+							<div id="sync-save" class="button"> Save </div>
+							<div id="sync-play" class="play-btn">
+								<span class="glyphicon glyphicon-play"> </span>
+								<span class="glyphicon glyphicon-pause"> </span>
+							</div>
+							<div id="sync-timeline"></div>
+							<audio id="sync-audio-source" preload> </audio>
+						</div>
+					</div>
+				</div>
+			</section>
+		</section>
+	</div>
+
+	<!-- Scripts -->
+	<script type="text/javascript" src="libs/reveal/lib/js/head.min.js"></script>
+	<script type="text/javascript" src="libs/reveal/js/reveal.js"></script>
+	<script type="text/javascript" src="libs/ace-editor/ace.js"></script>
+	<script type="text/javascript" src="libs/js-beautify/beautify-html.js"></script>
+	<script type="text/javascript" src="libs/browsercast/browsercast.js"></script>
+
+	<script type="text/javascript" src="components/timeline/EventEmiter.js"></script>
+	<script type="text/javascript" src="components/timeline/timeline.js"></script>
+
+	<script type="text/javascript" src="scripts/load-reveal.js"></script>
+	<script type="text/javascript" src="scripts/script.js"></script>
+	<script type="text/javascript" src="scripts/nav-menu.js"></script>
+	<script type="text/javascript" src="scripts/import-panel.js"></script>
+	<script type="text/javascript" src="scripts/slide-manipulation.js"></script>
+	<script type="text/javascript" src="scripts/slide-editor.js"></script>
+	<script type="text/javascript" src="scripts/sync-panel.js"></script>
+	<script type="text/javascript" src="scripts/init.js"></script>
+</body>
+</html>

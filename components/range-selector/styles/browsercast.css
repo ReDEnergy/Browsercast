@@ -1,0 +1,48 @@
+.timeline {
+	width: 75%;
+	height: 20px;
+	margin: 0 auto;
+	border: dashed 1px #CCC;
+	border-radius: 3px;
+}
+
+.timeline .section {
+	height: 100%;
+	background: #999;
+	background: linear-gradient(180deg, #AAA 0%, #777 100%);
+	border: 1px solid #3FB58E;
+	border-radius: 3px;
+	position: relative;
+	top: -1px;
+}
+
+.timeline .section:hover {
+	cursor: move;
+}
+
+.timeline .section .handle-left,
+.timeline .section .handle-right {
+	width: 5px;
+	height: 40%;
+	top: 30%;
+	background: #3FB58E;
+}
+
+.timeline .section .handle-left {
+	position: absolute;
+	left: -3px;
+}
+
+.timeline .section .handle-right {
+	position: absolute;
+	right: -3px;
+}
+
+.timeline .section .handle-left:hover {
+	cursor: e-resize;
+}
+
+.timeline .section .handle-right:hover {
+	cursor: w-resize;
+}
+
