@@ -1,9 +1,9 @@
-Browsercast
-===========
-
 <div align="center">
   <img src="./Design/logo.png" height="120px" alt="Browsercast" title="Browsercast">
 </div>
+
+Browsercast
+===========
 
 The Browsercast project aims to offer a web based slideshow composition tool with support for voice-over synchronization
 
