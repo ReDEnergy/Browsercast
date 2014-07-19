@@ -8,7 +8,6 @@ function setContenteEditable(target) {
 
 	target.setAttribute('contenteditable', 'true');
 	target.addEventListener('input', updateHtmlEditor);
-	html_editor.removeEventListener('change', updateSlidePreview);
 	document.removeEventListener('keydown', listenKeyDeleteEvent);
 	Reveal.removeEventListeners();
 };
@@ -17,7 +16,6 @@ function unsetContentEditable() {
 	ce_container.removeAttribute('contenteditable');
 	ce_container.removeEventListener('input', updateHtmlEditor);
 	ce_container = null;
-	html_editor.addEventListener('change', updateSlidePreview);
 	Reveal.addEventListeners();
 };
 
@@ -52,6 +50,7 @@ var editorShow = function editorShow() {
 	Reveal.addEventListener('slidechanged', updateHtmlEditor);
 	Reveal.addEventListener('fragmentshown', updateHtmlEditor);
 	Reveal.addEventListener('fragmenthidden', updateHtmlEditor);
+	html_editor.addEventListener('change', updateSlidePreview);
 	updateHtmlEditor();
 };
 
@@ -61,16 +60,17 @@ var editorHide = function editorHide() {
 	Reveal.removeEventListener('slidechanged', updateHtmlEditor);
 	Reveal.removeEventListener('fragmentshown', updateHtmlEditor);
 	Reveal.removeEventListener('fragmenthidden', updateHtmlEditor);
+	html_editor.removeEventListener('change', updateSlidePreview);
 };
 
 function updateSlidePreview() {
+	if (ce_container) return;
 	if (((new Date()) - ignore_change) > 1000) {
 		Reveal.getCurrentSlide().innerHTML = html_editor.getValue();
 	}
 }
 
 function updateHtmlEditor() {
-	console.log('updateHtmlEditor');
 	ignore_change = new Date();
 	html_editor.setValue(html_beautify(Reveal.getCurrentSlide().innerHTML));
 }
