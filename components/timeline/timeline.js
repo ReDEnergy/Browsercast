@@ -194,6 +194,7 @@ Timeline.prototype.sortMarks = function sortMarks() {
 	});
 };
 
+// TODO - explain this ... looks really strage
 Timeline.prototype.updateMarks = function updateMarks() {
 	var len = this.marks.length;
 	if (len === 0)
@@ -221,17 +222,18 @@ Timeline.prototype.updateMarks = function updateMarks() {
 	if (change) {
 		if (this.dir > 0) {
 			this.marks[index].setPast();
-			console.log('INDEX', index, 'PAST');
 		}
-		else if ((index + 1) < len) {
-			this.marks[index + 1].setFuture();
-			console.log('INDEX', index + 1, 'FUTURE');
+		else {
+			if ((index + 1) < len)
+				this.marks[index + 1].setFuture();
 		}
-		var s = '';
-		for (var i = 0; i < len; i++) {
-			s += (this.marks[i].past ? '1' : '0') + ' ';
-		}
-		console.log('Values', s);
+
+		// log type
+		// var s = '';
+		// for (var i = 0; i < len; i++) {
+			// s += (this.marks[i].past ? '1' : '0') + ' ';
+		// }
+		// console.log('Values', s);
 	}
 };
 
