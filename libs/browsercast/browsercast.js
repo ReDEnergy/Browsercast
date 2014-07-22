@@ -40,7 +40,7 @@
 		// Events
 
 		var handleKeyDown = function handleKeyDown(e) {
-			if (e.keyCode === 19) {
+			if (e.keyCode === 82 || e.keyCode === 83) {
 				togglePlayback();
 			}
 			// Debug logging
