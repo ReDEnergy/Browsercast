@@ -79,9 +79,10 @@ function enterPreview() {
 	window.setTimeout(function() {
 		Browsercast.initialize({
 			framework: 'reveal.js'
+		}, function() {
+			Reveal.slide(indices.h, indices.v, indices.f);
 		});
-		Reveal.slide(indices.h, indices.v, indices.f);
-	}, 600);
+	}, 800);
 }
 
 function leavePreview() {

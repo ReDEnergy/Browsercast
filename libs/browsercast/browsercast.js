@@ -10,6 +10,7 @@
 	var overlay;
 	var overview;
 	var slides = [];
+	var initCallback = function() {};
 
 	var Browsercast = (function() {
 		var reveal = false;
@@ -33,7 +34,6 @@
 				markers.removeAttribute('data-hidden');
 				resetTimeout();
 			};
-
 			document.addEventListener('mousemove', handleMouseMove);
 		};
 
@@ -42,6 +42,10 @@
 		var handleKeyDown = function handleKeyDown(e) {
 			if (e.keyCode === 19) {
 				togglePlayback();
+			}
+			// Debug logging
+			if (e.keyCode === 68) {
+				console.log('slides', slides);
 			}
 		};
 
@@ -68,46 +72,40 @@
 
 			function recordSlide(event) {
 				slides.push(new Slide(event.currentSlide));
+				triggerEvent();
 			}
 
 			function recordFragment(event) {
 				slides.push(new Slide(event.fragment));
+				triggerEvent();
 			}
 
+			function triggerEvent() {
+				if (Reveal.isLastSlide() && Reveal.availableFragments().next === false) {
+					unlistenSlideEvents();
+					Reveal.slide(0, 0, -1);
+					checkMarks();
+					initCallback();
+					return;
+				}
+				Reveal.next();
+			}
+
+			// TODO bug when just 1 slide
 			Reveal.slide(10000);
 			listenSlideEvents();
 			Reveal.slide(0, 0, -1);
-			while(1) {
-				while(Reveal.nextFragment());
-				if (Reveal.isLastSlide())
-					break;
-				Reveal.next();
-			}
-			unlistenSlideEvents();
-			Reveal.slide(0, 0, -1);
-
-			checkForErrors();
 		};
 
-		var checkForErrors = function checkForErrors() {
+		var checkMarks = function checkMarks() {
 			var len = slides.length;
-			for (var i = 0; i <len - 1; i++)
+			for (var i = 0; i <len - 1; i++) {
 				if (isNaN(slides[i].end))
 					slides[i].end = slides[i+1].start;
-		};
-
-		var initSlides = function initSlides() {
-			if (impress)
-				initImpress();
-			if (reveal)
-				initReveal();
-
+				slides[i].marker.setSize(100 / len);
+			}
 			console.log("Slides", slides);
 			console.log("Slides MAP", slide_map);
-
-			var len = slides.length;
-			for (var i = 0; i <len; i++)
-				slides[i].marker.setSize(100 / len);
 		};
 
 		var createOverlay = function createOverlay() {
@@ -221,8 +219,8 @@
 
 			document.addEventListener('keydown', handleKeyDown);
 
-			initSlides();
-			console.log(obj);
+			if (impress)	initImpress();
+			if (reveal)		initReveal();
 		};
 
 		return {
@@ -262,7 +260,6 @@
 		}
 		if (Browsercast.isReveal()) {
 			this.index = Reveal.getIndices();
-			console.log(this.index);
 			slide_map[[this.index.h, this.index.v, this.index.f]] = this;
 		}
 	}
@@ -330,28 +327,6 @@
 	Marker.prototype.setSize = function setSize(size) {
 		this.marker.style.width = size + '%';
 	};
-
-	//*************************************************************************
-	//*************************************************************************
-
-	/**
-	 * Audio fragment
-	 */
-	function AudioFragment(elem) {
-		this.startTime = parseFloat(elem.getAttribute('data-cue'));
-		this.length = parseFloat(elem.getAttribute('data-length')) * 1000;
-
-		if (isNaN(this.startTime) || isNaN(this.length)) {
-			return;
-		}
-
-		this.total = this.length;
-
-		var trackID = elem.getAttribute('data-track') | 0;
-		var name = elem.getAttribute('data-trackname');
-
-		this.audiocast = Audio.getCast(trackID, name);
-	}
 
 	//*************************************************************************
 	//*************************************************************************
@@ -562,7 +537,8 @@
 	 * Start Browsercast
 	 */
 
-	function initPresentation(config) {
+	function initPresentation(config, callback) {
+		initCallback = callback;
 		Audio.init();
 		Browsercast.init(config);
 		FrameworkEvents.init();
