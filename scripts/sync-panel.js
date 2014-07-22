@@ -80,44 +80,6 @@ function endSync() {
 	sync_audio_source.pause();
 }
 
-function saveSync() {
-	var start = 0;
-	var end;
-	var isFragment = false;
-	var transitions = timeline.marks;
-
-	function setAudioAttributes(elem) {
-		elem.setAttribute('data-bc-start', start.toFixed(2));
-		elem.setAttribute('data-bc-end', end.toFixed(2));
-		start = end;
-	};
-
-	function setSlideAudio(e) {
-		if (isFragment) return;
-		setAudioAttributes(e.currentSlide);
-	}
-
-	function setFragmentAudio(e) {
-		setAudioAttributes(e.fragment);
-	}
-
-	// TODO - try not to base on events
-
-	Reveal.addEventListener('slidechanged', setSlideAudio);
-	Reveal.addEventListener('fragmentshown', setFragmentAudio);
-
-	timeline.marks.forEach(function (transition) {
-		var ind = transition.data;
-		isFragment = (ind.f >= 0);
-		end = transition.time;
-		Reveal.slide(ind.h, ind.v, ind.f);
-	});
-
-	Reveal.removeEventListener('slidechanged', setSlideAudio);
-	Reveal.removeEventListener('fragmentshown', setFragmentAudio);
-
-};
-
 function markTransition(e) {
 	if (e.keyCode === 84) {
 		if (Reveal.isLastSlide() && Reveal.availableFragments().next === false) {
@@ -135,7 +97,6 @@ function transitionEvent(data) {
 }
 
 function transitionEventNext(data) {
-	console.log('make transition');
 	if (Reveal.isLastSlide() && Reveal.availableFragments().next === false) {
 		sync_play_btn.toggle(false);
 	}
@@ -149,7 +110,6 @@ var sync_audio_btn = new ToggleButton(sync_audio, openSync, endSync);
 var sync_audio_source = document.getElementById('sync-audio-source');
 var sync_timeline = document.getElementById('sync-timeline');
 var sync_reset = document.getElementById('sync-reset');
-var sync_save = document.getElementById('sync-save');
 var sync_play = document.getElementById('sync-play');
 
 var timeline = new Timeline();
@@ -159,7 +119,6 @@ timeline.computeLayout();
 
 sync_area.addEventListener('click', stopPropagation);
 sync_reset.addEventListener('click', resetSync);
-sync_save.addEventListener('click', saveSync);
 
 var sync_play_btn = new ToggleButton(sync_play, startSync, endSync);
 
