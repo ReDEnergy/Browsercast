@@ -1,0 +1,169 @@
+#nav {
+	width: 50px;
+	height: 100%;
+	padding: 100px 0 10px;
+	background: #019788;
+
+	position: absolute;
+	left: 0;
+	z-index: 100;
+
+	box-sizing: border-box;
+	box-shadow: 2px 0 10px 0 rgba(0, 0, 0, .16),
+				2px 0 5px 0 rgba(0, 0, 0, .26);
+
+	transition: all 0.3s  ease-out;
+}
+
+#nav .button {
+	width: 100%;
+	height: 36px;
+	margin: 3px 0;
+	line-height: 36px !important;
+	position: relative;
+
+	box-sizing: border-box;
+	transition: all 0.3s;
+}
+
+#nav .button:hover,
+#nav .button[data-active] {
+	background: #1ABC9C;
+	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16),
+				0 2px 5px 0 rgba(0, 0, 0, .26);
+}
+
+#nav .button:hover .text {
+	display: block;
+}
+
+#nav .button .glyphicon {
+	width: 36px;
+	height: 100%;
+	font-size: 1.25em;
+	line-height: 36px;
+	text-align: center;
+	position: static;
+}
+
+#nav .button .text {
+	width: 100px; 
+	padding: 0 0 0 10px;
+	text-align: left;
+	display: none;
+	position: absolute;
+	left: 50px;
+	top: 0;
+}
+
+
+/**
+ *	Nav Panels
+ */
+
+#nav-panels {
+	width: 0;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 90;
+
+	transition: all 0.3s  ease-out;
+}
+
+#nav-panels .menu-expand {
+	width: 200px;
+	height: 100%;
+	padding: 20px;
+	background: #098F82;
+	position: absolute;
+	
+	/* TODO: bug - need to set the widest menu */
+	left: -240px;
+
+	box-sizing: border-box;
+	transition: all 0.3s  ease-out;
+}
+
+#nav-panels .menu-expand[data-active] {
+	left: 50px !important;
+}
+
+#nav-panels .menu-expand .separator {
+	width: 100%;
+	height: 1px;
+	margin: 20px 0 0 0;
+	background: #E0F2F1;
+}
+
+#nav-panels .button {
+	width: 100px;
+	float: right;
+	background: #2FC5B6;
+}
+
+#nav-panels .button:hover {
+	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16),
+				0 2px 5px 0 rgba(0, 0, 0, .26);
+}
+
+#nav-panels .button.close {
+	font-size: 16px;
+	clear: both;
+}
+
+/*
+ * Preview
+ */
+
+#nav-overlays {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+#enter-preview {
+	border-radius: 50%;
+	font-size: 2em;
+	color: #FFF;
+	position: fixed;
+	top: 20px;
+	left: 80px;
+	transition: all 0.3s  ease-out;
+	z-index: 1;
+}
+
+#enter-preview:hover {
+	cursor: pointer;
+}
+
+#enter-preview:hover .text {
+	display: block;
+}
+
+#enter-preview .text {
+	display: none;
+	font-size: 0.5em;
+	position: absolute;
+	top: 0.5em;
+	left: 3em;
+}
+
+#leave-preview {
+	color: #FFF;
+	font-size: 1.5em;
+	
+	position: fixed;
+	top: -40px;
+	left: 50px;
+	transition: all 0.3s  ease-out;
+}
+
+#leave-preview:hover {
+	color: #FFF;
+	border-color: #FFF;
+	cursor: pointer;
+}
+

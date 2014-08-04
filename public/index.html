@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title> Browsercast Experiment </title>
+	<!-- fonts -->
+	<link rel="stylesheet" href="fonts/roboto.css">
+
+	<!-- app stylesheets -->
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/nav.css">
+	<link rel="stylesheet" href="css/import-panel.css">
+	<link rel="stylesheet" href="css/scene.css">
+	<link rel="stylesheet" href="css/code-editor.css">
+	<link rel="stylesheet" href="css/slides-panel.css">
+	<link rel="stylesheet" href="css/sync-panel.css">
+	<link rel="stylesheet" href="css/text.css">
+	<link rel="stylesheet" href="css/app-mode.css">
+
+	<!-- libs stylesheets -->
+	<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
+	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
+	<link rel="stylesheet" href="libs/browsercast/browsercast.css">
+
+	<!-- components stylesheets -->
+	<link rel="stylesheet" href="js/component/timeline.css">
+
+	<!-- app stylesheets -->
+	<link rel="stylesheet" href="css/reveal.css">
+
+	<!-- TODO - USE FLAT UI ?! -->
+
+</head>
+<body>
+	<div id="app" data-mode="editor">
+
+		<div id="browsercast">
+			<div id="bc-markers"></div>
+			<div id="bc-audio-tracks">
+				<audio preload="">
+					<source src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg" type="audio/ogg">
+				</audio>
+			</div>
+		</div>
+
+		<section id="nav">
+			<div class="button" data-panel="properties-panel">
+				<span class="glyphicon glyphicon-cog"></span>
+				<div class="text">Properties</div>
+			</div>
+			<div class="button" data-panel="import-panel">
+				<span class="glyphicon glyphicon-import"></span>
+				<div class="text">Import</div>
+			</div>
+			<!-- 
+			<div class="button" data-panel="export-panel">
+				<span class="glyphicon glyphicon-export"></span>
+				<div class="text">Export</div>
+			</div>
+			-->
+			<div class="button" data-panel="save-panel">
+				<span class="glyphicon glyphicon-save"></span>
+				<div class="text">Download</div>
+			</div>
+			<!-- <div class="button" data-panel="slides-panel">Slides</div> -->
+			<div class="button" id="toggle-editor">
+				<span class="glyphicon glyphicon-list-alt"></span>
+				<div class="text">Code Editor</div>
+			</div>
+			<div class="button" id="toggle-sync">
+				<span class="glyphicon glyphicon-music"></span>
+				<div class="text">Audio Panel</div>
+			</div>
+		</section>
+		
+		<!-- UI overlays -->
+		<section id="nav-overlays">
+			<div id="enter-preview">
+				<span class="glyphicon glyphicon-eye-open"></span>
+				<div class="text">Preview</div>
+			</div>
+
+			<div id="leave-preview">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</div>
+		</section>
+		
+		<!-- Functional panels -->
+		<section id="nav-panels">
+			<div id="import-panel" class="menu-expand">
+				<div class="info"> Paste the HTML source of a reveal.js presentation below to import all contained slides. </div>
+				<div id="import-editor"></div>
+				<div id="import-info">
+					<span class="glyphicon glyphicon-ok"></span>
+					<div id="import-slides-count"></div>
+					<div id="import-slides" class="button import"> import </div>
+				</div>
+			</div>
+			<div id="export-panel" class="menu-expand"></div>
+			<div id="save-panel" class="menu-expand">
+				<div id="save-test" class="button">Download</div>
+			</div>
+			<div id="properties-panel" class="menu-expand"></div>
+			<div id="slides-panel" class="menu-expand">
+				<div id="slides-container">
+					<div class="slide" style="top: 0px"> </div>
+					<div class="slide" style="top: 135px"> </div>
+					<div class="slide" style="top: 270px"> </div>
+					<div class="slide" style="top: 405px"> </div>
+					<div class="slide" style="top: 540px"> </div>
+				</div>
+			</div>
+		</section>
+
+		<section id="app-area">
+			<section id="app-space">
+				<div id="scene">
+					<div class="reveal">
+						<div class="slides">
+							<section>
+								<br />
+								<h2>Browsercast</h2>
+								<br /><br />
+								<p>The project aims to offer a web based slideshow composition tool with support for voice-over synchronization</p>
+								<div style="text-align: left; padding: 30px 100px">
+								    <p>Features:</p>
+								    <ul>
+								        <li>slide editor</li>
+								        <li>perfect voice-over synchronization</li>
+								        <li>playback functions - play/stop/pause/resume</li>
+								        <li>presentations are index-able by search engines</li>
+								        <li>import and export</li>
+								    </ul>
+								</div>
+    						</section>
+
+							<section>
+								<br>
+								<h2>The Editor</h2>
+								<br>
+								<br>
+								<p>Use the <b>HTML code editor</b> provided to edit slide content</p>
+								<p>You can <b>add</b> new vertical/horizontal slides or delete them</p>
+								<p>Basic support for HTML5 <b>contenteditable</b>. <b>Click on the slide!</b></p>
+								<p>Add an audiocast and synchronize it with the slides</p>
+								<p>try <a href="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg">this</a> audio-file <span style="color: red">(use the link)</span></p>
+								<br>
+								<p data-fragment-index="0" class="fragment visible">You can use fragments too!</p>
+							</section>
+
+							<section>
+								<br />
+								<h3> Preview mode </h3>
+								<br /><br />
+								<p style="color: red"> This slide has no audio</p>
+								<p>Navigate with <b>arrows</b></p>
+								<p><b>ESC</b> to go to overview mode</p>
+								<p>Press <b>S or R</b> to Pause/Resume the presentation</p>
+								<p  style="color: red"> Next slides are synchronized with audio </p>
+							</section>
+
+							<section>
+								<section data-bc-start="0.00">
+									<img src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/haiku.jpg" />
+									<p>The Japanese wrote haikus...</p>
+								</section>
+
+								<section data-bc-start="2.44">
+									<img src="demo/images/sonnet.jpg" />
+									<p>Shakespeare wrote sonnets...</p>
+								</section>
+							</section>
+							
+							<section data-bc-start="4.90">
+								<img src="demo/images/worst-powerpoint.jpg" />
+								<br/>
+								<p>And we... write PowerPoint</p>
+							</section>
+
+							<section data-bc-start="7.72">
+								<img src="demo/images/tufte.jpg" />
+								<p>A lot of people blame PowerPoint for bad presentations...</p>
+							</section>
+
+							<section data-bc-start="12.20">
+								<img src="demo/images/fountain-pen.jpg" />
+								<p>...but that's like blaming fountain pens for bad poetry.</p>
+							</section>
+
+							<section data-bc-start="16.20">
+								<div style="vertical-align: middle">
+									<img src="demo/images/powerpoint.png" />
+									<img src="demo/images/libreoffice.png" />
+								</div>
+								<p>The <em>real</em> problem with tools like PowerPoint...</p>
+								<div class="fragment" data-bc-start="19.61" data-bc-end="22">
+									<img src="demo/images/internet-cat.jpg" />
+									<p>...is that they aren't web-friendly.</p>
+								</div>
+							</section>
+						</div>
+					</div>
+
+					<div id="delete-slide" class="ui-overlay delete-slide" data-visible>
+						<span class="glyphicon glyphicon-trash"></span>
+						<div id="confirm-delete">
+							<div class="info">Are you sure you want to delete this slide?</div>
+							<div id="confirm-delete-cancel" class="button cancel">Cancel</div>
+							<div id="confirm-delete-ok" class="button delete">Delete</div>
+						</div>
+					</div>
+					<div id="add-horizontal-slide" class="ui-overlay add-slide" data-action="right">
+						<span class="glyphicon glyphicon-plus"></span>
+					</div>
+					<div id="add-vertical-slide" class="ui-overlay add-slide" data-action="down">
+						<span class="glyphicon glyphicon-plus"></span>
+					</div>
+				</div>
+				<div id="editor-panel">
+					<div id="slide-editor-html"> </div>
+					<div id="slide-editor-css"> </div>
+				</div>
+				<div id="sync-panel">
+					<div id="load-audio" class="button">
+						<span class="glyphicon glyphicon-music"> </span>
+						<div class="info"> Add audio </div>
+						<div id="load-audio-body" class="body">
+							<input id="load-audio-source" type="text" placeholder="audio url">
+							<div id="load-audio-ok"> Use </div>
+							<!-- TODO: bug => hide when error -->
+							<audio id="load-audio-preview" preload controls> </audio>
+							<div class="state">
+								<div class="loading"> Loading </div>
+								<div class="error"> Error loading resource. Check again </div>
+							</div>
+						</div>
+					</div>
+					<div id="sync-area">
+						<div class="info">
+							To sincronize with an audio stream you need to mark transition events.
+							Press T to set a new transition point and advance to the next slide or fragment.
+						</div>
+						<div id="sync-reset" class="button"> Reset </div>
+						<div id="sync-save" class="button"> Save </div>
+						<div id="sync-play" class="play-btn">
+							<span class="glyphicon glyphicon-play"> </span>
+							<span class="glyphicon glyphicon-pause"> </span>
+						</div>
+						<div id="sync-timeline"></div>
+						<audio id="sync-audio-source" preload> </audio>
+					</div>
+				</div>
+			</section>
+		</section>
+	</div>
+
+
+	<!-- Scripts -->
+	<!-- TODO - try to load as modues -->
+	<script type="text/javascript" src="libs/browsercast/browsercast-reveal.js"></script>
+
+	<script type="text/javascript" src="libs/reveal/lib/js/head.min.js"></script>
+	<script type="text/javascript" src="libs/reveal/js/reveal.js"></script>
+
+	<script type="text/javascript" src="libs/handlebars/handlebars.runtime-v1.3.0.js"></script>
+	<script type="text/javascript" src="js/templates.js"></script>
+
+
+	<!-- require.js -->
+	<script data-main="js/main.js" src="libs/require/require.min.js"></script>
+
+	<!-- TODO - BUG => need to be loaded as a module -->
+	<script type="text/javascript" src="libs/ace-editor/ace.js"></script>
+
+</body>
+</html>
