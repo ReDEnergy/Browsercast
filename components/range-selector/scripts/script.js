@@ -1,1 +1,0 @@
-Browsercast.create('timeline-sync');
