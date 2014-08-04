@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./Design/logo.png" height="120px" alt="Browsercast" title="Browsercast">
+  <img src="./public/design/logo.png" height="120px" alt="Browsercast" title="Browsercast">
 </div>
 
 Browsercast
