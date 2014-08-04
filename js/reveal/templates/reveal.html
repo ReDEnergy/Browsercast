@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>{{title}}</title>
+
+	<meta name="description" content="{{description}}" />
+	<meta name="author" content="{{author}}" />
+
+	<!-- libs stylesheets -->
+	<link rel="stylesheet" href="js/reveal/css/theme/default.css">
+	<link rel="stylesheet" href="js/reveal/css/reveal.min.css">
+	<link rel="stylesheet" href="js/browsercast/browsercast.css">
+</head>
+
+<!-- Body -->
+<body>
+	<div id="browsercast">
+		<div id="bc-markers"> </div>
+		<div id="bc-audio-tracks">
+			{{{audio}}}
+		</div>
+	</div>
+	<div class="reveal">
+		<div class="slides">
+			{{{slides}}}
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/reveal/lib/js/head.min.js"></script>
+	<script type="text/javascript" src="js/reveal/js/reveal.js"></script>
+	<script type="text/javascript" src="js/browsercast/browsercast-reveal.js"></script>
+	<script type="text/javascript" src="js/init.js"></script>
+</body>
+</html>

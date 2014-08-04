@@ -3,27 +3,33 @@
 <head>
 	<meta charset="UTF-8">
 	<title> Browsercast Experiment </title>
+	<!-- fonts -->
 	<link rel="stylesheet" href="fonts/roboto.css">
 
-	<link rel="stylesheet" href="styles/style.css">
-	<link rel="stylesheet" href="styles/nav.css">
-	<link rel="stylesheet" href="styles/import-panel.css">
-	<link rel="stylesheet" href="styles/scene.css">
-	<link rel="stylesheet" href="styles/code-editor.css">
-	<link rel="stylesheet" href="styles/slides-panel.css">
-	<link rel="stylesheet" href="styles/sync-panel.css">
-	<link rel="stylesheet" href="styles/text.css">
-	<link rel="stylesheet" href="styles/app-mode.css">
-	<!-- libs styles -->
-		<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
-		<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
-		<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
-		<link rel="stylesheet" href="libs/browsercast/browsercast.css">
-	<!-- End -->
+	<!-- app stylesheets -->
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/nav.css">
+	<link rel="stylesheet" href="css/import-panel.css">
+	<link rel="stylesheet" href="css/scene.css">
+	<link rel="stylesheet" href="css/code-editor.css">
+	<link rel="stylesheet" href="css/slides-panel.css">
+	<link rel="stylesheet" href="css/sync-panel.css">
+	<link rel="stylesheet" href="css/text.css">
+	<link rel="stylesheet" href="css/app-mode.css">
 
-	<link rel="stylesheet" href="components/timeline/timeline.css">
+	<!-- libs stylesheets -->
+	<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
+	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
+	<link rel="stylesheet" href="libs/browsercast/browsercast.css">
 
-	<link rel="stylesheet" href="styles/reveal.css">
+	<!-- components stylesheets -->
+	<link rel="stylesheet" href="js/component/timeline.css">
+
+	<!-- app stylesheets -->
+	<link rel="stylesheet" href="css/reveal.css">
+
+	<!-- TODO - USE FLAT UI ?! -->
 
 </head>
 <body>
@@ -32,8 +38,8 @@
 		<div id="browsercast">
 			<div id="bc-markers"></div>
 			<div id="bc-audio-tracks">
-				<audio data-bc-name="brave" preload="">
-					<source src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg" type="audio/mpeg">
+				<audio preload="">
+					<source src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg" type="audio/ogg">
 				</audio>
 			</div>
 		</div>
@@ -41,39 +47,45 @@
 		<section id="nav">
 			<div class="button" data-panel="properties-panel">
 				<span class="glyphicon glyphicon-cog"></span>
-				Properties
+				<div class="text">Properties</div>
 			</div>
 			<div class="button" data-panel="import-panel">
 				<span class="glyphicon glyphicon-import"></span>
-				Import
+				<div class="text">Import</div>
 			</div>
+			<!-- 
 			<div class="button" data-panel="export-panel">
 				<span class="glyphicon glyphicon-export"></span>
-				Export
+				<div class="text">Export</div>
 			</div>
+			-->
 			<div class="button" data-panel="save-panel">
 				<span class="glyphicon glyphicon-save"></span>
-				Save
+				<div class="text">Download</div>
 			</div>
 			<!-- <div class="button" data-panel="slides-panel">Slides</div> -->
 			<div class="button" id="toggle-editor">
 				<span class="glyphicon glyphicon-list-alt"></span>
-				Code Editor
+				<div class="text">Code Editor</div>
 			</div>
 			<div class="button" id="toggle-sync">
-				<span class="glyphicon glyphicon-refresh"></span>
-				Sync Audio
+				<span class="glyphicon glyphicon-music"></span>
+				<div class="text">Audio Panel</div>
 			</div>
-			<div class="button" id="enter-preview">
+		</section>
+		
+		<!-- UI overlays -->
+		<section id="nav-overlays">
+			<div id="enter-preview">
 				<span class="glyphicon glyphicon-eye-open"></span>
-				Preview
+				<div class="text">Preview</div>
 			</div>
 
-			<!-- Absolute position -->
 			<div id="leave-preview">
 				<span class="glyphicon glyphicon-chevron-left"></span>
 			</div>
 		</section>
+		
 		<!-- Functional panels -->
 		<section id="nav-panels">
 			<div id="import-panel" class="menu-expand">
@@ -86,7 +98,9 @@
 				</div>
 			</div>
 			<div id="export-panel" class="menu-expand"></div>
-			<div id="save-panel" class="menu-expand"></div>
+			<div id="save-panel" class="menu-expand">
+				<div id="save-test" class="button">Download</div>
+			</div>
 			<div id="properties-panel" class="menu-expand"></div>
 			<div id="slides-panel" class="menu-expand">
 				<div id="slides-container">
@@ -95,11 +109,6 @@
 					<div class="slide" style="top: 270px"> </div>
 					<div class="slide" style="top: 405px"> </div>
 					<div class="slide" style="top: 540px"> </div>
-<!--
-					<div class="slide" style="top: 675px"></div>
-					<div class="slide" style="top: 810px"></div>
-					<div class="slide" style="top: 945px"></div>
--->
 				</div>
 			</div>
 		</section>
@@ -153,39 +162,40 @@
 
 							<section>
 								<section data-bc-start="0.00">
-									<img src="images/haiku.jpg" />
+									<img src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/haiku.jpg" />
 									<p>The Japanese wrote haikus...</p>
 								</section>
 
 								<section data-bc-start="2.44">
-									<img src="images/sonnet.jpg" />
+									<img src="demo/images/sonnet.jpg" />
 									<p>Shakespeare wrote sonnets...</p>
 								</section>
 							</section>
+							
 							<section data-bc-start="4.90">
-								<img src="images/worst-powerpoint.jpg" />
+								<img src="demo/images/worst-powerpoint.jpg" />
 								<br/>
 								<p>And we... write PowerPoint</p>
 							</section>
 
 							<section data-bc-start="7.72">
-								<img src="images/tufte.jpg" />
+								<img src="demo/images/tufte.jpg" />
 								<p>A lot of people blame PowerPoint for bad presentations...</p>
 							</section>
 
 							<section data-bc-start="12.20">
-								<img src="images/fountain-pen.jpg" />
+								<img src="demo/images/fountain-pen.jpg" />
 								<p>...but that's like blaming fountain pens for bad poetry.</p>
 							</section>
 
 							<section data-bc-start="16.20">
 								<div style="vertical-align: middle">
-									<img src="images/powerpoint.png" />
-									<img src="images/libreoffice.png" />
+									<img src="demo/images/powerpoint.png" />
+									<img src="demo/images/libreoffice.png" />
 								</div>
 								<p>The <em>real</em> problem with tools like PowerPoint...</p>
 								<div class="fragment" data-bc-start="19.61" data-bc-end="22">
-									<img src="images/internet-cat.jpg" />
+									<img src="demo/images/internet-cat.jpg" />
 									<p>...is that they aren't web-friendly.</p>
 								</div>
 							</section>
@@ -212,15 +222,13 @@
 					<div id="slide-editor-css"> </div>
 				</div>
 				<div id="sync-panel">
-					<div id="audio-tracks">
-						<audio id="audiocast-source" preload> </audio>
-					</div>
 					<div id="load-audio" class="button">
 						<span class="glyphicon glyphicon-music"> </span>
 						<div class="info"> Add audio </div>
 						<div id="load-audio-body" class="body">
 							<input id="load-audio-source" type="text" placeholder="audio url">
 							<div id="load-audio-ok"> Use </div>
+							<!-- TODO: bug => hide when error -->
 							<audio id="load-audio-preview" preload controls> </audio>
 							<div class="state">
 								<div class="loading"> Loading </div>
@@ -228,47 +236,42 @@
 							</div>
 						</div>
 					</div>
-					<div id="sync-audio" class="button">
-						<span class="glyphicon glyphicon-refresh"> </span>
-						<div class="info"> Sync </div>
-						<div id="sync-area">
-							<div class="info">
-								To sincronize with an audio stream you need to mark transition events.
-								Press T to set a new transition point and advance to the next slide or fragment.
-							</div>
-							<div id="sync-reset" class="button"> Reset </div>
-							<div id="sync-save" class="button"> Save </div>
-							<div id="sync-play" class="play-btn">
-								<span class="glyphicon glyphicon-play"> </span>
-								<span class="glyphicon glyphicon-pause"> </span>
-							</div>
-							<div id="sync-timeline"></div>
-							<audio id="sync-audio-source" preload> </audio>
+					<div id="sync-area">
+						<div class="info">
+							To sincronize with an audio stream you need to mark transition events.
+							Press T to set a new transition point and advance to the next slide or fragment.
 						</div>
+						<div id="sync-reset" class="button"> Reset </div>
+						<div id="sync-save" class="button"> Save </div>
+						<div id="sync-play" class="play-btn">
+							<span class="glyphicon glyphicon-play"> </span>
+							<span class="glyphicon glyphicon-pause"> </span>
+						</div>
+						<div id="sync-timeline"></div>
+						<audio id="sync-audio-source" preload> </audio>
 					</div>
 				</div>
 			</section>
 		</section>
 	</div>
 
+
 	<!-- Scripts -->
+	<!-- TODO - try to load as modues -->
+	<script type="text/javascript" src="libs/browsercast/browsercast-reveal.js"></script>
+
 	<script type="text/javascript" src="libs/reveal/lib/js/head.min.js"></script>
 	<script type="text/javascript" src="libs/reveal/js/reveal.js"></script>
+
+	<script type="text/javascript" src="libs/handlebars/handlebars.runtime-v1.3.0.js"></script>
+	<script type="text/javascript" src="js/templates.js"></script>
+
+
+	<!-- require.js -->
+	<script data-main="js/main.js" src="libs/require/require.min.js"></script>
+
+	<!-- TODO - BUG => need to be loaded as a module -->
 	<script type="text/javascript" src="libs/ace-editor/ace.js"></script>
-	<script type="text/javascript" src="libs/js-beautify/beautify-html.js"></script>
-	<script type="text/javascript" src="libs/browsercast/browsercast.js"></script>
 
-	<script type="text/javascript" src="components/timeline/EventEmiter.js"></script>
-	<script type="text/javascript" src="components/timeline/timeline.js"></script>
-
-	<script type="text/javascript" src="scripts/load-reveal.js"></script>
-	<script type="text/javascript" src="scripts/script.js"></script>
-	<script type="text/javascript" src="scripts/nav-menu.js"></script>
-	<script type="text/javascript" src="scripts/import-panel.js"></script>
-	<script type="text/javascript" src="scripts/slide-manipulation.js"></script>
-	<script type="text/javascript" src="scripts/slide-editor.js"></script>
-	<script type="text/javascript" src="scripts/save-sync.js"></script>
-	<script type="text/javascript" src="scripts/sync-panel.js"></script>
-	<script type="text/javascript" src="scripts/init.js"></script>
 </body>
 </html>
