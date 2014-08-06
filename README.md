@@ -2,6 +2,8 @@
   <img src="./public/design/logo.png" height="120px" alt="Browsercast" title="Browsercast">
 </div>
 
+<b>The project is stil in early development phase. You can expect major changes between each new version</b>
+
 Browsercast
 ===========
 
