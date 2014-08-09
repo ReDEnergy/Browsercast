@@ -1,6 +1,6 @@
 {
   "name": "Browsercast-Experiment",
-  "version": "0.3.0",
+  "version": "0.3.5",
   "dependencies": {
     "express": "^4.6.1",
     "ncp": "^0.6.0",
