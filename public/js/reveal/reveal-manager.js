@@ -135,7 +135,8 @@ define(function(require, exports, module) {
 	});
 	
 	// Public API
-	exports.init = function () {
+	exports.initSlides = function() {
 		RevealUtils.initReveal();
+		slides = document.querySelector('.reveal .slides');		
 	};
 });

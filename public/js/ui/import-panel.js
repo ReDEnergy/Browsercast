@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 	// Load Modules
 	var CodeEditor = require('editor/ace');
-	var RevealUtils = require('reveal/reveal-utils');
+	var SlideManager = require('reveal/reveal-manager');
 	var PanelManager = require('ui/panel-manager');
 	var DelayedEvent = require('core/delayed-event');
 	var Utils = require('utils');
@@ -35,7 +35,6 @@ define(function(require, exports, module) {
 	}
 
 	function handleChange() {
-		console.log('awesome', imported_content);
 		imported_content.innerHTML = import_editor.getValue();
 		var slides = imported_content.querySelector('.slides');
 		if (slides) {
@@ -60,7 +59,7 @@ define(function(require, exports, module) {
 		reveal.appendChild(slides);
 
 		PanelManager.closeAll();
-		RevealUtils.reloadReveal();
+		SlideManager.initSlides();
 		Reveal.slide(0);		
 	}
 
