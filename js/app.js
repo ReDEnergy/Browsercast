@@ -16,7 +16,7 @@ define(function(require, exports, module) {
 
 	return {
 		initialize: function() {
-			SlideManager.init();
+			SlideManager.initSlides();
 			NavManager.init();
 			CodeEditor.init();
 			VisualEditor.init();

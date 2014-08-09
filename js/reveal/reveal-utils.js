@@ -7,7 +7,6 @@ define(function(require, exports, module) {
 	 * Call Reveal initialization 
 	 */
 	function initReveal() {
-		console.log('initialized Reveal');
 		Reveal.initialize({
 			controls: true,
 			progress: true,
