@@ -85,6 +85,7 @@ gulp.task('buildZip', function() {
 	zip.addLocalFile(APP_ROOT + '/js/reveal/export/init.js', 'js');
 	zip.addLocalFolder(APP_ROOT + '/libs/reveal', 'js/reveal');
 	zip.addLocalFolder(APP_ROOT + '/libs/browsercast', 'js/browsercast');
+	zip.addLocalFolder(APP_ROOT + '/dev/components/timeline', 'js/timeline');
 	zip.writeZip(APP_ROOT + '/js/reveal/reveal.zip');
 });
 

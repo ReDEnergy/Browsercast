@@ -3,13 +3,12 @@ define(function(require, exports, module) {
 
 	// Load Modules
 	var ToggleButton = require('component/toggle-button');
-	var Timeline = require('component/timeline');
+	// var Timeline = require('component/timeline');
 	var DelayedEvent = require('core/delayed-event');
 	var SaveSync = require('sync/save-sync');
 	var Utils = require('utils');
 
 	// API
-	var tracks = document.getElementById('bc-audio-tracks');
 	var load_audio = document.getElementById('load-audio');
 	var load_audio_body = document.getElementById('load-audio-body');
 	var load_audio_preview = document.getElementById('load-audio-preview');
@@ -34,19 +33,8 @@ define(function(require, exports, module) {
 	load_audio_body.addEventListener('click', Utils.stopPropagation);
 
 
-	function getAudio(src) {
-		var audio = document.createElement('audio');
-			audio.setAttribute('preload','');
-		var source = document.createElement('source');
-			source.src = src;
-		audio.appendChild(source);
-		return audio;
-	}
-
 	load_audio_ok.addEventListener('click', function() {
 		load_audio_btn.toggle(false);
-		tracks.textContent = '';
-		tracks.appendChild(getAudio(load_audio_preview.src));
 		timeline.setTimeFrame(load_audio_preview.duration);
 		load_audio_preview.pause();
 		sync_audio_source.src = load_audio_preview.src;
@@ -85,7 +73,6 @@ define(function(require, exports, module) {
 		Reveal.removeEventListeners();
 		document.addEventListener('keydown', markTransition);
 		sync_audio_source.currentTime = timeline.currentTime;
-		timeline.play();
 		sync_audio_source.play();
 		// timeline.off('pastMark', transitionEvent);
 		// timeline.off('futureMark', transitionEvent);
@@ -100,7 +87,7 @@ define(function(require, exports, module) {
 	
 	function testIfSyncEnd() {
 		if (Reveal.isLastSlide() && Reveal.availableFragments().next === false) {
-			sync_play_btn.toggle(false);
+			timeline.pause();
 		}
 	}
 
@@ -127,7 +114,6 @@ define(function(require, exports, module) {
 	var sync_audio_source = document.getElementById('sync-audio-source');
 	var sync_timeline = document.getElementById('sync-timeline');
 	var sync_reset = document.getElementById('sync-reset');
-	var sync_play = document.getElementById('sync-play');
 	var sync_save = document.getElementById('sync-save');
 
 	var timeline = new Timeline(sync_timeline);
@@ -135,15 +121,25 @@ define(function(require, exports, module) {
 	sync_area.addEventListener('click', Utils.stopPropagation);
 	sync_reset.addEventListener('click', resetSync);
 	sync_save.addEventListener('click', function() {
+		var tracks = [];
+		
+		// Get each track
+		var track = [];
+		track.push(sync_audio_source.src);
+		track.push([0, sync_audio_source.duration, 0]);
+		
+		tracks.push(track);
+
+		var container = document.querySelector('#bc-audio code');
+		container.textContent = JSON.stringify(tracks);
+		console.log(JSON.stringify(tracks)); 
+
 		SaveSync.save(timeline.events);
 	});
 
-	var sync_play_btn = new ToggleButton(sync_play, startSync, endSync);
-
+	timeline.on('play', startSync);
+	timeline.on('pause', endSync);
 	timeline.on('pastEvent', transitionEventNext);
 	timeline.on('futureEvent', transitionEvent);
-	timeline.on('mark', transitionEventNext);
-	timeline.on('pause', function() {
-		sync_play_btn.toggle(false);
-	});
+	timeline.on('event', transitionEventNext);
 });

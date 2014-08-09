@@ -11,14 +11,18 @@
 	<link rel="stylesheet" href="js/reveal/css/theme/default.css">
 	<link rel="stylesheet" href="js/reveal/css/reveal.min.css">
 	<link rel="stylesheet" href="js/browsercast/browsercast.css">
+	<link rel="stylesheet" href="js/timeline/timeline.css">
+	<link rel="stylesheet" href="js/timeline/glyphicon.css">
+	
 </head>
 
 <!-- Body -->
 <body>
 	<div id="browsercast">
-		<div id="bc-markers"> </div>
-		<div id="bc-audio-tracks">
-			{{{audio}}}
+		<div id="bc-audio">
+			<code>
+				{{audio}}
+			</code>
 		</div>
 	</div>
 	<div class="reveal">
@@ -30,6 +34,8 @@
 	<script type="text/javascript" src="js/reveal/lib/js/head.min.js"></script>
 	<script type="text/javascript" src="js/reveal/js/reveal.js"></script>
 	<script type="text/javascript" src="js/browsercast/browsercast-reveal.js"></script>
+	<script type="text/javascript" src="js/timeline/EventEmitter.js"></script>
+	<script type="text/javascript" src="js/timeline/timeline.js"></script>
 	<script type="text/javascript" src="js/init.js"></script>
 </body>
 </html>

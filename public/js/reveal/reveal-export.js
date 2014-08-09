@@ -21,13 +21,28 @@ define(function(require, exports, module) {
 		});
 	}
 
-	function requestFile(source, onSuccess, onTimeout) {
+	function requestFile(url, onSuccess, onTimeout) {
+		console.log(url);
+		if (typeof(onSuccess) !== 'function') {
+			console.log('error: onSuccess parameter is not a function');
+			return;
+		}
+
+		function onLoad(e) {
+			if (this.status == 200) {
+				// var MIME = this.getResponseHeader('content-type');
+				onSuccess(this.response);
+			}
+			else {
+				onTimeout();
+			}
+		}
+		
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', source, true);
+		xhr.open('GET', url, true);
 		xhr.timeout = 5000;
 		xhr.responseType = 'arraybuffer';
-
-		xhr.onload = function(e) {
+		xhr.onload = function onLoad(e) {
 			if (this.status == 200) {
 				// var MIME = this.getResponseHeader('content-type');
 				onSuccess(this.response);
@@ -36,48 +51,41 @@ define(function(require, exports, module) {
 				onTimeout();
 			}
 		};
-		xhr.ontimeout = onTimeout;
+		xhr.ontimeout = (typeof(onTimeout) === 'function') ? onTimeout : function(){};
 		xhr.send();
 	}
+
+	var audioTracks = [];
+	
+	function parseAudioInfo(audioInfo) {
+		var info = JSON.parse(audioInfo);
+		var audio = document.createElement('audio');
+		audio.src = info[0];
+	}	
 	
 	function prepareZipFile() {
-		var audioInfo = document.getElementById('bc-audio-tracks').cloneNode(true);
+		// Slides Info
 	 	var slides = document.querySelector('#scene .reveal .slides').cloneNode(true);
-		var imgs = slides.querySelectorAll('img');
-		var audios = audioInfo.querySelectorAll('source');
-		
 		RevealUtils.cleanUpSlides(slides);
 
-		var count = imgs.length;
-		count += audios.length;
+		// Search for images
+		var imgs = slides.querySelectorAll('img');
 
+		// Audio info
+		var bcAudio = document.querySelector('#bc-audio code');
+		var tracks = JSON.parse(bcAudio.textContent);
+
+		// Request count
+		var reqCount = imgs.length + tracks.length;
+
+		// Zip folders
 		var imgFolder = zip.folder("images");
 		var audioFolder = zip.folder("audio");
 
-		function saveResource(zipFolder, folderName, source) {
-			var fileName = source.src.split('/').pop();
-			requestFile(source.src, function(data) {
-				console.log('SUCCESS:', fileName);
-				source.src = folderName + '/' + fileName;
-				zipFolder.file(fileName, data);
-				finishRequest();
-			}, function() {
-				console.log('ERROR:', fileName);
-				finishRequest();
-			});
-		}
-
-		var saveImage = saveResource.bind(null, imgFolder, 'images');
-		var saveAudio = saveResource.bind(null, audioFolder, 'audio');
-
-		[].forEach.call(imgs, saveImage);
-		[].forEach.call(audios, saveAudio);
-
-
 		function finishRequest() {
-			count--;
-			console.log('REQUESTS TO COMPLETE:', count);
-			if (count === 0) {
+			reqCount--;
+			console.log('REQUESTS TO COMPLETE:', reqCount);
+			if (reqCount === 0) {
 				finishZip();
 			}
 		}
@@ -87,13 +95,36 @@ define(function(require, exports, module) {
 				title: 'Exported Presentation',
 				author: 'Gabriel Ivanica',
 				description: 'a presentation done with Browsercast Editor',
-				audio: audioInfo.innerHTML,
+				audio: JSON.stringify(tracks),
 				slides: slides.innerHTML.replace(/					/g, '	')
 			};
 
 			zip.file("index.html", AppTemplate.reveal(revealData));
 			downloadZipFile();
 		};
+		
+		// Save resources 
+		[].forEach.call(imgs, function(image) {
+			requestFile(image.src, function(data) {
+				var fileName = image.src.split('/').pop();
+				image.src = 'images/' + fileName;
+				imgFolder.file(fileName, data);
+				finishRequest();
+			}, function() {
+				finishRequest();
+			});			
+		});
+		
+		tracks.forEach(function(track) {
+			requestFile(track[0], function(data) {
+				var fileName = track[0].split('/').pop();
+				track[0] = 'audio/' + fileName;
+				audioFolder.file(fileName, data);
+				finishRequest();
+			}, function () {
+				finishRequest();
+			});
+		});
 	}
 
 	function downloadZipFile(callback) {

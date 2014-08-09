@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<title> Browsercast Experiment </title>
 	<!-- fonts -->
-	<link rel="stylesheet" href="fonts/roboto.css">
+	<link rel="stylesheet" href="fonts/roboto/roboto.css">
+	<link rel="stylesheet" href="fonts/glyphicon/glyphicon.css">
 
 	<!-- app stylesheets -->
 	<link rel="stylesheet" href="css/style.css">
@@ -19,12 +20,16 @@
 
 	<!-- libs stylesheets -->
 	<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
-	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css"> -->
 	<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
 	<link rel="stylesheet" href="libs/browsercast/browsercast.css">
 
+
+	<link rel="stylesheet" href="css/reset-bootstrap.css">
+
 	<!-- components stylesheets -->
-	<link rel="stylesheet" href="js/component/timeline.css">
+	<!-- <link rel="stylesheet" href="js/component/timeline.css"> -->
+	<link rel="stylesheet" href="dev/components/timeline/timeline.css">
 
 	<!-- app stylesheets -->
 	<link rel="stylesheet" href="css/reveal.css">
@@ -34,14 +39,12 @@
 </head>
 <body>
 	<div id="app" data-mode="editor">
-
 		<div id="browsercast">
-			<div id="bc-markers"></div>
-			<div id="bc-audio-tracks">
-				<audio preload="">
-					<source src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg" type="audio/ogg">
-				</audio>
-			</div>
+			<pre id="bc-audio">
+				<code>
+					[["http://localhost:8080/demo/audio/audio.ogg",[0,111.258412,0]]]
+				</code>
+			</pre>
 		</div>
 
 		<section id="nav">
@@ -237,17 +240,14 @@
 						</div>
 					</div>
 					<div id="sync-area">
+						<div id="sync-timeline"></div>
 						<div class="info">
 							To sincronize with an audio stream you need to mark transition events.
 							Press T to set a new transition point and advance to the next slide or fragment.
+							When you finished press Save.
 						</div>
 						<div id="sync-reset" class="button"> Reset </div>
 						<div id="sync-save" class="button"> Save </div>
-						<div id="sync-play" class="play-btn">
-							<span class="glyphicon glyphicon-play"> </span>
-							<span class="glyphicon glyphicon-pause"> </span>
-						</div>
-						<div id="sync-timeline"></div>
 						<audio id="sync-audio-source" preload> </audio>
 					</div>
 				</div>
@@ -255,10 +255,11 @@
 		</section>
 	</div>
 
-
 	<!-- Scripts -->
 	<!-- TODO - try to load as modues -->
 	<script type="text/javascript" src="libs/browsercast/browsercast-reveal.js"></script>
+	<script type="text/javascript" src="dev/components/timeline/EventEmitter.js"></script>
+	<script type="text/javascript" src="dev/components/timeline/timeline.js"></script>
 
 	<script type="text/javascript" src="libs/reveal/lib/js/head.min.js"></script>
 	<script type="text/javascript" src="libs/reveal/js/reveal.js"></script>

@@ -3,11 +3,16 @@
 	position: absolute;
 	top: 5px; left: 5px;
 	z-index: 100;
+	transition: all 0.3s ease-out;
 }
 
-#browsercast #bc-audio-tracks {
-
+#browsercast #bc-audio {
+	display: none;
 }
+
+/**
+ * 	UI Overlay
+ */
 
 #browsercast #bc-overlay {
 	width: 100%;
@@ -49,54 +54,46 @@
 	background-color: #999;
 	position: absolute;
 	top: 10px;
+}
 
+/**
+ * Timeline	
+ */
+
+#browsercast #bc-timeline {
+	width: 80%;
+	margin: 0 10%;
+	top: 10px;
+	position: absolute;
 	transition: all 0.3s;
 }
 
-#browsercast #bc-markers[data-hidden='true'] {
-	width: 50%;
-	margin: 0 25%;
-	top: -20px;
-}
-
-#browsercast #bc-markers .cue {
-	height: 100%;
-	padding: 1px;
-	background: #EEE;
-	cursor: pointer;
-	position: relative;
-	float: left;
-
-	transition: all 0.5s;
-
-	box-sizing: -webkit-border-box;
-	box-sizing: -moz-border-box;
-	box-sizing: border-box;
-}
-
-#browsercast #bc-markers .cue[data-active='true'] {
-	background: #CCC;
-}
-
-#browsercast #bc-markers .cue:hover {
-	background: #999;
-	cursor: pointer;
-}
-
-/*
- * TODO - works but it would be better with another element inside (JS)
+/**
+ * 	Hidden Mode - Youtube style
  */
 
-#browsercast #bc-markers .cue:after {
-	content: "";
-	height: 100%;
-	position: absolute;
-	width: 2px;
-	background: #999;
-	top: 0;
-	left: 0;
+#browsercast[data-hidden] #bc-timeline {
+	width: 100%;
+	margin: 0;
+	top: -10px;
 }
 
-#browsercast #bc-markers .cue:first-child:after {
+#browsercast[data-hidden] #bc-timeline .timeline .time-pointer {
+	display: none;
+}
+
+#browsercast[data-hidden] #bc-timeline .timeline .time-info {
+	display: none;
+}
+
+#browsercast[data-hidden] #bc-timeline .timeline .play {
+	display: none;
+}
+
+#browsercast[data-hidden] #bc-timeline .timeline .event {
+	/*height: 10px;*/
+}
+
+#browsercast[data-hidden] #bc-timeline .timeline .event:after {
 	display: none;
 }
