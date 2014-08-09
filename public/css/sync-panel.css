@@ -83,7 +83,7 @@
 }
 
 
-#sync-panel .body {
+#sync-panel #load-audio .body {
 	width: 0;
 	height: 0;
 	background: #009688;
@@ -100,9 +100,10 @@
 	width: 400px;
 	padding: 10px;
 	top: 30px;
+	box-sizing: border-box;
 }
 
-#sync-panel .body:hover {
+#sync-panel #load-audio .body:hover {
 	cursor: default;
 }
 
@@ -113,6 +114,7 @@
 	color: #777;
 	float: left;
 	transition: all 0.3s ease;
+	box-sizing: border-box;
 }
 
 #sync-panel #load-audio-ok {
@@ -136,15 +138,15 @@
 	width: 0;
 }
 
-#load-audio .error {
+#sync-panel #load-audio .error {
 	display: none;
 }
 
-#load-audio .loading {
+#sync-panel #load-audio .loading {
 	display: none;
 }
 
-#load-audio .body .state {
+#sync-panel #load-audio .body .state {
 	margin: 5px 0 0 0;
 }
 
@@ -184,24 +186,6 @@
 	top: 0;
 }
 
-#sync-panel #sync-area .play-btn {
-	position: absolute;
-	top: 66px;
-	left: 120px;
-}
-
-#sync-panel #sync-area .play-btn .glyphicon-pause {
-	display: none;
-}
-
-#sync-panel #sync-area .play-btn[data-active] .glyphicon-play {
-	display: none;
-}
-
-#sync-panel #sync-area .play-btn[data-active] .glyphicon-pause {
-	display: block;
-}
-
 #sync-panel #sync-area #sync-timeline {
 	width: 80%;
 	margin: 0 10%;
@@ -209,7 +193,14 @@
 	top: 80px;
 }
 
-#sync-panel #sync-area #sync-timeline .play {
-	display: none;
+#sync-panel #sync-timeline .timeline .play-btn:before {
+	color: #333;
 }
 
+#sync-panel #sync-timeline .timeline .event[past] {
+	border-color: #DDD !important;
+}
+
+#sync-panel #sync-timeline .timeline .event[past]:after {
+	border-color: #DDD !important;
+}
