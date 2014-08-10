@@ -9,10 +9,6 @@ The Browsercast project aims to offer a web based slideshow composition tool wit
 
 Presentation will offer full playback functionality: play/stop/pause/resume with perfect voice-over synchronization like a video but will maintain the same rich web environment: text, images, links, interactivity.
 
-<p>
-  <b>The project is stil in early development phase. Major changes can occur between each version</b>
-<p>
-
 ##Demo
 http://redenergy.github.io/Browsercast
 
