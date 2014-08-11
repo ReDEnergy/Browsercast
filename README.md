@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="./design/logo.png" height="120px" alt="Browsercast" title="Browsercast">
+</div>
+
 Browsercast
 ===========
 
