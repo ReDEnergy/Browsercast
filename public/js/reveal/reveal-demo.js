@@ -7,7 +7,6 @@ define(function(require, exports, module) {
 	var init = function init() {
 		var reveal = document.querySelector('#scene .reveal');
 		reveal.innerHTML = AppTemplate.demo();
-		console.log('AppTemplate', AppTemplate);
 		SlideManager.initSlides();
 		
 	};
