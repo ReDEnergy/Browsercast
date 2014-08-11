@@ -5,20 +5,19 @@
 
 	var state_map = [];
 	var activeState;
-	var overview;
 	var states = [];
+
+	// Callback after library initialization
 	var initCallback;
 
+	// Timeline Object
 	var timeline;
-	var update_timeline = true;
 
 	var Browsercast = (function() {
-		var playback = true;
-
 		// Events
 		var handleKeyDown = function handleKeyDown(e) {
 			if (e.keyCode === 82 || e.keyCode === 83) {
-				togglePlayback();
+				timeline.playing ? timeline.pause() : timeline.play();
 			}
 		};
 
@@ -109,58 +108,10 @@
 						states[i].endTime = currentTime; 
 				}
 			}
-			console.log("States", states);
-			console.log("States MAP", state_map);
+			// console.log("States", states);
+			// console.log("States MAP", state_map);
 		};
 
-		// Control presentation
-		var pause = function pause() {
-			playback = false;
-			Reveal.removeEventListeners();
-			timeline.pause();
-		};
-
-		var resume = function resume() {
-			playback = true;
-			Reveal.addEventListeners();
-			timeline.play();
-		};
-
-		var togglePlayback = function togglePlayback() {
-			playback ? pause() : resume();
-			return playback;
-		};
-
-		var toggleOverview = function toggleOverview(state) {
-			if(state !== undefined)
-				state = !overview;
-			overview = state;
-		};
-
-		var canPlay = function canPlay() {
-			return playback && !overview;
-		};
-
-		var reset = function reset() {
-			playback = false;
-			overview = Reveal.isOverview();
-			Reveal.addEventListeners();
-			states = [];
-			state_map = [];
-			document.removeEventListener('keydown', handleKeyDown);
-			
-			var timelineElem = document.getElementById('bc-timeline');
-			if (timelineElem)
-				timelineElem.parentElement.removeChild(timelineElem);
-		};
-
-		// TODO add config obj
-		var init = function init(obj) {
-			reset();
-			getStates();
-			document.addEventListener('keydown', handleKeyDown);
-		};
-		
 		var initTimeline = function initTimeline() {
 			var browsercast = document.getElementById('browsercast');
 			var timelineElem = document.createElement('div');
@@ -168,9 +119,6 @@
 			timelineElem.textContent = '';
 			browsercast.appendChild(timelineElem);
 
-			// Debug
-			window.timeline = timeline;
-			
 			timeline = new Timeline(timelineElem);
 			timeline.setTimeFrame(states[states.length - 1].endTime);
 			
@@ -190,7 +138,6 @@
 			timeline.on('event', focusState);
 			timeline.on('futureEvent', focusPrevState);
 			timeline.on('pastEvent', focusState);
-			console.log('Timeline 1', timeline);
 			fadeTimeline(timeline);
 		};		
 
@@ -202,10 +149,8 @@
 				clearTimeout(timeout);
 				timeout = setTimeout(function() {
 					browsercast.setAttribute('data-hidden', '');
-					setTimeout(function() {timeline.computeLayout();}, 300);
 				}, 3000);
 				browsercast.removeAttribute('data-hidden');
-				setTimeout(function() {timeline.computeLayout();}, 300);
 			}
 
 			var handleMouseMove = function handleMouseMove(e) {
@@ -222,11 +167,28 @@
 				document.removeEventListener('mousemove', handleMouseMove);
 			});
 		};
+		
+		var reset = function reset() {
+			Reveal.addEventListeners();
+			states = [];
+			state_map = [];
+			document.removeEventListener('keydown', handleKeyDown);
+			
+			var timelineElem = document.getElementById('bc-timeline');
+			if (timelineElem)
+				timelineElem.parentElement.removeChild(timelineElem);
+		};
+				
+		// TODO add config obj
+		var init = function init(obj) {
+			reset();
+			getStates();
+			document.addEventListener('keydown', handleKeyDown);
+		};		
 
 		return {
 			init : init,
-			reset : reset,
-			toggleOverview : toggleOverview
+			reset : reset
 		};
 
 	})();
@@ -258,7 +220,7 @@
 		}
 	};
 
-	State.prototype.focus = function focus(update_timeline) {
+	State.prototype.focus = function focus() {
 		Reveal.slide(this.index.h, this.index.v, this.index.f);
 	};
 
@@ -368,9 +330,6 @@
 			stop: stop,
 			clear: clear,
 			events: function () { return events;},
-			log: function() {
-				console.log('events', events);
-			}
 		};
 	})();
 	
@@ -415,10 +374,7 @@
 			TrackEvents.clear();
 			var container = document.querySelector('#bc-audio code');
 			var tracks = JSON.parse(container.textContent);
-			console.log(tracks);
 			tracks.forEach(registerAudio);	
-			TrackEvents.log();
-			window.TrackEvents = TrackEvents;
 		};
 
 		return {
@@ -436,35 +392,22 @@
 	var FrameworkEvents = (function FrameworkEvents() {
 
 		// Reveal events
-		function getStateInfo() {
+		function setState() {
 			var indices = Reveal.getIndices();
 			var slide = state_map[[indices.h, indices.v, indices.f]];
 			slide.activate();
 		}
 
-		function overviewShown(event) {
-			Browsercast.toggleOverview(true);
-		}
-
-		function overviewHidden(event) {
-			Browsercast.toggleOverview(false);
-			getStateInfo();
-		}
-
 		var init = function init() {
-			Reveal.addEventListener("slidechanged", getStateInfo);
-			Reveal.addEventListener("fragmentshown", getStateInfo);
-			Reveal.addEventListener("fragmenthidden", getStateInfo);
-			Reveal.addEventListener("overviewshown", overviewShown);
-			Reveal.addEventListener("overviewhidden", overviewHidden);
+			Reveal.addEventListener("slidechanged", setState);
+			Reveal.addEventListener("fragmentshown", setState);
+			Reveal.addEventListener("fragmenthidden", setState);
 		};
 
 		var stop = function stop() {
-			Reveal.removeEventListener("slidechanged", getStateInfo);
-			Reveal.removeEventListener("fragmentshown", getStateInfo);
-			Reveal.removeEventListener("fragmenthidden", getStateInfo);
-			Reveal.removeEventListener("overviewshown", overviewShown);
-			Reveal.removeEventListener("overviewhidden", overviewHidden);
+			Reveal.removeEventListener("slidechanged", setState);
+			Reveal.removeEventListener("fragmentshown", setState);
+			Reveal.removeEventListener("fragmenthidden", setState);
 		};
 
 		return {

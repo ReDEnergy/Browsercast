@@ -25,6 +25,9 @@ require.config({
 		},
 		'ace-editor': {
 			exports : 'ace'
+		},
+		'templates': {
+			exports : 'AppTemplate'
 		}
 	}
 });

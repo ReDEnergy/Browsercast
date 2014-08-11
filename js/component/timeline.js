@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 	// API
 	function TimedEvent(timeline, time, data) {
 		var elem = document.createElement('div');
-		elem.className = 'mark';
+		elem.className = 'event';
 
 		this.timeline = timeline;
 		this.time = time;
@@ -17,32 +17,27 @@ define(function(require, exports, module) {
 		this.computePosition();
 
 		elem.addEventListener('click', handleClick.bind(this));
-		elem.addEventListener('dblclick', handleDoubleClick.bind(this));
 
 		function handleClick(e) {
 			e.stopPropagation();
 			if (timeline.playing)
 				timeline.pause();
-			timeline.setPointerPosition(this.pos);
-			this.timeline.emit('mark', this.data);
-			this.timeline.updateEvents();
-			console.log(this);
-		}
-
-		function handleDoubleClick(e) {
-			e.stopPropagation();
-			timeline.removeEvent(this);
+			timeline.setPointerPosition((this.pos * timeline.size / 100).toFixed(2));
+			timeline.emitEvent('event', this.data);
+			timeline.selectedEvent = this;
 		}
 
 		timeline.timeline.appendChild(elem);
 	}
+	
+	Timeline.prototype = Object.create(EventEmitter.prototype);
 
 	TimedEvent.prototype.computePosition = function computePosition() {
 		if (this.time < 0) this.time = 0;
 		if (this.time > this.timeline.duration) this.time = this.timeline.duration;
 
-		this.pos = (this.time / this.timeline.duration) * this.timeline.size;
-		this.elem.style.left = this.pos + 'px';
+		this.pos = (this.time / this.timeline.duration) * 100;
+		this.elem.style.left = this.pos.toFixed(2) + '%';
 	};
 
 	TimedEvent.prototype.clear = function clear() {
@@ -51,21 +46,15 @@ define(function(require, exports, module) {
 	};
 
 	TimedEvent.prototype.setInFuture = function setInFuture() {
-		if (this.triggered === true) {
-			this.triggered = false;
-			this.timeline.emit('futureEvent', this.data);
-			return true;
-		}
-		return false;
+		this.triggered = false;
+		this.timeline.emitEvent('futureEvent', this.data);
+		this.elem.removeAttribute('past');
 	};
 
 	TimedEvent.prototype.setInPast = function setInPast() {
-		if (this.triggered === false) {
-			this.triggered = true;
-			this.timeline.emit('pastEvent', this.data);
-			return true;
-		}
-		return false;
+		this.triggered = true;
+		this.timeline.emitEvent('pastEvent', this.data);
+		this.elem.setAttribute('past', '');
 	};
 
 	function Timeline(ParentNode) {
@@ -80,7 +69,7 @@ define(function(require, exports, module) {
 		time_pointer.className = 'time-pointer';
 		time_info.className = 'time-info';
 		time_info.textContent = '0:00';
-		play_btn.className = 'play';
+		play_btn.className = 'play-btn glyphicon';
 
 		time_pointer.appendChild(time_info);
 		timeline.appendChild(play_btn);
@@ -97,14 +86,16 @@ define(function(require, exports, module) {
 		this.tpos = 0;
 		this.startDate = new Date();
 		this.currentTime = 0;
+		this.prevTime = 0;
 		this.size = 0;
 		this.playing = false;
 		this.layout = null;
 		this.duration = 60;
-		this.dir = 0;
+
 		this.events = [];
-		this.lastEventID = 0;
-		this.current_mark_id = null;
+		this.prevEventID = -1;
+		this.triggerEvents = true;
+		this.selectedEvent = null;
 
 		this.advance = this.advance.bind(this);
 		this.pause = this.pause.bind(this);
@@ -117,27 +108,32 @@ define(function(require, exports, module) {
 		this.setEvents();
 	}
 
-	Timeline.prototype = Object.create(EventEmitter.prototype);
-
 	Timeline.prototype.setTimeFrame = function setTimeFrame(duration) {
 		this.duration = duration;
 		for (var i=0; i<this.events.length; i++) {
 			this.events[i].computePosition();
 		}
 	};
-
+	
 	Timeline.prototype.setCurrentTime = function setCurrentTime(time) {
+		this.prevTime = this.currentTime;   
 		if (time < 0) time = 0;
-		if (time > this.duration) time = this.duration;
+		if (time >= this.duration) {
+			this.pause();
+			time = this.duration;
+		}
 		this.currentTime = time;
 		this.updatePointerPosition();
 		this.updateTimeInfo();
+		this.emitEvent('timeUpdate', this.currentTime);
+		this.updateEvents();
 	};
 
-	Timeline.prototype.computeLayout = function computeLayout(pos) {
+	Timeline.prototype.computeLayout = function computeLayout() {
 		this.box = this.timeline.getBoundingClientRect();
 		this.size = this.box.right - this.box.left;
 		this.layout = true;
+		this.setCurrentTime(this.currentTime);
 	};
 
 	Timeline.prototype.updateTimeInfo = function updateTimeInfo() {
@@ -150,22 +146,26 @@ define(function(require, exports, module) {
 	
 	Timeline.prototype.updatePointerPosition = function updatePointerPosition() {
 		var pos = (this.currentTime / this.duration) * this.size;
+		var apos = this.currentTime / this.duration * 100;
 		this.tpos = pos;
-		this.time_pointer.style.left = pos + 'px';
-		this.fill.style.width = pos + 'px';
+		this.time_pointer.style.left = apos + '%';
+		this.fill.style.width = apos + '%';
 	};
 
 	Timeline.prototype.setPointerPosition = function setPointerPosition(pos) {
 		this.tpos = pos;
-		pos > this.tpos ? (this.dir = 1) : (this.dir = -1);
 		var time = (pos/this.size * this.duration);
 		this.setCurrentTime(time);
-		this.updateEvents();
 	};
+	
 
-	Timeline.prototype.addEvent = function addEvent(time, data) {
-		var mark = new TimedEvent(this, time, data);
-		this.events.push(mark);
+	/*
+	 * Timeline Events
+	 */
+
+	Timeline.prototype.addEvent = function addEvent(startTime, Data) {
+		var event = new TimedEvent(this, startTime, Data);
+		this.events.push(event);
 		this.sortEvents();
 	};
 	
@@ -180,9 +180,18 @@ define(function(require, exports, module) {
 		for (var i=0; i<this.events.length; i++)
 			this.timeline.removeChild(this.events[i].elem);
 		this.events = [];
+		this.prevEventID = -1;		
 	};
 
-	Timeline.prototype.getFirstPastEvent = function getFirstPastEvent() {
+	Timeline.prototype.logEvents = function logEvents() {
+		var s = '';
+		this.events.forEach(function(event) {
+			s += (event.triggered ? '1' : '0') + ' ';
+		});
+		console.log('EVENTS', s);
+	};
+
+	Timeline.prototype.getPreviousEvent = function getPreviousEvent() {
 		for (var i = 0; i < this.events.length; i++) {
 			if (this.events[i].time > this.currentTime)
 				return (i - 1);
@@ -196,55 +205,64 @@ define(function(require, exports, module) {
 		});
 	};
 
-	// TODO - explain this ... looks really strage
-	// TODO - make this more efficient
 	Timeline.prototype.updateEvents = function updateEvents() {
+		if (this.prevTime === this.currentTime)
+			return;
+
 		var len = this.events.length;
 		if (len === 0)
 			return;
-
-		var index = -1;
-		var change = false;
-		for (var i = len - 1; i >= 0; i--) {
-			if (this.events[i].pos < this.tpos) {
-				index = i;
-				break;
+		
+		var nextEventID = this.prevEventID + 1;
+		if (nextEventID < len) {
+			if (this.events[nextEventID].time > this.currentTime) {
+				if (this.prevEventID === -1 || this.events[this.prevEventID].time < this.currentTime)
+					return;
 			}
-			else
-				change = change | this.events[i].setInFuture();
 		}
 
-		for (var i = 0; i <= index; i++) {
-			change = change | this.events[i].setInPast();
-		}
+		var lastEvent = null;
+		this.setEmitEvent(false);
 
-		if (index === -1) {
-			change = change | this.events[0].setInFuture();
-		}
-
-		if (change) {
-			if (this.dir > 0) {
-				this.events[index].setInPast();
+		if (this.prevTime < this.currentTime) {
+			if (this.prevEventID === len - 1)
+				return;
+			
+			for (var i = this.prevEventID + 1; i < len; i++) {
+				if (this.events[i].time > this.currentTime)
+					break;
+					
+				this.events[i].setInPast();
+				this.prevEventID = i;
+				lastEvent = this.events[i]; 
 			}
-			else {
-				if ((index + 1) < len)
-					this.events[index + 1].setInFuture();
-			}
-
-			// log type
-			// var s = '';
-			// for (var i = 0; i < len; i++) {
-				// s += (this.events[i].triggered ? '1' : '0') + ' ';
-			// }
-			// console.log('Values', s);
 		}
+		else {
+			for (var i = this.prevEventID; i >= 0; i--) {
+				if (this.events[i].time <= this.currentTime)
+					break;
+
+				this.events[i].setInFuture();
+				this.prevEventID = i - 1;
+				lastEvent = this.events[i]; 
+			}
+		}
+
+		this.setEmitEvent(true);
+		if (lastEvent)
+			this.prevTime < this.currentTime ? lastEvent.setInPast() : lastEvent.setInFuture();
 	};
 
-	/*
-	 * Events
-	 */
+	Timeline.prototype.setEmitEvent = function setEmitEvent(value) {
+		this.triggerEvents = value;
+	};
+	
+	Timeline.prototype.emitEvent = function emitEvent(name, data) {
+		if (this.triggerEvents)
+			this.emit(name, data);
+	};
 
-	Timeline.prototype.setEvents = function() {
+	Timeline.prototype.setEvents = function setEvents() {
 		this.timeline.addEventListener('click', this.handleClick.bind(this));
 		this.play_btn.addEventListener('click', function(e) {
 			this.playing ? this.pause(e) : this.play(e);
@@ -257,27 +275,25 @@ define(function(require, exports, module) {
 	Timeline.prototype.advance = function advance() {
 		var diff = new Date() - this.startDate;
 		this.setCurrentTime(this.startTime + diff / 1000);
-		this.updateEvents();
 	};
 
 	Timeline.prototype.play = function play(e) {
 		if (e) e.stopPropagation();
 		if (this.playing) return;
-
-		this.lastEventID = this.getFirstPastEvent();
+		if (this.currentTime === this.duration) return;
 
 		this.startDate = new Date();
 		this.startTime = this.currentTime;
-		this.playing = setInterval(this.advance, 200);
+		this.playing = setInterval(this.advance, 100);
 		
-		this.play_btn.setAttribute('playing', 'true');
+		this.play_btn.setAttribute('playing', '');
 		this.emit('play');
 	};
 
 	Timeline.prototype.pause = function pause(e) {
-		if (this.playing === false)
-			return;
 		if (e) e.stopPropagation();
+		if (!this.playing) return;
+		
 		clearInterval(this.playing);
 		this.playing = false;
 		this.play_btn.removeAttribute('playing');
@@ -308,7 +324,6 @@ define(function(require, exports, module) {
 		document.removeEventListener('mousemove', this.handleMouseMove);
 		document.removeEventListener('mouseup', this.handleMouseUp);
 		this.addTransitions();
-		this.updateEvents();
 	};
 
 	Timeline.prototype.addTransitions = function addTransitions() {
@@ -323,5 +338,4 @@ define(function(require, exports, module) {
 
 	// Public API
 	return Timeline;
-
 });

@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title> Browsercast Experiment </title>
+
 	<!-- fonts -->
 	<link rel="stylesheet" href="fonts/roboto/roboto.css">
 	<link rel="stylesheet" href="fonts/glyphicon/glyphicon.css">
@@ -20,23 +21,14 @@
 
 	<!-- libs stylesheets -->
 	<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
-	<!-- <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css"> -->
 	<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
 	<link rel="stylesheet" href="libs/browsercast/browsercast.css">
-
-
-	<link rel="stylesheet" href="css/reset-bootstrap.css">
-
-	<!-- components stylesheets -->
-	<!-- <link rel="stylesheet" href="js/component/timeline.css"> -->
-	<link rel="stylesheet" href="dev/components/timeline/timeline.css">
+	<link rel="stylesheet" href="libs/browsercast/timeline/timeline.css">
 
 	<!-- app stylesheets -->
 	<link rel="stylesheet" href="css/reveal.css">
-
-	<!-- TODO - USE FLAT UI ?! -->
-
 </head>
+
 <body>
 	<div id="app" data-mode="editor">
 		<div id="browsercast">
@@ -56,12 +48,6 @@
 				<span class="glyphicon glyphicon-import"></span>
 				<div class="text">Import</div>
 			</div>
-			<!-- 
-			<div class="button" data-panel="export-panel">
-				<span class="glyphicon glyphicon-export"></span>
-				<div class="text">Export</div>
-			</div>
-			-->
 			<div class="button" data-panel="save-panel">
 				<span class="glyphicon glyphicon-save"></span>
 				<div class="text">Download</div>
@@ -119,91 +105,7 @@
 		<section id="app-area">
 			<section id="app-space">
 				<div id="scene">
-					<div class="reveal">
-						<div class="slides">
-							<section>
-								<br />
-								<h2>Browsercast</h2>
-								<br /><br />
-								<p>The project aims to offer a web based slideshow composition tool with support for voice-over synchronization</p>
-								<div style="text-align: left; padding: 30px 100px">
-								    <p>Features:</p>
-								    <ul>
-								        <li>slide editor</li>
-								        <li>perfect voice-over synchronization</li>
-								        <li>playback functions - play/stop/pause/resume</li>
-								        <li>presentations are index-able by search engines</li>
-								        <li>import and export</li>
-								    </ul>
-								</div>
-    						</section>
-
-							<section>
-								<br>
-								<h2>The Editor</h2>
-								<br>
-								<br>
-								<p>Use the <b>HTML code editor</b> provided to edit slide content</p>
-								<p>You can <b>add</b> new vertical/horizontal slides or delete them</p>
-								<p>Basic support for HTML5 <b>contenteditable</b>. <b>Click on the slide!</b></p>
-								<p>Add an audiocast and synchronize it with the slides</p>
-								<p>try <a href="https://dl.dropboxusercontent.com/u/14586656/Browsercast/audio.ogg">this</a> audio-file <span style="color: red">(use the link)</span></p>
-								<br>
-								<p data-fragment-index="0" class="fragment visible">You can use fragments too!</p>
-							</section>
-
-							<section>
-								<br />
-								<h3> Preview mode </h3>
-								<br /><br />
-								<p style="color: red"> This slide has no audio</p>
-								<p>Navigate with <b>arrows</b></p>
-								<p><b>ESC</b> to go to overview mode</p>
-								<p>Press <b>S or R</b> to Pause/Resume the presentation</p>
-								<p  style="color: red"> Next slides are synchronized with audio </p>
-							</section>
-
-							<section>
-								<section data-bc-start="0.00">
-									<img src="https://dl.dropboxusercontent.com/u/14586656/Browsercast/haiku.jpg" />
-									<p>The Japanese wrote haikus...</p>
-								</section>
-
-								<section data-bc-start="2.44">
-									<img src="demo/images/sonnet.jpg" />
-									<p>Shakespeare wrote sonnets...</p>
-								</section>
-							</section>
-							
-							<section data-bc-start="4.90">
-								<img src="demo/images/worst-powerpoint.jpg" />
-								<br/>
-								<p>And we... write PowerPoint</p>
-							</section>
-
-							<section data-bc-start="7.72">
-								<img src="demo/images/tufte.jpg" />
-								<p>A lot of people blame PowerPoint for bad presentations...</p>
-							</section>
-
-							<section data-bc-start="12.20">
-								<img src="demo/images/fountain-pen.jpg" />
-								<p>...but that's like blaming fountain pens for bad poetry.</p>
-							</section>
-
-							<section data-bc-start="16.20">
-								<div style="vertical-align: middle">
-									<img src="demo/images/powerpoint.png" />
-									<img src="demo/images/libreoffice.png" />
-								</div>
-								<p>The <em>real</em> problem with tools like PowerPoint...</p>
-								<div class="fragment" data-bc-start="19.61" data-bc-end="22">
-									<img src="demo/images/internet-cat.jpg" />
-									<p>...is that they aren't web-friendly.</p>
-								</div>
-							</section>
-						</div>
-					</div>
+					<div class="reveal"></div>
 
 					<div id="delete-slide" class="ui-overlay delete-slide" data-visible>
 						<span class="glyphicon glyphicon-trash"></span>
@@ -258,15 +160,13 @@
 	<!-- Scripts -->
 	<!-- TODO - try to load as modues -->
 	<script type="text/javascript" src="libs/browsercast/browsercast-reveal.js"></script>
-	<script type="text/javascript" src="dev/components/timeline/EventEmitter.js"></script>
-	<script type="text/javascript" src="dev/components/timeline/timeline.js"></script>
+	<script type="text/javascript" src="libs/browsercast/timeline/EventEmitter.js"></script>
+	<script type="text/javascript" src="libs/browsercast/timeline/timeline.js"></script>
 
 	<script type="text/javascript" src="libs/reveal/lib/js/head.min.js"></script>
 	<script type="text/javascript" src="libs/reveal/js/reveal.js"></script>
 
 	<script type="text/javascript" src="libs/handlebars/handlebars.runtime-v1.3.0.js"></script>
-	<script type="text/javascript" src="js/templates.js"></script>
-
 
 	<!-- require.js -->
 	<script data-main="js/main.js" src="libs/require/require.min.js"></script>

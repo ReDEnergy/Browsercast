@@ -143,9 +143,10 @@
 	
 	Timeline.prototype.updatePointerPosition = function updatePointerPosition() {
 		var pos = (this.currentTime / this.duration) * this.size;
+		var apos = this.currentTime / this.duration * 100;
 		this.tpos = pos;
-		this.time_pointer.style.left = pos + 'px';
-		this.fill.style.width = pos + 'px';
+		this.time_pointer.style.left = apos + '%';
+		this.fill.style.width = apos + '%';
 	};
 
 	Timeline.prototype.setPointerPosition = function setPointerPosition(pos) {

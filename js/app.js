@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
 	window.BE = {};
 
-	var SlideManager = require('reveal/reveal-manager');
+	var Demo = require('reveal/reveal-demo');
 	var NavManager = require('ui/panel-manager');
 	var ImportPanel = require('ui/import-panel');
 	var SyncPanel = require('sync/sync-panel');
@@ -16,7 +16,8 @@ define(function(require, exports, module) {
 
 	return {
 		initialize: function() {
-			SlideManager.initSlides();
+			// SlideManager.initSlides();
+			Demo.init();
 			NavManager.init();
 			CodeEditor.init();
 			VisualEditor.init();

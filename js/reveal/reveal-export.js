@@ -7,6 +7,7 @@ define(function(require, exports, module) {
 	var JSZipUtils = require('jszip-utils');
 	var saveFileAs = require('file-saver');
 	var RevealUtils = require('reveal/reveal-utils');
+	var AppTemplate = require('templates');
 
 	// TODO
 	// add a node.js fallback in case of XHR errors for images or audio

@@ -38,7 +38,7 @@
 }
 
 .timeline .play-btn[playing]:before {
-	content: "\e074";
+	content: "\e073";
 	color: #EEE;
 }
 

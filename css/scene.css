@@ -35,15 +35,22 @@
 	overflow: hidden;
 	text-align: center;
 	border: 1px solid #BABABA;
+	font-size: 20px;
+	line-height: 40px;
 	border-radius: 50%;
 
 	z-index: 100;
 	transition: all 0.3s  ease-out;
 }
 
+#scene .add-slide span {
+	margin: 0 0 0 2px;
+}
+
 #scene .add-slide:hover {
 	cursor: pointer;
-	border-color: #FFF;
+	border-color: #019788;
+	box-shadow: 0 0 20px 0 #019788; 
 }
 
 #scene .add-slide[data-action="right"] {
@@ -58,17 +65,13 @@
 	left: 50%;
 }
 
-#scene .add-slide span {
-	margin: -1px 0 0 1px;
-	line-height: 36px;
-}
-
 #scene #delete-slide {
 	width: 40px;
 	height: 40px;
 	top: -50px;
 	right: 30px;
 	border: 1px solid #BABABA;
+	font-size: 20px;
 	line-height: 40px;
 	text-align: center;
 	transition: all 0.3s ease-in-out;
@@ -79,8 +82,9 @@
 }
 
 #scene #delete-slide:hover {
-	border-color: #e84e40;
-	background: #e51c23;
+	border-color: #E84E40;
+	color: #FFF;
+	box-shadow: 0 0 20px 0 #E51C23; 
 }
 
 #scene #confirm-delete {
@@ -89,6 +93,8 @@
 	background: #00796B;
 	position: absolute;
 	color: #BABABA;
+	font-size: 16px;
+
 	overflow: hidden;
 	top: -1px;
 	right: 45px;
@@ -104,6 +110,7 @@
 }
 
 #scene #confirm-delete .info {
+	white-space: nowrap; 
 	color: #EEE;
 }
 
@@ -122,5 +129,5 @@
 }
 
 #scene #confirm-delete .delete {
-	background: #e84e40;
+	background: #E84E40;
 }

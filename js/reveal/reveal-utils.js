@@ -1,8 +1,6 @@
 define(function(require, exports, module) {
 	'use strict';
 
-	var _ = require('lodash');
-
 	/**
 	 * Call Reveal initialization 
 	 */
@@ -74,6 +72,4 @@ define(function(require, exports, module) {
 	exports.cleanUpReveal = cleanUpReveal;
 	exports.initReveal = initReveal;
 	exports.triggerLayoutChange = triggerLayoutChange;
-	
-	window.cleanUpReveal = cleanUpReveal;
 });
