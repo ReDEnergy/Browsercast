@@ -137,6 +137,7 @@
 
 #enter-preview:hover {
 	cursor: pointer;
+	text-shadow: 0 0 30px #019788;
 }
 
 #enter-preview:hover .text {
@@ -165,5 +166,6 @@
 	color: #FFF;
 	border-color: #FFF;
 	cursor: pointer;
+	text-shadow: 0 0 30px #48C9B0;
 }
 
