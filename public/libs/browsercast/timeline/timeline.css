@@ -1,0 +1,159 @@
+.timeline {
+	width: 100%;
+	height: 8px;
+	margin: 0 auto;
+	background: #DDD;
+	background: linear-gradient(180deg, #DDD 0%, #CCC 100%);
+	border-radius: 0px;
+	position: relative;
+	
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none;
+}
+
+.timeline:hover {
+	cursor: pointer;
+}
+
+.timeline .play-btn {
+	width: 16px;
+	height: 16px;
+	margin: -8px 0 0 -8px;
+	position: absolute;
+	color: #FFF;
+	line-height: 16px;
+	left: -32px;
+	top: 50%;
+	transition: all 0.2s;
+}
+
+.timeline .play-btn:before {
+	content: "\e072";
+}
+
+.timeline .play-btn:hover {
+	cursor: pointer;
+}
+
+.timeline .play-btn[playing]:before {
+	content: "\e073";
+	color: #EEE;
+}
+
+.timeline .play-btn[playing]:hover:before {
+	color: #EE4E38;
+}
+
+.timeline .fill {
+	height: 100%;
+	width: 0;
+	background: #EE4E38;
+	position: absolute;
+	left: 0;
+	transition: all 0.2s linear;
+}
+
+.timeline .time-pointer {
+	width: 16px;
+	height: 16px;
+	margin: -8px 0 0 -8px;
+	background: #FFF;
+	border-radius: 50%;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	z-index: 100;
+
+	box-shadow: 0 1px 3px 0 #999;
+	transition: all 0.2s linear;
+}
+
+.timeline .time-pointer:after {
+	content: " ";
+	width: 6px;
+	height: 6px;
+	margin: -3px 0 0 -3px;
+	background: #999;
+	border-radius:50%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 100;
+}
+
+.timeline .time-pointer:hover:after {
+	background: #E7546A;
+}
+
+.timeline .time-info {
+	width: 50px;
+	height: 20px;
+	margin: 0 0 0 -27px;
+	background: #FFF;
+	border: 1px solid #DDD;
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 20px;
+	text-align: center;
+	color: #333;
+
+	position: absolute;
+	top: 26px;
+	left: 50%;
+}
+
+.timeline .time-info:after {
+	content: " ";
+	width: 16px;
+	height: 16px;
+	background: #FFF;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: -1;
+	transform: translate(-7px, -14px) rotate(45deg);
+}
+
+.timeline .event {
+	width: 1px;
+	height: 100%;
+	margin: 0px 0 0 -1px;
+	padding: 0;
+	background: #777;
+	border-width: 0 1px;
+	border-style: solid;
+	border-color: #DDD;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+}
+
+.timeline .event[past] {
+	border-color: #EE4E38;
+}
+
+.timeline .event:after {
+	content: " ";
+	width: 7px;
+	height: 7px;
+	margin: 0;
+	border: 1px solid #DDD;
+	background: #333;
+	position: absolute;
+	left: -4px;
+	top: 10px;
+	z-index: -100;
+	transform: rotate(45deg);
+	transition: all 0.2s;
+}
+
+.timeline .event[past]:after {
+	border-color: #EE4E38;
+}
+
+.timeline .event:hover {
+	cursor: pointer;
+}
