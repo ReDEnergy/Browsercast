@@ -5,8 +5,14 @@ define(function(require, exports, module) {
 	var CodeEditor = require('editor/ace');
 	var SlideManager = require('reveal/reveal-manager');
 	var PanelManager = require('ui/panel-manager');
-	var DelayedEvent = require('core/delayed-event');
+	var DelayedEvent = require('core/DelayedEvent');
 	var Utils = require('utils');
+
+	// Module API
+	var import_editor;
+	var import_slides_count;
+	var imported_content;
+	var import_info;
 
 	// TODO -? how to create templated localization ?
 	var MSG = {
@@ -14,7 +20,7 @@ define(function(require, exports, module) {
 		'found' : function(count) {
 			return 'Found ' + count + ' slides';
 		},
-		'error' : ':( Unable to find class .slides'
+		'error' : ':( Unable to find element with class="slides"'
 	};
 
 	function setMessage(message, type) {
@@ -63,19 +69,24 @@ define(function(require, exports, module) {
 		Reveal.slide(0);		
 	}
 
-	
-	var import_editor = CodeEditor.create('import-editor', 'html');
-	var import_slides_count = document.getElementById('import-slides-count');
-	var imported_content = document.createElement('div');
-	var import_info = document.getElementById('import-info');
-	var import_button = document.getElementById('import-slides');
+	var init = function init() {
+		var container = document.getElementById('import-panel');
+		container.innerHTML = AppTemplate['import-panel']();
 
-	var ChangeEvent = new DelayedEvent(handleChange, 300); 
-	import_editor.addEventListener('change', function() {
-		ChangeEvent.resetTimer();
-	});
-	import_button.addEventListener('click', handleClick);
+		import_editor = CodeEditor.create('import-editor', 'html');
+		import_slides_count = document.getElementById('import-slides-count');
+		imported_content = document.createElement('div');
+		import_info = document.getElementById('import-info');
+
+		var import_button = document.getElementById('import-slides');
+		import_button.addEventListener('click', handleClick);
+
+		var ChangeEvent = new DelayedEvent(handleChange, 300); 
+		import_editor.addEventListener('change', function() {
+			ChangeEvent.resetTimer();
+		});
+	};
 
 	// Public API
-	// exports.init = init;
+	exports.init = init;
 });
