@@ -1,12 +1,16 @@
 define(function(require, exports, module) {
 	'use strict';
 
+	// Load Modules
+	var RevealUtils = require('reveal/reveal-utils');
+
 	// API
-	function saveSync(events) {
+	function saveSync(events, callback) {
 		var start = 0;
 		var end;
 		var isFragment = false;
 		var index = 0;
+		callback = typeof(callback) === 'function' ? callback : function() {};
 
 		function setAudioAttributes(elem) {
 			elem.setAttribute('data-bc-start', start.toFixed(2));
@@ -38,6 +42,7 @@ define(function(require, exports, module) {
 		function triggerChange() {
 			if (index === events.length) {
 				endSave();
+				callback();
 				return;
 			}
 
@@ -48,6 +53,8 @@ define(function(require, exports, module) {
 			Reveal.slide(idx.h, idx.v, idx.f);
 		}
 
+	 	var slides = document.querySelector('#scene .reveal .slides');
+		RevealUtils.cleanupBrowsercast(slides);
 		startSave();
 	}
 

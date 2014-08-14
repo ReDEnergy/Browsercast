@@ -9,18 +9,16 @@ define(function(require, exports, module) {
 
 	var Demo = require('reveal/reveal-demo');
 	var NavManager = require('ui/panel-manager');
-	var ImportPanel = require('ui/import-panel');
-	var SyncPanel = require('sync/sync-panel');
 	var VisualEditor = require('editor/visual-editor');
 	var CodeEditor = require('editor/code-editor');
 
 	return {
 		initialize: function() {
 			// SlideManager.initSlides();
-			Demo.init();
 			NavManager.init();
 			CodeEditor.init();
 			VisualEditor.init();
+			Demo.init();
 		}
 	};
 });

@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 		separator.className = 'separator';
 
 		var close = document.createElement('div');
-		close.className = 'button';
+		close.className = 'close button';
 		close.textContent = 'Close';
 		close.addEventListener('click', this.hide.bind(this));
 		button.addEventListener('click', this.toggle.bind(this));

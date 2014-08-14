@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="css/import-panel.css">
 	<link rel="stylesheet" href="css/scene.css">
 	<link rel="stylesheet" href="css/code-editor.css">
-	<link rel="stylesheet" href="css/slides-panel.css">
+	<link rel="stylesheet" href="css/download-panel.css">
 	<link rel="stylesheet" href="css/sync-panel.css">
 	<link rel="stylesheet" href="css/text.css">
 	<link rel="stylesheet" href="css/app-mode.css">
@@ -34,21 +34,23 @@
 		<div id="browsercast">
 			<pre id="bc-audio">
 				<code>
-					[["http://localhost:8080/demo/audio/audio.ogg",[0,111.258412,0]]]
+					[["demo/audio/audio.ogg",[0,111.258412,0]]]
 				</code>
 			</pre>
 		</div>
 
 		<section id="nav">
+			<!--
 			<div class="button" data-panel="properties-panel">
 				<span class="glyphicon glyphicon-cog"></span>
 				<div class="text">Properties</div>
 			</div>
+			-->
 			<div class="button" data-panel="import-panel">
 				<span class="glyphicon glyphicon-import"></span>
-				<div class="text">Import</div>
+				<div class="text">Import presentation</div>
 			</div>
-			<div class="button" data-panel="save-panel">
+			<div class="button" data-panel="download-panel">
 				<span class="glyphicon glyphicon-save"></span>
 				<div class="text">Download</div>
 			</div>
@@ -65,13 +67,14 @@
 		
 		<!-- UI overlays -->
 		<section id="nav-overlays">
-			<div id="enter-preview">
+			<div id="enter-preview" class="overlay">
 				<span class="glyphicon glyphicon-eye-open"></span>
 				<div class="text">Preview</div>
 			</div>
 
-			<div id="leave-preview">
+			<div id="leave-preview" class="overlay">
 				<span class="glyphicon glyphicon-chevron-left"></span>
+				<div class="text">Back</div>
 			</div>
 		</section>
 		
@@ -86,20 +89,7 @@
 					<div id="import-slides" class="button import"> import </div>
 				</div>
 			</div>
-			<div id="export-panel" class="menu-expand"></div>
-			<div id="save-panel" class="menu-expand">
-				<div id="save-test" class="button">Download</div>
-			</div>
-			<div id="properties-panel" class="menu-expand"></div>
-			<div id="slides-panel" class="menu-expand">
-				<div id="slides-container">
-					<div class="slide" style="top: 0px"> </div>
-					<div class="slide" style="top: 135px"> </div>
-					<div class="slide" style="top: 270px"> </div>
-					<div class="slide" style="top: 405px"> </div>
-					<div class="slide" style="top: 540px"> </div>
-				</div>
-			</div>
+			<div id="download-panel" class="menu-expand"></div>
 		</section>
 
 		<section id="app-area">
@@ -126,33 +116,7 @@
 					<div id="slide-editor-html"> </div>
 					<div id="slide-editor-css"> </div>
 				</div>
-				<div id="sync-panel">
-					<div id="load-audio" class="button">
-						<span class="glyphicon glyphicon-music"> </span>
-						<div class="info"> Add audio </div>
-						<div id="load-audio-body" class="body">
-							<input id="load-audio-source" type="text" placeholder="audio url">
-							<div id="load-audio-ok"> Use </div>
-							<!-- TODO: bug => hide when error -->
-							<audio id="load-audio-preview" preload controls> </audio>
-							<div class="state">
-								<div class="loading"> Loading </div>
-								<div class="error"> Error loading resource. Check again </div>
-							</div>
-						</div>
-					</div>
-					<div id="sync-area">
-						<div id="sync-timeline"></div>
-						<div class="info">
-							To sincronize with an audio stream you need to mark transition events.
-							Press T to set a new transition point and advance to the next slide or fragment.
-							When you finished press Save.
-						</div>
-						<div id="sync-reset" class="button"> Reset </div>
-						<div id="sync-save" class="button"> Save </div>
-						<audio id="sync-audio-source" preload> </audio>
-					</div>
-				</div>
+				<div id="sync-panel"></div>
 			</section>
 		</section>
 	</div>
