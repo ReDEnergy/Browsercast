@@ -1,7 +1,7 @@
 var gulp	= require('gulp');
 var gutil	= require('gulp-util');
 var open	= require('gulp-open');
-// var watch = require('gulp-watch');
+var watch = require('gulp-watch');
 // var livereload = require('gulp-livereload');
 // var filter = require('gulp-filter');
 
@@ -64,14 +64,21 @@ var declare = require('gulp-declare');
 var concat = require('gulp-concat');
 
 gulp.task('templates', function() {
-	gulp.src([APP_ROOT + '/**/templates/*.html'])
-		.pipe(handlebars())
-		.pipe(defineModule('plain'))
-		.pipe(declare({
-			namespace: 'AppTemplate'
-		}))
-		.pipe(concat('templates.js'))
-		.pipe(gulp.dest(APP_ROOT + '/js'));
+	var files = APP_ROOT + '/**/templates/*.html';
+
+	function compile() {
+		gulp.src([files])
+			.pipe(handlebars())
+			.pipe(defineModule('plain'))
+			.pipe(declare({
+				namespace: 'AppTemplate'
+			}))
+			.pipe(concat('templates.js'))
+			.pipe(gulp.dest(APP_ROOT + '/js'));
+	};
+
+    watch({glob: files}, compile);
+
 });
 
 /**
@@ -82,10 +89,9 @@ var AdmZip = require('adm-zip');
 
 gulp.task('buildZip', function() {
 	var zip = new AdmZip();
-	zip.addLocalFile(APP_ROOT + '/js/reveal/export/init.js', 'js');
-	zip.addLocalFolder(APP_ROOT + '/libs/reveal', 'js/reveal');
-	zip.addLocalFolder(APP_ROOT + '/libs/browsercast', 'js/browsercast');
-	zip.addLocalFolder(APP_ROOT + '/dev/components/timeline', 'js/timeline');
+	zip.addLocalFile(APP_ROOT + '/js/reveal/export/init.js', 'reveal/js');
+	zip.addLocalFolder(APP_ROOT + '/libs/browsercast', 'reveal/js/browsercast');
+	zip.addLocalFolder(APP_ROOT + '/libs/reveal', 'reveal/js/reveal');
 	zip.writeZip(APP_ROOT + '/js/reveal/reveal.zip');
 });
 
@@ -93,7 +99,7 @@ gulp.task('buildZip', function() {
  * Build deploy
  */
 
-gulp.task('build', ['templates', 'buildZip'], function() {
+gulp.task('build', ['buildZip'], function() {
 	gutil.log('Build end:', gutil.colors.cyan('Now Deploy!'));
 });
 
