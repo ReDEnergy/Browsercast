@@ -33,10 +33,6 @@
 				0 2px 5px 0 rgba(0, 0, 0, .26);
 }
 
-#nav .button:hover .text {
-	display: block;
-}
-
 #nav .button .glyphicon {
 	width: 36px;
 	height: 100%;
@@ -47,13 +43,21 @@
 }
 
 #nav .button .text {
-	width: 100px; 
+	width: 200px; 
 	padding: 0 0 0 10px;
 	text-align: left;
 	display: none;
 	position: absolute;
 	left: 50px;
 	top: 0;
+}
+
+#nav .button[data-active] .text {
+	display: none !important;
+}
+
+#nav .button:hover .text {
+	display: block;
 }
 
 
@@ -124,6 +128,18 @@
 	z-index: 1;
 }
 
+#nav-overlays .overlay:hover .text {
+	display: block;
+}
+
+#nav-overlays .overlay .text {
+	display: none;
+	font-size: 0.5em;
+	position: absolute;
+	top: 0.5em;
+	left: 3em;
+}
+
 #enter-preview {
 	border-radius: 50%;
 	font-size: 2em;
@@ -138,18 +154,6 @@
 #enter-preview:hover {
 	cursor: pointer;
 	text-shadow: 0 0 30px #019788;
-}
-
-#enter-preview:hover .text {
-	display: block;
-}
-
-#enter-preview .text {
-	display: none;
-	font-size: 0.5em;
-	position: absolute;
-	top: 0.5em;
-	left: 3em;
 }
 
 #leave-preview {
@@ -169,3 +173,9 @@
 	text-shadow: 0 0 30px #48C9B0;
 }
 
+#leave-preview .text {
+	font-size: 0.70em !important;
+	position: absolute;
+	top: 0.2em !important;
+	left: 2.2em !important;
+}

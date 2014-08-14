@@ -23,7 +23,7 @@
 
 #import-info {
 	height: 36px;
-	margin: 10px 0 0 0;
+	margin: 20px 0 0 0;
 	background: #E0F2F1;
 	line-height: 32px;
 	color: rgba(0, 0, 0, .75);
@@ -59,7 +59,7 @@
 
 #import-info[state='error'] {
 	padding: 0 20px;
-	background: #EA9861;
+	background: #E06C1E;
 	color: #FFF;
 }
 
