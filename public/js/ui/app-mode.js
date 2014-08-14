@@ -19,7 +19,7 @@ define(function(require, exports, module) {
 		// Solved the bug with vertical slides
 		// TODO - might be a browsercast-reveal bug
 		var reveal = document.querySelector('#scene .reveal');
-		RevealUtils.cleanUpReveal(reveal);
+		RevealUtils.cleanupReveal(reveal);
 		RevealUtils.initReveal();
 		
 		
