@@ -5,7 +5,8 @@ define(function(require, exports, module) {
 	var EventEmitter = require('core/EventEmitter');
 
 	// API
-	function TimedEvent(timeline, time, data) {
+	function TimelineEvent(timeline, time, data) {
+		var self = this;
 		var elem = document.createElement('div');
 		elem.className = 'event';
 
@@ -16,23 +17,48 @@ define(function(require, exports, module) {
 		this.data = data;
 		this.computePosition();
 
-		elem.addEventListener('click', handleClick.bind(this));
+		var deleteElem = document.createElement('div');
+		deleteElem.className = 'glyphicon delete';
+		elem.appendChild(deleteElem);
 
-		function handleClick(e) {
-			e.stopPropagation();
+		function handleClick(event) {
+			event.stopPropagation();
 			if (timeline.playing)
 				timeline.pause();
-			timeline.setPointerPosition((this.pos * timeline.size / 100).toFixed(2));
-			timeline.emitEvent('event', this.data);
-			timeline.selectedEvent = this;
+			timeline.setPointerPosition((self.pos * timeline.size / 100).toFixed(2));
+			timeline.emitEvent('event', self.data);
 		}
+		
+		function handleContextMenu(event) {
+			event.stopPropagation();
+			event.preventDefault();
+			self.highlight();
+		}
+		
+		elem.addEventListener('click', handleClick);
+		// elem.addEventListener ('contextmenu', handleContextMenu);	
+		elem.addEventListener ('mouseover', handleContextMenu);
+		deleteElem.addEventListener('click', function(event) {
+			event.stopPropagation();
+			timeline.removeEvent(self);
+		});
 
 		timeline.timeline.appendChild(elem);
 	}
 	
-	Timeline.prototype = Object.create(EventEmitter.prototype);
+	TimelineEvent.prototype.highlight = function highlight() {
+		var selected = this.timeline.selectedEvent;
+		if (selected) selected.blur();
+		this.timeline.selectedEvent = this;
+		this.elem.setAttribute('data-selected', '');
+	};
 
-	TimedEvent.prototype.computePosition = function computePosition() {
+	TimelineEvent.prototype.blur = function blur() {
+		this.timeline.selectedEvent = null;
+		this.elem.removeAttribute('data-selected');
+	};
+	
+	TimelineEvent.prototype.computePosition = function computePosition() {
 		if (this.time < 0) this.time = 0;
 		if (this.time > this.timeline.duration) this.time = this.timeline.duration;
 
@@ -40,31 +66,35 @@ define(function(require, exports, module) {
 		this.elem.style.left = this.pos.toFixed(2) + '%';
 	};
 
-	TimedEvent.prototype.clear = function clear() {
+	TimelineEvent.prototype.clear = function clear() {
+		this.blur();
 		this.data = null;
 		this.timeline = null;
 	};
 
-	TimedEvent.prototype.setInFuture = function setInFuture() {
+	TimelineEvent.prototype.setInFuture = function setInFuture() {
 		this.triggered = false;
 		this.timeline.emitEvent('futureEvent', this.data);
 		this.elem.removeAttribute('past');
 	};
 
-	TimedEvent.prototype.setInPast = function setInPast() {
+	TimelineEvent.prototype.setInPast = function setInPast() {
 		this.triggered = true;
 		this.timeline.emitEvent('pastEvent', this.data);
 		this.elem.setAttribute('past', '');
 	};
 
+	/**
+	 * Timeline 
+	 */
 	function Timeline(ParentNode) {
-		var timeline = document.createElement('div');
+		var container = document.createElement('div');
 		var fill = document.createElement('div');
 		var time_pointer = document.createElement('div');
 		var time_info =  document.createElement('div');
 		var play_btn = document.createElement('div');
 
-		timeline.className = 'timeline';
+		container.className = 'timeline';
 		fill.className = 'fill';
 		time_pointer.className = 'time-pointer';
 		time_info.className = 'time-info';
@@ -72,12 +102,12 @@ define(function(require, exports, module) {
 		play_btn.className = 'play-btn glyphicon';
 
 		time_pointer.appendChild(time_info);
-		timeline.appendChild(play_btn);
-		timeline.appendChild(fill);
-		timeline.appendChild(time_pointer);
-		ParentNode.appendChild(timeline);
+		container.appendChild(play_btn);
+		container.appendChild(fill);
+		container.appendChild(time_pointer);
+		ParentNode.appendChild(container);
 
-		this.timeline = timeline;
+		this.timeline = container;
 		this.fill = fill;
 		this.time_pointer = time_pointer;
 		this.play_btn = play_btn;
@@ -88,9 +118,10 @@ define(function(require, exports, module) {
 		this.currentTime = 0;
 		this.prevTime = 0;
 		this.size = 0;
-		this.playing = false;
 		this.layout = null;
 		this.duration = 60;
+		this.playing = false;
+		this.interrupted = false;
 
 		this.events = [];
 		this.prevEventID = -1;
@@ -107,6 +138,8 @@ define(function(require, exports, module) {
 		this.computeLayout();
 		this.setEvents();
 	}
+	
+	Timeline.prototype = Object.create(EventEmitter.prototype);
 
 	Timeline.prototype.setTimeFrame = function setTimeFrame(duration) {
 		this.duration = duration;
@@ -164,7 +197,7 @@ define(function(require, exports, module) {
 	 */
 
 	Timeline.prototype.addEvent = function addEvent(startTime, Data) {
-		var event = new TimedEvent(this, startTime, Data);
+		var event = new TimelineEvent(this, startTime, Data);
 		this.events.push(event);
 		this.sortEvents();
 	};
@@ -174,6 +207,10 @@ define(function(require, exports, module) {
 		var index = this.events.indexOf(event);
 		this.events.splice(index, 1);
 		this.timeline.removeChild(event.elem);
+		if (this.prevEventID === index)
+			this.prevEventID = -1;
+		if (this.prevEventID > index)
+			this.prevEventID--;
 	};
 
 	Timeline.prototype.clearEvents = function clearEvents() {
@@ -213,6 +250,7 @@ define(function(require, exports, module) {
 		if (len === 0)
 			return;
 		
+		// Instant return if between events
 		var nextEventID = this.prevEventID + 1;
 		if (nextEventID < len) {
 			if (this.events[nextEventID].time > this.currentTime) {
@@ -220,14 +258,15 @@ define(function(require, exports, module) {
 					return;
 			}
 		}
-
+		else {
+			if (this.prevEventID >=0 && this.currentTime > this.events[this.prevEventID].time)
+				return;			
+		}
+		
 		var lastEvent = null;
 		this.setEmitEvent(false);
 
 		if (this.prevTime < this.currentTime) {
-			if (this.prevEventID === len - 1)
-				return;
-			
 			for (var i = this.prevEventID + 1; i < len; i++) {
 				if (this.events[i].time > this.currentTime)
 					break;
@@ -264,6 +303,9 @@ define(function(require, exports, module) {
 
 	Timeline.prototype.setEvents = function setEvents() {
 		this.timeline.addEventListener('click', this.handleClick.bind(this));
+		this.timeline.addEventListener ('contextmenu', function(event) {
+			event.preventDefault();
+		});		
 		this.play_btn.addEventListener('click', function(e) {
 			this.playing ? this.pause(e) : this.play(e);
 		}.bind(this));
@@ -282,12 +324,24 @@ define(function(require, exports, module) {
 		if (this.playing) return;
 		if (this.currentTime === this.duration) return;
 
+		this.interrupted = false;
 		this.startDate = new Date();
 		this.startTime = this.currentTime;
 		this.playing = setInterval(this.advance, 100);
 		
 		this.play_btn.setAttribute('playing', '');
 		this.emit('play');
+	};
+	
+	Timeline.prototype.interrupt = function interrupt() {
+		if (!this.playing) return;
+		this.interrupted = true;
+		this.pause();
+	};
+
+	Timeline.prototype.resume = function resume() {
+		if (!this.interrupted) return;
+		setTimeout(this.play, 200);
 	};
 
 	Timeline.prototype.pause = function pause(e) {
@@ -301,9 +355,10 @@ define(function(require, exports, module) {
 	};
 
 	Timeline.prototype.handleClick = function handleClick(e) {
-		if (this.playing) this.pause(e);
+		this.interrupt();
 		var delta = e.clientX - this.box.left;
 		this.setPointerPosition(delta);
+		this.resume();
 	};
 
 	Timeline.prototype.handleMouseMove = function handleMouseMove(e) {
@@ -312,8 +367,7 @@ define(function(require, exports, module) {
 	};
 
 	Timeline.prototype.handleMouseDown = function handleMouseDown(e) {
-		if (this.playing) this.pause(e);
-
+		this.interrupt();
 		this.startX = e.clientX - this.tpos;
 		document.addEventListener('mousemove', this.handleMouseMove);
 		document.addEventListener('mouseup', this.handleMouseUp);
@@ -323,6 +377,7 @@ define(function(require, exports, module) {
 	Timeline.prototype.handleMouseUp = function handleMouseUp() {
 		document.removeEventListener('mousemove', this.handleMouseMove);
 		document.removeEventListener('mouseup', this.handleMouseUp);
+		this.resume(); 
 		this.addTransitions();
 	};
 

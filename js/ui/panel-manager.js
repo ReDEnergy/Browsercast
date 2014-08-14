@@ -2,10 +2,13 @@ define(function(require, exports, module) {
 	'use strict';
 
 	// Load Modules
+	var DownloadPanel = require('ui/download-panel');
+	var ImportPanel = require('ui/import-panel');
+	var SyncPanel = require('sync/sync-panel');
 	var NavPanel = require('component/nav-panel');
 	var _ = require('lodash');
 
-	// Code
+	// API
 	var panels = [];
 
 	var closeAllExcept = function closeAllExcept(Panel) {
@@ -25,9 +28,15 @@ define(function(require, exports, module) {
 			}
 		});
 	};
-
-	return {
-		init : initMenuPanels,
-		closeAll : closeAllExcept.bind(null, null)
+	
+	var init = function init () {
+		DownloadPanel.init();
+		ImportPanel.init();
+		SyncPanel.init();
+		initMenuPanels();
 	};
+
+	// Public API
+	exports.init = init;
+	exports.closeAll = closeAllExcept.bind(null, null);
 });

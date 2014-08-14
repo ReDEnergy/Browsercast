@@ -1,0 +1,43 @@
+<div class="controls">
+	<div id="load-audio" class="button">
+		<span class="glyphicon glyphicon-music"> </span>
+		<div class="info"> Add audio </div>
+		<div id="load-audio-body" class="body">
+			<input id="load-audio-source" type="text" placeholder="audio url">
+			<div id="load-audio-ok"> 
+				<span class="glyphicon glyphicon-ok"></span>
+			</div>
+			<!-- TODO: bug => hide when error -->
+			<audio id="load-audio-preview" preload controls> </audio>
+			<div class="state">
+				<div class="loading"> Loading </div>
+				<div class="error"> Error loading resource. Check again </div>
+			</div>
+		</div>
+	</div>
+	<div id="sync-save" class="button"> 
+		<span class="glyphicon glyphicon-ok"></span>
+		<span>Save sync</span>
+		<div class="info">
+			saving...
+		</div>
+	</div>
+	<div id="sync-reset" class="button">
+		<span class="glyphicon glyphicon-repeat"></span>
+		<span>Reset sync</span>
+	</div>
+	<div class="button totorial">
+		<span class="glyphicon glyphicon-exclamation-sign"></span>
+		<div class="info">
+			During playback press <b class="highlight">T</b> to add a new transition point (advance to the next slide or fragment) </br>
+			You may delete a specific event by <b class="highlight">hovering</b> over it and then press the delete button that appears </br>
+			<b class="highlight">Save</b> : saves the audio synchronisation into the presentation </br>
+			<b class="highlight">Reset</b> : resets the synchronisation process. Does not affect the presentation </br>
+		</div>
+	</div>
+</div>
+
+<div id="sync-area">
+	<audio id="sync-audio-source" preload> </audio>
+	<div id="sync-timeline"></div>
+</div>

@@ -2,7 +2,11 @@
 	"use strict";
 
 	// API
-	function TimedEvent(timeline, time, data) {
+
+	/**
+	 * Timeline Event 
+	 */	
+	function TimelineEvent(timeline, time, data) {
 		var elem = document.createElement('div');
 		elem.className = 'event';
 
@@ -21,13 +25,12 @@
 				timeline.pause();
 			timeline.setPointerPosition((this.pos * timeline.size / 100).toFixed(2));
 			timeline.emitEvent('event', this.data);
-			timeline.selectedEvent = this;
 		}
 
 		timeline.timeline.appendChild(elem);
 	}
 
-	TimedEvent.prototype.computePosition = function computePosition() {
+	TimelineEvent.prototype.computePosition = function computePosition() {
 		if (this.time < 0) this.time = 0;
 		if (this.time > this.timeline.duration) this.time = this.timeline.duration;
 
@@ -35,23 +38,26 @@
 		this.elem.style.left = this.pos.toFixed(2) + '%';
 	};
 
-	TimedEvent.prototype.clear = function clear() {
+	TimelineEvent.prototype.clear = function clear() {
 		this.data = null;
 		this.timeline = null;
 	};
 
-	TimedEvent.prototype.setInFuture = function setInFuture() {
+	TimelineEvent.prototype.setInFuture = function setInFuture() {
 		this.triggered = false;
 		this.timeline.emitEvent('futureEvent', this.data);
 		this.elem.removeAttribute('past');
 	};
 
-	TimedEvent.prototype.setInPast = function setInPast() {
+	TimelineEvent.prototype.setInPast = function setInPast() {
 		this.triggered = true;
 		this.timeline.emitEvent('pastEvent', this.data);
 		this.elem.setAttribute('past', '');
 	};
 
+	/**
+	 * Timeline 
+	 */
 	function Timeline(ParentNode) {
 		var timeline = document.createElement('div');
 		var fill = document.createElement('div');
@@ -84,13 +90,13 @@
 		this.prevTime = 0;
 		this.size = 0;
 		this.playing = false;
+		this.seeking = false;
 		this.layout = null;
 		this.duration = 60;
 
 		this.events = [];
 		this.prevEventID = -1;
 		this.triggerEvents = true;
-		this.selectedEvent = null;
 
 		this.advance = this.advance.bind(this);
 		this.pause = this.pause.bind(this);
@@ -142,9 +148,9 @@
 	};
 	
 	Timeline.prototype.updatePointerPosition = function updatePointerPosition() {
-		var pos = (this.currentTime / this.duration) * this.size;
-		var apos = this.currentTime / this.duration * 100;
-		this.tpos = pos;
+		var pos = (this.currentTime / this.duration);
+		var apos = pos * 100;
+		this.tpos = pos * this.size;
 		this.time_pointer.style.left = apos + '%';
 		this.fill.style.width = apos + '%';
 	};
@@ -155,15 +161,43 @@
 		this.setCurrentTime(time);
 	};
 	
-
 	/*
 	 * Timeline Events
 	 */
 
-	Timeline.prototype.addEvent = function addEvent(startTime, Data) {
-		var event = new TimedEvent(this, startTime, Data);
+	Timeline.prototype.addEvent = function addEvent(startTime, data) {
+		var event = new TimelineEvent(this, startTime, data);
 		this.events.push(event);
 		this.sortEvents();
+	};
+
+	Timeline.prototype.setEventByData = function setEventByData(data) {
+		var index = -1;
+		for (var i=0; i<this.events.length; i++) {
+			if (this.events[i].data === data)
+				index = i;
+		}
+		if (index === this.prevEventID) {
+			return;
+		}
+
+		if (index >= 0 && this.prevEventID >= 0) {
+			this.setEmitEvent(false);
+			if (index < this.prevEventID) {
+				for (var i=this.prevEventID; i>index; i--) {
+					this.events[i].setInFuture();
+				}
+			}
+			if (index > this.prevEventID) {
+				for (var i=this.prevEventID; i<index; i++) {
+					this.events[i].setInPast();
+				}
+			}
+			this.events[index].setInPast();
+			this.prevEventID = index;
+			this.logEvents();
+			this.setEmitEvent(true);
+		}
 	};
 	
 	Timeline.prototype.removeEvent = function removeEvent(event) {
@@ -315,12 +349,14 @@
 		document.addEventListener('mousemove', this.handleMouseMove);
 		document.addEventListener('mouseup', this.handleMouseUp);
 		this.removeTransitions();
+		this.seeking = true;
 	};
 
 	Timeline.prototype.handleMouseUp = function handleMouseUp() {
 		document.removeEventListener('mousemove', this.handleMouseMove);
 		document.removeEventListener('mouseup', this.handleMouseUp);
 		this.addTransitions();
+		this.seeking = false;
 	};
 
 	Timeline.prototype.addTransitions = function addTransitions() {

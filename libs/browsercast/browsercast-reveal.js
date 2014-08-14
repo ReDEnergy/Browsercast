@@ -61,6 +61,7 @@
 			function goLeftTop() {
 				if (Reveal.isFirstSlide()) {
 					Reveal.removeEventListener("slidechanged", goLeftTop);
+					FrameworkEvents.init();
 					initCallback();
 				}
 				else {
@@ -71,9 +72,9 @@
 			
 			function finish() {
 				unlistenStateEvents();
-				returnToFirstSlide();
 				checkStates();
 				initTimeline();
+				returnToFirstSlide();
 			}
 		
 			function triggerEvent() {
@@ -214,9 +215,12 @@
 		if (activeState === this)
 			return;
 		activeState = this;
-		if (timeline.currentTime < this.startTime || timeline.currentTime >= this.endTime) {
+		if (timeline.currentTime < this.startTime || timeline.currentTime >= this.endTime) {			
 			timeline.pause();
 			timeline.setCurrentTime(this.startTime);
+		}
+		if (!timeline.seeking && !timeline.playing) {
+			timeline.setEventByData(this);
 		}
 	};
 
@@ -424,7 +428,6 @@
 		initCallback = typeof callback === 'function' ? callback : function() {};
 		Audio.init();
 		Browsercast.init(config);
-		FrameworkEvents.init();
 		TrackEvents.init();
 	}
 

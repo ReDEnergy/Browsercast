@@ -145,9 +145,8 @@
 	position: absolute;
 	left: -4px;
 	top: 10px;
-	z-index: -100;
+	z-index: -1;
 	transform: rotate(45deg);
-	transition: all 0.2s;
 }
 
 .timeline .event[past]:after {
