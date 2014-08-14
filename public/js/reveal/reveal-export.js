@@ -8,9 +8,9 @@ define(function(require, exports, module) {
 	var saveFileAs = require('file-saver');
 	var RevealUtils = require('reveal/reveal-utils');
 	var AppTemplate = require('templates');
+	var GlobalEvent = require('core/GlobalEvents');
+	var Presentation = require('app/config').Presentation;
 
-	// TODO
-	// add a node.js fallback in case of XHR errors for images or audio
 	var zip;
 	requestRevealZip();
 
@@ -23,7 +23,6 @@ define(function(require, exports, module) {
 	}
 
 	function requestFile(url, onSuccess, onTimeout) {
-		console.log(url);
 		if (typeof(onSuccess) !== 'function') {
 			console.log('error: onSuccess parameter is not a function');
 			return;
@@ -67,7 +66,7 @@ define(function(require, exports, module) {
 	function prepareZipFile() {
 		// Slides Info
 	 	var slides = document.querySelector('#scene .reveal .slides').cloneNode(true);
-		RevealUtils.cleanUpSlides(slides);
+		RevealUtils.cleanupSlides(slides);
 
 		// Search for images
 		var imgs = slides.querySelectorAll('img');
@@ -78,30 +77,33 @@ define(function(require, exports, module) {
 
 		// Request count
 		var reqCount = imgs.length + tracks.length;
+		var reqDone = 0; 
 
 		// Zip folders
-		var imgFolder = zip.folder("images");
-		var audioFolder = zip.folder("audio");
+		var imgFolder = zip.folder("reveal/images");
+		var audioFolder = zip.folder("reveal/audio");
 
+		GlobalEvent.emit('download-start');
 		function finishRequest() {
-			reqCount--;
-			console.log('REQUESTS TO COMPLETE:', reqCount);
-			if (reqCount === 0) {
+			reqDone++;
+			if (reqDone === reqCount) {
 				finishZip();
 			}
+			GlobalEvent.emit('download-progress', (reqDone/reqCount)*100);
 		}
 
 		function finishZip() {
 			var revealData = {
-				title: 'Exported Presentation',
-				author: 'Gabriel Ivanica',
-				description: 'a presentation done with Browsercast Editor',
+				title: Presentation.title,
+				author: Presentation.author,
+				description: Presentation.description,
 				audio: JSON.stringify(tracks),
 				slides: slides.innerHTML.replace(/					/g, '	')
 			};
 
-			zip.file("index.html", AppTemplate.reveal(revealData));
+			zip.file("reveal/index.html", AppTemplate['reveal-export'](revealData));
 			downloadZipFile();
+			GlobalEvent.emit('download-end');
 		};
 		
 		// Save resources 
@@ -132,8 +134,7 @@ define(function(require, exports, module) {
 		var content = zip.generate({type:"blob"});
 		saveFileAs(content, "reveal.zip");
 	}
-
-	var save_test = document.getElementById('save-test');
-	save_test.addEventListener('click', prepareZipFile);
-
+	
+	// Public API
+	exports.download = prepareZipFile;
 });

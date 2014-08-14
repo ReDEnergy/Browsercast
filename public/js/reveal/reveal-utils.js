@@ -29,14 +29,14 @@ define(function(require, exports, module) {
 	 * @param {DOM Object} class="reveal"
 	 * TODO: remove only reveal.js specific attributes
 	 */
-	function cleanUpReveal(reveal) {
+	function cleanupReveal(reveal) {
 		var slides = reveal.querySelector('.slides');
 		reveal.className = 'reveal';
 		reveal.removeAttribute('style');
 		reveal.removeAttribute('data-transition-speed');
 		reveal.removeAttribute('data-background-transition');
 		reveal.textContent = '';
-		cleanUpSlides(slides);
+		cleanupSlides(slides);
 		reveal.appendChild(slides);
 	}
 
@@ -44,7 +44,7 @@ define(function(require, exports, module) {
 	 * @param {DOM Object} class="slides"
 	 * TODO: remove only reveal.js specific attributes
 	 */
-	function cleanUpSlides(slides) {
+	function cleanupSlides(slides) {
 		slides.removeAttribute('style');
 			
 		var sections = slides.querySelectorAll('section');
@@ -62,14 +62,34 @@ define(function(require, exports, module) {
 			fragment.removeAttribute('data-fragment-index');
 		});
 	}
+	
+	/**
+	 * @param {DOM Object} class="slides"
+	 * ABOUT: Remove only browsercast specific attributes
+	 */
+	function cleanupBrowsercast(slides, browsercast) {
+		function removeBrowsercastData(elem) {
+			elem.removeAttribute('data-bc-start');
+			elem.removeAttribute('data-bc-end');
+		}
+		
+		var sections = slides.querySelectorAll('section');
+		[].forEach.call(sections, removeBrowsercastData);
 
+		var fragments = slides.querySelectorAll('.fragment');
+		[].forEach.call(fragments, removeBrowsercastData);
+	}
+	
 	function triggerLayoutChange(delay) {
 		setTimeout(Reveal.layout, delay);
 	}
 
 	// Public API
-	exports.cleanUpSlides = cleanUpSlides;
-	exports.cleanUpReveal = cleanUpReveal;
 	exports.initReveal = initReveal;
 	exports.triggerLayoutChange = triggerLayoutChange;
+
+	exports.cleanupSlides = cleanupSlides;
+	exports.cleanupReveal = cleanupReveal;
+	exports.cleanupBrowsercast = cleanupBrowsercast;
+
 });
