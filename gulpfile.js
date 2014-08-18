@@ -1,7 +1,7 @@
 var gulp	= require('gulp');
 var gutil	= require('gulp-util');
 var open	= require('gulp-open');
-var watch = require('gulp-watch');
+var watch	= require('gulp-watch');
 // var livereload = require('gulp-livereload');
 // var filter = require('gulp-filter');
 
@@ -64,10 +64,12 @@ var declare = require('gulp-declare');
 var concat = require('gulp-concat');
 
 gulp.task('templates', function() {
-	var files = APP_ROOT + '/**/templates/*.html';
+	var files = [
+		APP_ROOT + '/**/templates/*.html',
+		APP_ROOT + '/demo/reveal/*'];
 
 	function compile() {
-		gulp.src([files])
+		gulp.src(files)
 			.pipe(handlebars())
 			.pipe(defineModule('plain'))
 			.pipe(declare({
