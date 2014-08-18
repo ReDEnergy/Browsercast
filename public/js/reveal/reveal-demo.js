@@ -3,17 +3,14 @@ define(function(require, exports, module) {
 
 	var SlideManager = require('reveal/reveal-manager');
 	var SyncPanel = require('sync/sync-panel');
-	var demoHTML = require('text!/demo/reveal/browsercast.html');
-	var demoAudio = require('text!/demo/reveal/audio.json');
-	
-	console.log(demoAudio);
+	var AppTemplate = require('templates');
 	
 	var init = function init() {
 		var reveal = document.querySelector('#scene .reveal');
-		reveal.innerHTML = demoHTML;
+		reveal.innerHTML = AppTemplate['browsercast']();
 		
 		var audio = document.querySelector('#bc-audio code');
-		audio.textContent = demoAudio;
+		audio.textContent = AppTemplate['audio']();
 		
 		SlideManager.initSlides();
 		SyncPanel.setAudioSource('demo/audio/audio.ogg');
