@@ -5,6 +5,10 @@ require.config({
 	baseURL: '/js',
 
 	paths: {
+		// Require.js modules
+		'domReady': '../libs/require/domReady',
+		'text': '../libs/require/text',
+
 		// libs
 		zepto:	'../libs/zepto/zepto.min',
 		lodash:	'../libs/lodash/lodash.min',
@@ -16,7 +20,7 @@ require.config({
 		'beautify-html': '../libs/js-beautify/beautify-html',
 		'beautify-css': '../libs/js-beautify/beautify-css',
 		'beautify-js': '../libs/js-beautify/beautify-js',
-		'beautify': '../libs/js-beautify/beautify',
+		'beautify': '../libs/js-beautify/beautify'
 	},
 
 	shim: {
