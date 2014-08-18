@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 	var Utils = require('utils');
 	var RevealExport = require('reveal/reveal-export');
 	var RevealUtils = require('reveal/reveal-utils');
+	var GlobalEvent = require('core/GlobalEvents');
 
 	// Code
 	var slides = document.querySelector('.reveal .slides');
@@ -132,6 +133,14 @@ define(function(require, exports, module) {
 	delete_confirm_ok.addEventListener('click', deleteCurrentSlide);
 	delete_confirm_cancel.addEventListener('click', function() {
 		delete_slide_button.toggle();
+	});
+	
+	GlobalEvent.on('enter-preview', function() {
+		delete_slide_button.toggle(false);
+	});
+
+	GlobalEvent.on('sync-panel-open', function() {
+		delete_slide_button.toggle(false);
 	});
 	
 	// Public API
