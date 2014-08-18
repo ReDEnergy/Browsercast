@@ -6,11 +6,13 @@ define(function(require, exports, module) {
 	var PanelManager = require('ui/panel-manager');
 	var RevealUtils = require('reveal/reveal-utils');
 	var VisualEditor = require('editor/visual-editor');
+	var GlobalEvent = require('core/GlobalEvents');
 
 	// API
 	var app;
 
 	function enterPreview() {
+		GlobalEvent.emit('enter-preview');
 		setMode(MODES.PREVIEW);
 		VisualEditor.disable();
 		PanelManager.closeAll();
@@ -33,6 +35,7 @@ define(function(require, exports, module) {
 	}
 
 	function leavePreview() {
+		GlobalEvent.emit('leave-preview');
 		setMode(MODES.EDITOR);
 		VisualEditor.enable();
 		RevealUtils.triggerLayoutChange(400);;
@@ -55,6 +58,7 @@ define(function(require, exports, module) {
 
 	// Sync Panel button
 	var openSyncPanel = function openSyncPanel() {
+		GlobalEvent.emit('sync-panel-open');
 		app.setAttribute('data-sync-audio', '');
 		RevealUtils.triggerLayoutChange(400);;
 	};

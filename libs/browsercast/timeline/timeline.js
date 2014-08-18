@@ -195,7 +195,6 @@
 			}
 			this.events[index].setInPast();
 			this.prevEventID = index;
-			this.logEvents();
 			this.setEmitEvent(true);
 		}
 	};
