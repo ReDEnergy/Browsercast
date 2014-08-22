@@ -221,14 +221,6 @@
 		console.log('EVENTS', s);
 	};
 
-	Timeline.prototype.getPreviousEvent = function getPreviousEvent() {
-		for (var i = 0; i < this.events.length; i++) {
-			if (this.events[i].time > this.currentTime)
-				return (i - 1);
-		}
-		return i - 1;
-	};
-
 	Timeline.prototype.sortEvents = function sortEvents() {
 		this.events.sort(function(a, b) {
 			return a.time - b.time;
@@ -243,6 +235,7 @@
 		if (len === 0)
 			return;
 		
+		// Instant return if between events
 		var nextEventID = this.prevEventID + 1;
 		if (nextEventID < len) {
 			if (this.events[nextEventID].time > this.currentTime) {
@@ -250,16 +243,20 @@
 					return;
 			}
 		}
-
+		else {
+			if (this.prevEventID >=0 && this.currentTime > this.events[this.prevEventID].time)
+				return;			
+		}
+		
 		var lastEvent = null;
 		this.setEmitEvent(false);
 
 		if (this.prevTime < this.currentTime) {
-			if (this.prevEventID === len - 1)
-				return;
-			
 			for (var i = this.prevEventID + 1; i < len; i++) {
 				if (this.events[i].time > this.currentTime)
+					break;
+
+				if (this.events[i].time === this.events[i+1].time)
 					break;
 					
 				this.events[i].setInPast();
@@ -312,12 +309,24 @@
 		if (this.playing) return;
 		if (this.currentTime === this.duration) return;
 
+		this.interrupted = false;
 		this.startDate = new Date();
 		this.startTime = this.currentTime;
 		this.playing = setInterval(this.advance, 100);
 		
 		this.play_btn.setAttribute('playing', '');
 		this.emit('play');
+	};
+	
+	Timeline.prototype.interrupt = function interrupt() {
+		if (!this.playing) return;
+		this.interrupted = true;
+		this.pause();
+	};
+
+	Timeline.prototype.resume = function resume() {
+		if (!this.interrupted) return;
+		setTimeout(this.play, 200);
 	};
 
 	Timeline.prototype.pause = function pause(e) {
@@ -331,10 +340,11 @@
 	};
 
 	Timeline.prototype.handleClick = function handleClick(e) {
-		if (this.playing) this.pause(e);
+		this.interrupt();
 		var delta = e.clientX - this.box.left;
 		this.setPointerPosition(delta);
-	};
+		this.resume();
+	};	
 
 	Timeline.prototype.handleMouseMove = function handleMouseMove(e) {
 		var posX = e.clientX - this.startX;
@@ -342,20 +352,18 @@
 	};
 
 	Timeline.prototype.handleMouseDown = function handleMouseDown(e) {
-		if (this.playing) this.pause(e);
-
+		this.interrupt();
 		this.startX = e.clientX - this.tpos;
 		document.addEventListener('mousemove', this.handleMouseMove);
 		document.addEventListener('mouseup', this.handleMouseUp);
 		this.removeTransitions();
-		this.seeking = true;
 	};
 
 	Timeline.prototype.handleMouseUp = function handleMouseUp() {
 		document.removeEventListener('mousemove', this.handleMouseMove);
 		document.removeEventListener('mouseup', this.handleMouseUp);
+		this.resume(); 
 		this.addTransitions();
-		this.seeking = false;
 	};
 
 	Timeline.prototype.addTransitions = function addTransitions() {
