@@ -228,14 +228,6 @@ define(function(require, exports, module) {
 		console.log('EVENTS', s);
 	};
 
-	Timeline.prototype.getPreviousEvent = function getPreviousEvent() {
-		for (var i = 0; i < this.events.length; i++) {
-			if (this.events[i].time > this.currentTime)
-				return (i - 1);
-		}
-		return i - 1;
-	};
-
 	Timeline.prototype.sortEvents = function sortEvents() {
 		this.events.sort(function(a, b) {
 			return a.time - b.time;
