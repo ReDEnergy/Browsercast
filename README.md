@@ -15,7 +15,7 @@ http://redenergy.github.io/Browsercast
 
 ## Development
 
-Browsercast is a single page client side HTML5 application. It should work without an internet connection just by using local resrouces.
+Browsercast is a single page, client side HTML5 application. It works without an internet connection just by using local resources. That means, it also can be hosted and served statically from any server including github pages.
 
 #### Prerequisites
 - Node.js
