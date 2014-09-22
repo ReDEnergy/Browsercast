@@ -13,8 +13,19 @@ but maintains a rich web environment: searchable text, images, links, interactiv
 
 http://redenergy.github.io/Browsercast
 
-1. clone - https://github.com/ReDEnergy/Browsercast.git
-2. enter /Browsercast
-3. npm install - will install all development dependencies
-4. type "gulp" - will create a server on localhost:8080 and open the default browser
-5. type "gulp templates" - templates livereload (needed for automatic updates of templates after they are edited) 
+## Development
+
+Browsercast is a single page client side HTML5 application. It should work without an internet connection just by using local resrouces.
+
+#### Prerequisites
+- Node.js
+- Gulp.js build system - used for compiling handlebars templates, optimize require.js and livereload server
+  -- (optional) install gulp.js as a global dependency "npm install -g gulp"
+
+#### How to
+
+1. clone repo
+2. type "npm install" - installs all development dependencies
+3. type "gulp" - starts a server on localhost:8080
+4. type "gulp templates" - provides templates livereload (needed for automatic updates of templates after they are edited)
+5. start hacking
