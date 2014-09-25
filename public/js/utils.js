@@ -15,8 +15,22 @@ define(function(require, exports, module) {
 		return elems;
 	}
 
-	return {
-		stopPropagation: stopPropagation,		getChildsByTag: getChildsByTag
+	function getURLParam(val) {
+	    var result = undefined,
+	        tmp = [];
+	    location.search
+	    	.substr(1)
+	        .split("&")
+	        .forEach(function (item) {
+	        tmp = item.split("=");
+	        if (tmp[0] === val) result = decodeURIComponent(tmp[1]);
+	    });
+	    return result;
+	}
 
-	};
+
+	// Public API
+	exports.stopPropagation = stopPropagation;
+	exports.getChildsByTag = getChildsByTag;
+	exports.getURLParam = getURLParam;
 });
