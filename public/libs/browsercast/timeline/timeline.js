@@ -4,8 +4,8 @@
 	// API
 
 	/**
-	 * Timeline Event 
-	 */	
+	 * Timeline Event
+	 */
 	function TimelineEvent(timeline, time, data) {
 		var elem = document.createElement('div');
 		elem.className = 'event';
@@ -56,7 +56,7 @@
 	};
 
 	/**
-	 * Timeline 
+	 * Timeline
 	 */
 	function Timeline(ParentNode) {
 		var timeline = document.createElement('div');
@@ -117,9 +117,9 @@
 			this.events[i].computePosition();
 		}
 	};
-	
+
 	Timeline.prototype.setCurrentTime = function setCurrentTime(time) {
-		this.prevTime = this.currentTime;   
+		this.prevTime = this.currentTime;
 		if (time < 0) time = 0;
 		if (time >= this.duration) {
 			this.pause();
@@ -146,7 +146,7 @@
 			seconds = '0' + seconds;
 		this.time_info.textContent = minutes + ':' + seconds;
 	};
-	
+
 	Timeline.prototype.updatePointerPosition = function updatePointerPosition() {
 		var pos = (this.currentTime / this.duration);
 		var apos = pos * 100;
@@ -160,7 +160,7 @@
 		var time = (pos/this.size * this.duration);
 		this.setCurrentTime(time);
 	};
-	
+
 	/*
 	 * Timeline Events
 	 */
@@ -198,7 +198,7 @@
 			this.setEmitEvent(true);
 		}
 	};
-	
+
 	Timeline.prototype.removeEvent = function removeEvent(event) {
 		event.clear();
 		var index = this.events.indexOf(event);
@@ -210,7 +210,7 @@
 		for (var i=0; i<this.events.length; i++)
 			this.timeline.removeChild(this.events[i].elem);
 		this.events = [];
-		this.prevEventID = -1;		
+		this.prevEventID = -1;
 	};
 
 	Timeline.prototype.logEvents = function logEvents() {
@@ -234,7 +234,7 @@
 		var len = this.events.length;
 		if (len === 0)
 			return;
-		
+
 		// Instant return if between events
 		var nextEventID = this.prevEventID + 1;
 		if (nextEventID < len) {
@@ -245,9 +245,9 @@
 		}
 		else {
 			if (this.prevEventID >=0 && this.currentTime > this.events[this.prevEventID].time)
-				return;			
+				return;
 		}
-		
+
 		var lastEvent = null;
 		this.setEmitEvent(false);
 
@@ -256,12 +256,13 @@
 				if (this.events[i].time > this.currentTime)
 					break;
 
-				if (this.events[i].time === this.events[i+1].time)
-					break;
-					
+				if ((i + 1) < len)
+					if (this.events[i].time === this.events[i+1].time)
+						break;
+
 				this.events[i].setInPast();
 				this.prevEventID = i;
-				lastEvent = this.events[i]; 
+				lastEvent = this.events[i];
 			}
 		}
 		else {
@@ -271,7 +272,7 @@
 
 				this.events[i].setInFuture();
 				this.prevEventID = i - 1;
-				lastEvent = this.events[i]; 
+				lastEvent = this.events[i];
 			}
 		}
 
@@ -283,7 +284,7 @@
 	Timeline.prototype.setEmitEvent = function setEmitEvent(value) {
 		this.triggerEvents = value;
 	};
-	
+
 	Timeline.prototype.emitEvent = function emitEvent(name, data) {
 		if (this.triggerEvents)
 			this.emit(name, data);
@@ -313,11 +314,11 @@
 		this.startDate = new Date();
 		this.startTime = this.currentTime;
 		this.playing = setInterval(this.advance, 100);
-		
+
 		this.play_btn.setAttribute('playing', '');
 		this.emit('play');
 	};
-	
+
 	Timeline.prototype.interrupt = function interrupt() {
 		if (!this.playing) return;
 		this.interrupted = true;
@@ -332,7 +333,7 @@
 	Timeline.prototype.pause = function pause(e) {
 		if (e) e.stopPropagation();
 		if (!this.playing) return;
-		
+
 		clearInterval(this.playing);
 		this.playing = false;
 		this.play_btn.removeAttribute('playing');
@@ -344,7 +345,7 @@
 		var delta = e.clientX - this.box.left;
 		this.setPointerPosition(delta);
 		this.resume();
-	};	
+	};
 
 	Timeline.prototype.handleMouseMove = function handleMouseMove(e) {
 		var posX = e.clientX - this.startX;
@@ -362,7 +363,7 @@
 	Timeline.prototype.handleMouseUp = function handleMouseUp() {
 		document.removeEventListener('mousemove', this.handleMouseMove);
 		document.removeEventListener('mouseup', this.handleMouseUp);
-		this.resume(); 
+		this.resume();
 		this.addTransitions();
 	};
 
