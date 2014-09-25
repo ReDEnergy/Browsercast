@@ -14,7 +14,7 @@ define(function(require, exports, module) {
 		audio.textContent = AppTemplate[demo + '-audio']();
 
 		SlideManager.initSlides();
-		SyncPanel.setAudioSource('demo/audio/' + demo + '.ogg');
+		SyncPanel.setAudioSource('demo/audio/' + demo.substr(5) + '.ogg');
 	};
 
 	var initDemo = function initDemo(demo) {
