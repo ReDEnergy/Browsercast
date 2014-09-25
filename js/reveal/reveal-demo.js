@@ -6,7 +6,6 @@ define(function(require, exports, module) {
 	var AppTemplate = require('templates');
 
 	var init = function init(demo) {
-		console.log("awesome", demo);
 		var reveal = document.querySelector('#scene .reveal');
 		reveal.innerHTML = AppTemplate[demo]();
 
