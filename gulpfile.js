@@ -2,6 +2,9 @@ var gulp	= require('gulp');
 var gutil	= require('gulp-util');
 var open	= require('gulp-open');
 var watch	= require('gulp-watch');
+var sys		= require('sys');
+var exec	= require('child_process').exec;
+
 // var livereload = require('gulp-livereload');
 // var filter = require('gulp-filter');
 
@@ -18,6 +21,8 @@ var lr_files = [
 	'!' + APP_ROOT + '/libs/**',
 	APP_ROOT + '/libs/browsercast/**',
 ];
+
+function shellCmd(error, stdout, stderr) { sys.puts(stdout); }
 
 /**
  * Gulp tasks
@@ -50,6 +55,7 @@ gulp.task('livereload', function() {
 });
 
 gulp.task('watch', ['livereload'], function() {
+	exec("gulp templates", shellCmd);
 	gulp.watch(lr_files, notifyLivereload);
 });
 

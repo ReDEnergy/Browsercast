@@ -26,6 +26,5 @@ Browsercast is a single page, client side HTML5 application. It works without an
 
 1. clone repo
 2. type "npm install" - installs all development dependencies
-3. type "gulp" - starts a server on localhost:8080
-4. type "gulp templates" - provides templates livereload (needed for automatic updates of templates after they are edited)
-5. start hacking
+3. type "gulp" - starts a server on localhost:8080 with livereload functionality
+4. start hacking
