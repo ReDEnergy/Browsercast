@@ -11,6 +11,7 @@ define(function(require, exports, module) {
 	var NavManager = require('ui/panel-manager');
 	var VisualEditor = require('editor/visual-editor');
 	var CodeEditor = require('editor/code-editor');
+	var Utils = require('utils');
 
 	return {
 		initialize: function() {
@@ -18,7 +19,9 @@ define(function(require, exports, module) {
 			NavManager.init();
 			CodeEditor.init();
 			VisualEditor.init();
-			Demo.init();
+
+			var demo = Utils.getURLParam('demo');
+			Demo.initDemo(demo);
 		}
 	};
 });
