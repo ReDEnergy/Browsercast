@@ -80,7 +80,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "[[\"demo/audio/browsercast2.ogg\",[0, 126, 0]]]";
+  return "[[\"demo/audio/browsercast.ogg\",[0, 126, 0]]]";
   });;
 this["AppTemplate"] = this["AppTemplate"] || {};
 this["AppTemplate"]["demo-browsercast"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -98,7 +98,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "[[\"demo/audio/browsercast.ogg\",[0, 111.25, 0]]]";
+  return "[[\"demo/audio/browsercast2.ogg\",[0, 111.25, 0]]]";
   });;
 this["AppTemplate"] = this["AppTemplate"] || {};
 this["AppTemplate"]["demo-browsercast2"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
