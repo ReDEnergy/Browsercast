@@ -43,7 +43,7 @@
 }
 
 #nav .button .text {
-	width: 200px; 
+	width: 200px;
 	padding: 0 0 0 10px;
 	text-align: left;
 	display: none;
@@ -59,7 +59,6 @@
 #nav .button:hover .text {
 	display: block;
 }
-
 
 /**
  *	Nav Panels
@@ -82,9 +81,7 @@
 	padding: 20px;
 	background: #098F82;
 	position: absolute;
-	
-	/* TODO: bug - need to set the widest menu */
-	left: -240px;
+	opacity: 0;
 
 	box-sizing: border-box;
 	transition: all 0.3s  ease-out;
@@ -92,6 +89,7 @@
 
 #nav-panels .menu-expand[data-active] {
 	left: 50px !important;
+	opacity: 1;
 }
 
 #nav-panels .menu-expand .separator {
@@ -156,10 +154,24 @@
 	text-shadow: 0 0 30px #019788;
 }
 
+/*
+#enter-preview {
+	background: #1ABC9C;
+	font-size: 1.5em;
+	position: absolute !important;
+	top: -3px;
+	left: 0px;
+}
+
+#enter-preview .text {
+	font-size: 16px;
+}
+*/
+
 #leave-preview {
 	color: #FFF;
 	font-size: 1.5em;
-	
+
 	position: fixed;
 	top: -40px;
 	left: 50px;

@@ -38,7 +38,15 @@
 		</div>
 
 		<section id="nav">
-			<div class="button" data-panel="import-panel">
+			<!-- <div id="enter-preview" class="button">
+				<span class="glyphicon glyphicon-eye-open"></span>
+				<div class="text">Preview</div>
+			</div> -->
+<!--		<div class="button" data-panel="start-new">
+				<span class="glyphicon glyphicon-file"></span>
+				<div class="text">New presentation</div>
+			</div>
+-->			<div class="button" data-panel="import-panel">
 				<span class="glyphicon glyphicon-import"></span>
 				<div class="text">Import presentation</div>
 			</div>
@@ -56,20 +64,19 @@
 				<div class="text">Audio Panel</div>
 			</div>
 		</section>
-		
+
 		<!-- UI overlays -->
 		<section id="nav-overlays">
 			<div id="enter-preview" class="overlay">
 				<span class="glyphicon glyphicon-eye-open"></span>
 				<div class="text">Preview</div>
 			</div>
-
 			<div id="leave-preview" class="overlay">
 				<span class="glyphicon glyphicon-chevron-left"></span>
 				<div class="text">Back</div>
 			</div>
 		</section>
-		
+
 		<!-- Functional panels -->
 		<section id="nav-panels">
 			<div id="import-panel" class="menu-expand">
@@ -91,6 +98,7 @@
 
 					<div id="delete-slide" class="ui-overlay delete-slide" data-visible>
 						<span class="glyphicon glyphicon-trash"></span>
+						<div class="text">Delete slide</div>
 						<div id="confirm-delete">
 							<div class="info">Are you sure you want to delete this slide?</div>
 							<div id="confirm-delete-cancel" class="button cancel">Cancel</div>
@@ -99,9 +107,11 @@
 					</div>
 					<div id="add-horizontal-slide" class="ui-overlay add-slide" data-action="right">
 						<span class="glyphicon glyphicon-plus"></span>
+						<div class="text">Add horizontal slide</div>
 					</div>
 					<div id="add-vertical-slide" class="ui-overlay add-slide" data-action="down">
 						<span class="glyphicon glyphicon-plus"></span>
+						<div class="text">Add vertical slide</div>
 					</div>
 				</div>
 				<div id="editor-panel">
