@@ -17,6 +17,7 @@
     "gulp-handlebars": "^2.1.0",
     "gulp-open": "^0.2.8",
     "gulp-util": "^3.0.0",
+    "gulp-watch": "^0.6.8",
     "tiny-lr": "0.0.9"
   },
   "engines": {
