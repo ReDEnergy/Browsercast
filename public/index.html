@@ -9,21 +9,24 @@
 	<link rel="stylesheet" href="fonts/glyphicon/glyphicon.css">
 
 	<!-- app stylesheets -->
+	<!-- TODO: concat CSS -->
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/nav.css">
 	<link rel="stylesheet" href="css/import-panel.css">
+	<link rel="stylesheet" href="css/download-panel.css">
+	<link rel="stylesheet" href="css/new-presentation-panel.css">
+	<link rel="stylesheet" href="css/history-panel.css">
 	<link rel="stylesheet" href="css/scene.css">
 	<link rel="stylesheet" href="css/code-editor.css">
-	<link rel="stylesheet" href="css/download-panel.css">
 	<link rel="stylesheet" href="css/sync-panel.css">
 	<link rel="stylesheet" href="css/text.css">
 	<link rel="stylesheet" href="css/app-mode.css">
 
 	<!-- libs stylesheets -->
 	<link rel="stylesheet" href="libs/reveal/css/theme/default.css">
-	<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
 	<link rel="stylesheet" href="libs/browsercast/browsercast.css">
 	<link rel="stylesheet" href="libs/browsercast/timeline/timeline.css">
+	<link rel="stylesheet" href="libs/reveal/css/reveal.min.css">
 
 	<!-- app stylesheets -->
 	<link rel="stylesheet" href="css/reveal.css">
@@ -37,33 +40,9 @@
 			</pre>
 		</div>
 
-		<section id="nav">
-			<!-- <div id="enter-preview" class="button">
-				<span class="glyphicon glyphicon-eye-open"></span>
-				<div class="text">Preview</div>
-			</div> -->
-<!--		<div class="button" data-panel="start-new">
-				<span class="glyphicon glyphicon-file"></span>
-				<div class="text">New presentation</div>
-			</div>
--->			<div class="button" data-panel="import-panel">
-				<span class="glyphicon glyphicon-import"></span>
-				<div class="text">Import presentation</div>
-			</div>
-			<div class="button" data-panel="download-panel">
-				<span class="glyphicon glyphicon-save"></span>
-				<div class="text">Download</div>
-			</div>
-			<!-- <div class="button" data-panel="slides-panel">Slides</div> -->
-			<div class="button" id="toggle-editor">
-				<span class="glyphicon glyphicon-list-alt"></span>
-				<div class="text">Code Editor</div>
-			</div>
-			<div class="button" id="toggle-sync">
-				<span class="glyphicon glyphicon-music"></span>
-				<div class="text">Audio Panel</div>
-			</div>
-		</section>
+		<!-- Menu and panels -->
+		<section id="nav"> </section>
+		<section id="nav-panels"> </section>
 
 		<!-- UI overlays -->
 		<section id="nav-overlays">
@@ -75,20 +54,6 @@
 				<span class="glyphicon glyphicon-chevron-left"></span>
 				<div class="text">Back</div>
 			</div>
-		</section>
-
-		<!-- Functional panels -->
-		<section id="nav-panels">
-			<div id="import-panel" class="menu-expand">
-				<div class="info"> Paste the HTML source of a reveal.js presentation below to import all contained slides. </div>
-				<div id="import-editor"></div>
-				<div id="import-info">
-					<span class="glyphicon glyphicon-ok"></span>
-					<div id="import-slides-count"></div>
-					<div id="import-slides" class="button import"> import </div>
-				</div>
-			</div>
-			<div id="download-panel" class="menu-expand"></div>
 		</section>
 
 		<section id="app-area">

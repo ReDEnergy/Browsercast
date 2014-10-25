@@ -1,15 +1,19 @@
 define(function(require, exports, module) {
 	'use strict';
 
+	// Load Modules
+	var Utils = require('utils');
+
+	// Module API
 	/**
-	 * Call Reveal initialization 
+	 * Call Reveal initialization
 	 */
 	function initReveal() {
 		Reveal.initialize({
 			controls: true,
 			progress: true,
 			history: true,
-			center: true,
+			center: false,
 			overview: true,
 
 			theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
@@ -46,7 +50,7 @@ define(function(require, exports, module) {
 	 */
 	function cleanupSlides(slides) {
 		slides.removeAttribute('style');
-			
+
 		var sections = slides.querySelectorAll('section');
 		// TODO - remove just for the first 2 levels
 		[].forEach.call(sections, function (section) {
@@ -62,7 +66,7 @@ define(function(require, exports, module) {
 			fragment.removeAttribute('data-fragment-index');
 		});
 	}
-	
+
 	/**
 	 * @param {DOM Object} class="slides"
 	 * ABOUT: Remove only browsercast specific attributes
@@ -72,14 +76,44 @@ define(function(require, exports, module) {
 			elem.removeAttribute('data-bc-start');
 			elem.removeAttribute('data-bc-end');
 		}
-		
+
 		var sections = slides.querySelectorAll('section');
 		[].forEach.call(sections, removeBrowsercastData);
 
 		var fragments = slides.querySelectorAll('.fragment');
 		[].forEach.call(fragments, removeBrowsercastData);
 	}
-	
+
+	/**
+	 * @param {DOM Object} class="slides"
+	 * ABOUT: Returns the number of reveal.js slides
+	 */
+	function countSlides(slidesDOMElem) {
+		var count = 0;
+		var slides = Utils.getChildsByTag(slidesDOMElem, 'section');
+		[].forEach.call(slides, function (slide) {
+			var vslides = Utils.getChildsByTag(slide, 'section');
+			if (vslides.length)
+				count += vslides.length - 1;
+		});
+		count += slides.length;
+		return count;
+	}
+
+	/**
+	 * ABOUT: Returns whole presentation as a string
+	 */
+	function getPresentationBackUp() {
+	 	var slides = document.querySelector('#scene .reveal .slides').cloneNode(true);
+		cleanupSlides(slides);
+		return slides.innerHTML;
+	}
+
+
+	/**
+	 * @param {delay} miliseconds to wait before layout refresh
+	 * ABOUT: Returns whole presentation as a string
+	 */
 	function triggerLayoutChange(delay) {
 		setTimeout(Reveal.layout, delay);
 	}
@@ -92,4 +126,6 @@ define(function(require, exports, module) {
 	exports.cleanupReveal = cleanupReveal;
 	exports.cleanupBrowsercast = cleanupBrowsercast;
 
+	exports.countSlides = countSlides;
+	exports.getPresentationBackUp = getPresentationBackUp;
 });
