@@ -2,7 +2,6 @@ define(function(require, exports, module) {
 	'use strict';
 
 	// Load Modules
-	var ToggleButton = require('component/toggle-button');
 	var PanelManager = require('ui/panel-manager');
 	var RevealUtils = require('reveal/reveal-utils');
 	var VisualEditor = require('editor/visual-editor');
@@ -17,14 +16,14 @@ define(function(require, exports, module) {
 		VisualEditor.disable();
 		PanelManager.closeAll();
 		RevealUtils.triggerLayoutChange(400);;
-		
+
 		// Solved the bug with vertical slides
 		// TODO - might be a browsercast-reveal bug
 		var reveal = document.querySelector('#scene .reveal');
 		RevealUtils.cleanupReveal(reveal);
 		RevealUtils.initReveal();
-		
-		
+
+
 		var indices = Reveal.getIndices();
 
 		Browsercast.initialize({
@@ -42,35 +41,6 @@ define(function(require, exports, module) {
 		Browsercast.uninitialize();
 	}
 
-	// Code Editor button
-	var showEditor = function showEditor() {
-		app.setAttribute('data-code-editor', '');
-		RevealUtils.triggerLayoutChange(400);;
-	};
-
-	var hideEditor = function hideEditor() {
-		app.removeAttribute('data-code-editor');
-		RevealUtils.triggerLayoutChange(400);;
-	};
-
-	var toggle_editor = document.getElementById('toggle-editor');
-	var toggle_editor_btn = new ToggleButton(toggle_editor, showEditor, hideEditor);
-
-	// Sync Panel button
-	var openSyncPanel = function openSyncPanel() {
-		GlobalEvent.emit('sync-panel-open');
-		app.setAttribute('data-sync-audio', '');
-		RevealUtils.triggerLayoutChange(400);;
-	};
-
-	var hideSyncPanel = function hideSyncPanel() {
-		app.removeAttribute('data-sync-audio');
-		RevealUtils.triggerLayoutChange(400);;
-	};
-
-	var toggle_sync = document.getElementById('toggle-sync');
-	var toggle_sync_btn = new ToggleButton(toggle_sync, openSyncPanel, hideSyncPanel);
-
 	var MODES = {
 		AUDIO_SYNC: 'sync-audio',
 		PREVIEW: 'preview',
@@ -87,8 +57,14 @@ define(function(require, exports, module) {
 	enter_preview.addEventListener('click', enterPreview);
 	leave_preview.addEventListener('click', leavePreview);
 
+	GlobalEvent.on('code-editor', function(value) {
+		value ? app.setAttribute('data-code-editor', '') : app.removeAttribute('data-code-editor');
+	});
+
+	GlobalEvent.on('sync-panel', function(value) {
+		value ? app.setAttribute('data-sync-audio', '') : app.removeAttribute('data-sync-audio');
+	});
+
 	// Public API
-	exports = {
-		setMode : setMode
-	};
+	exports.setMode = setMode;
 });

@@ -2,10 +2,13 @@ define(function(require, exports, module) {
 	'use strict';
 
 	// Load Modules
-	var DownloadPanel = require('ui/download-panel');
-	var ImportPanel = require('ui/import-panel');
+	var DownloadPanel = require('ui/panels/download');
+	var ImportPanel = require('ui/panels/import');
+	var CreateNew = require('ui/panels/create-new');
+	var HistoryPanel = require('ui/panels/history');
+	var CodeEditor = require('editor/code-editor');
 	var SyncPanel = require('sync/sync-panel');
-	var NavPanel = require('component/nav-panel');
+	var NavMenu = require('ui/nav-menu');
 	var _ = require('lodash');
 
 	// API
@@ -18,25 +21,23 @@ define(function(require, exports, module) {
 		});
 	};
 
-	var initMenuPanels = function initMenuPanels() {
-		var nav = document.getElementById('nav');
-		[].forEach.call(nav.children, function(elem) {
-			if (elem.getAttribute('data-panel')) {
-				var panel = new NavPanel(elem);
-				panel.on('open', closeAllExcept);
-				panels.push(panel);
-			}
-		});
+	var register = function register(Panel) {
+		panels.push(Panel);
 	};
-	
+
 	var init = function init () {
-		DownloadPanel.init();
+		NavMenu.init();
+		CreateNew.init();
 		ImportPanel.init();
+		DownloadPanel.init();
+		HistoryPanel.init();
 		SyncPanel.init();
-		initMenuPanels();
+		CodeEditor.init();
 	};
 
 	// Public API
 	exports.init = init;
+	exports.register = register;
 	exports.closeAll = closeAllExcept.bind(null, null);
+	exports.closeAllExcept = closeAllExcept;
 });

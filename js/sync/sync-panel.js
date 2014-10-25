@@ -5,8 +5,11 @@ define(function(require, exports, module) {
 	var ToggleButton = require('component/toggle-button');
 	var Timeline = require('component/timeline');
 	var DelayedEvent = require('core/DelayedEvent');
+	var GlobalEvent = require('core/GlobalEvents');
+	var RevealUtils = require('reveal/reveal-utils');
 	var SaveSync = require('sync/save-sync');
-	var Utils = require('utils');
+	var DomUtils = require('utils');
+	var NavMenu = require('ui/nav-menu');
 
 	// API
 	var load_audio;
@@ -25,30 +28,30 @@ define(function(require, exports, module) {
 	var sync_save;
 	var timeline;
 
-	/**************************************************************************/	
+	/**************************************************************************/
 
 	function setEvents() {
 		load_audio_source.addEventListener('keyup', function() {
 			LoadEvent.resetTimer();
 		});
-	
+
 		load_audio_preview.addEventListener('loadeddata', function() {
 			load_audio.setAttribute('data-state', 'ok');
 		});
-	
+
 		load_audio_preview.addEventListener('error', function() {
 			load_audio.setAttribute('data-state', 'error');
 		});
-	
-		load_audio_body.addEventListener('click', Utils.stopPropagation);
-	
+
+		load_audio_body.addEventListener('click', DomUtils.stopPropagation);
+
 		load_audio_ok.addEventListener('click', function() {
 			load_audio_btn.toggle(false);
 			load_audio_preview.pause();
 			setAudioSource(load_audio_preview.src);
 		});
-		
-		sync_area.addEventListener('click', Utils.stopPropagation);
+
+		sync_area.addEventListener('click', DomUtils.stopPropagation);
 		sync_reset.addEventListener('click', resetSync);
 
 		sync_save.addEventListener('click', function() {
@@ -57,26 +60,26 @@ define(function(require, exports, module) {
 			info.setAttribute('data-visible', '');
 
 			var tracks = [];
-			
+
 			// Get each track
 			var track = [];
 			track.push(sync_audio_source.src);
 			track.push([0, sync_audio_source.duration, 0]);
-			
+
 			tracks.push(track);
-	
+
 			var container = document.querySelector('#bc-audio code');
 			container.textContent = JSON.stringify(tracks);
-			console.log(JSON.stringify(tracks)); 
+			console.log(JSON.stringify(tracks));
 
-				
+
 			SaveSync.save(timeline.events, function() {
 				info.textContent = 'done';
 				setTimeout(function() {
 					info.removeAttribute('data-visible');
 				}, 1000);
 			});
-		});		
+		});
 	}
 
 	function setAudioSource(source) {
@@ -130,7 +133,7 @@ define(function(require, exports, module) {
 		timeline.pause();
 		sync_audio_source.pause();
 	}
-	
+
 	function testIfSyncEnd() {
 		if (Reveal.isLastSlide() && Reveal.availableFragments().next === false) {
 			timeline.pause();
@@ -155,14 +158,33 @@ define(function(require, exports, module) {
 		Reveal.next();
 	}
 
+	// Sync Panel button
+	var openSyncPanel = function openSyncPanel() {
+		GlobalEvent.emit('sync-panel', true);
+		RevealUtils.triggerLayoutChange(400);;
+	};
+
+	var hideSyncPanel = function hideSyncPanel() {
+		GlobalEvent.emit('sync-panel', false);
+		RevealUtils.triggerLayoutChange(400);;
+	};
 
 	/*
 	 * Module Init
 	 */
 	var init = function init() {
+
+		var options = {
+			title: 'Audio Panel',
+			icon: 'music',
+			toggleOn: openSyncPanel,
+			toggleOff: hideSyncPanel
+		};
+		NavMenu.createButton(options);
+
 		var container = document.getElementById('sync-panel');
 		container.innerHTML = AppTemplate['sync-panel']();
-		
+
 		load_audio = document.getElementById('load-audio');
 		load_audio_body = document.getElementById('load-audio-body');
 		load_audio_preview = document.getElementById('load-audio-preview');
@@ -172,25 +194,25 @@ define(function(require, exports, module) {
 
 		LoadEvent = new DelayedEvent(loadAudioSource, 300);
 		load_audio_btn = new ToggleButton(load_audio, openLoadAudio, closeLoadAudio);
-		
+
 		sync_area = document.getElementById('sync-area');
 		sync_audio = document.getElementById('sync-audio');
 		sync_audio_source = document.getElementById('sync-audio-source');
 		sync_timeline = document.getElementById('sync-timeline');
 		sync_reset = document.getElementById('sync-reset');
 		sync_save = document.getElementById('sync-save');
-	
-		timeline = new Timeline(sync_timeline);		
+
+		timeline = new Timeline(sync_timeline);
 
 		timeline.on('play', startSync);
 		timeline.on('pause', endSync);
 		timeline.on('pastEvent', transitionEventNext);
 		timeline.on('futureEvent', transitionEvent);
 		timeline.on('event', transitionEventNext);
-		
+
 		setEvents();
-	};	
-	
+	};
+
 	// Public API
 	exports.init = init;
 	exports.setAudioSource = setAudioSource;

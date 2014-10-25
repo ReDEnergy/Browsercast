@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 	var RevealUtils = require('reveal/reveal-utils');
 	var AppTemplate = require('templates');
 	var GlobalEvent = require('core/GlobalEvents');
-	var Presentation = require('app/config').Presentation;
+	var Presentation = require('app/config');
 
 	var zip;
 	requestRevealZip();
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
 				onTimeout();
 			}
 		}
-		
+
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, true);
 		xhr.timeout = 5000;
@@ -56,13 +56,13 @@ define(function(require, exports, module) {
 	}
 
 	var audioTracks = [];
-	
+
 	function parseAudioInfo(audioInfo) {
 		var info = JSON.parse(audioInfo);
 		var audio = document.createElement('audio');
 		audio.src = info[0];
-	}	
-	
+	}
+
 	function prepareZipFile() {
 		// Slides Info
 	 	var slides = document.querySelector('#scene .reveal .slides').cloneNode(true);
@@ -77,7 +77,7 @@ define(function(require, exports, module) {
 
 		// Request count
 		var reqCount = imgs.length + tracks.length;
-		var reqDone = 0; 
+		var reqDone = 0;
 
 		// Zip folders
 		var imgFolder = zip.folder("reveal/images");
@@ -94,9 +94,9 @@ define(function(require, exports, module) {
 
 		function finishZip() {
 			var revealData = {
-				title: Presentation.title,
-				author: Presentation.author,
-				description: Presentation.description,
+				title: Presentation.getProperty('title'),
+				author: Presentation.getProperty('author'),
+				description: Presentation.getProperty('description'),
 				audio: JSON.stringify(tracks),
 				slides: slides.innerHTML.replace(/					/g, '	')
 			};
@@ -105,8 +105,8 @@ define(function(require, exports, module) {
 			downloadZipFile();
 			GlobalEvent.emit('download-end');
 		};
-		
-		// Save resources 
+
+		// Save resources
 		[].forEach.call(imgs, function(image) {
 			requestFile(image.src, function(data) {
 				var fileName = image.src.split('/').pop();
@@ -115,9 +115,9 @@ define(function(require, exports, module) {
 				finishRequest();
 			}, function() {
 				finishRequest();
-			});			
+			});
 		});
-		
+
 		tracks.forEach(function(track) {
 			requestFile(track[0], function(data) {
 				var fileName = track[0].split('/').pop();
@@ -134,7 +134,7 @@ define(function(require, exports, module) {
 		var content = zip.generate({type:"blob"});
 		saveFileAs(content, "reveal.zip");
 	}
-	
+
 	// Public API
 	exports.download = prepareZipFile;
 });

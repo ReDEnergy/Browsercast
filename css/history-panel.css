@@ -1,0 +1,52 @@
+#nav-panels [data-panel="history"] {
+	width: 300px !important;
+	left: -300px !important;
+}
+
+#nav-panels [data-panel="history"] .properties {
+	color: #FFF;
+}
+
+#nav-panels [data-panel="history"] .properties > div {
+	padding: 10px 0;
+}
+
+#nav-panels [data-panel="history"] .properties label:hover {
+	cursor: pointer;
+}
+
+#nav-panels [data-panel="history"] .properties textarea,
+#nav-panels [data-panel="history"] .properties input {
+	width: 100%;
+	margin: 10px 0 0;
+	padding: 6px 10px;
+	font-family: Roboto;
+	color: #999;
+	font-size: 14px;
+	border: none;
+	border-radius: 3px;
+	box-sizing: border-box;
+}
+
+#nav-panels [data-panel="history"] .properties textarea:focus,
+#nav-panels [data-panel="history"] .properties input:focus {
+	color: #555;
+}
+
+#nav-panels [data-panel="history"] .properties textarea {
+	resize: vertical;
+}
+
+#nav-panels [data-panel="history"] .restore-btn {
+	float: left;
+	background: #E06C1E;
+}
+
+#nav-panels [data-panel="history"] .close {
+	float: right;
+	clear: none !important;
+}
+
+#nav-panels [data-panel="history"] .separator {
+	display: none;
+}

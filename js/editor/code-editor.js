@@ -3,20 +3,22 @@ define(function(require, exports, module) {
 
 	// Load Modules
 	var Ace = require('editor/ace');
-	var ToggleButton = require('component/toggle-button');
 	var AppMode = require('ui/app-mode');
 	var BeautifyHTML = require('beautify-html');
 	var VisualEditor = require('editor/visual-editor');
 	var RevealUtils = require('reveal/reveal-utils');
+	var ToggleButton = require('component/toggle-button');
+	var GlobalEvent = require('core/GlobalEvents');
+	var NavMenu = require('ui/nav-menu');
 
-	var app;
+	// Private API
 	var HTMLEditor;
 	var CSSEditor;
 	var last_change;
 
 	var editorShow = function editorShow() {
-		RevealUtils.triggerLayoutChange(300);
-		app.setAttribute('data-code-editor', '');
+		RevealUtils.triggerLayoutChange(400);;
+		GlobalEvent.emit('code-editor', true);
 		Reveal.addEventListener('slidechanged', updateHtmlEditor);
 		Reveal.addEventListener('fragmentshown', updateHtmlEditor);
 		Reveal.addEventListener('fragmenthidden', updateHtmlEditor);
@@ -25,8 +27,8 @@ define(function(require, exports, module) {
 	};
 
 	var editorHide = function editorHide() {
-		RevealUtils.triggerLayoutChange(300);
-		app.removeAttribute('data-code-editor');
+		RevealUtils.triggerLayoutChange(400);;
+		GlobalEvent.emit('code-editor', false);
 		Reveal.removeEventListener('slidechanged', updateHtmlEditor);
 		Reveal.removeEventListener('fragmentshown', updateHtmlEditor);
 		Reveal.removeEventListener('fragmenthidden', updateHtmlEditor);
@@ -46,24 +48,21 @@ define(function(require, exports, module) {
 		HTMLEditor.clearSelection();
 	}
 
-	var getState = function getState() {
-		return CEC;
-	};
-
 	var init = function init() {
-		app = document.getElementById('app');
+		var options = {
+			title: 'Code Editor',
+			icon: 'list-alt',
+			toggleOn: editorShow,
+			toggleOff: editorHide
+		};
+		NavMenu.createButton(options);
 
 		HTMLEditor = Ace.create('slide-editor-html', 'html');
 		CSSEditor = Ace.create('slide-editor-css', 'css');
-
-		var toggle_editor = document.getElementById('toggle-editor');
-		toggle_editor = new ToggleButton(toggle_editor, editorShow, editorHide);
-
 	};
 
 	// Public API
 	exports.init = init;
-	exports.getState = getState;
 	exports.update = updateHtmlEditor;
 
 });

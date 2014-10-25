@@ -1,4 +1,40 @@
 this["AppTemplate"] = this["AppTemplate"] || {};
+this["AppTemplate"]["nav-panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<span class=\"glyphicon glyphicon-";
+  if (helper = helpers.icon) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.icon); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"></span>\r\n<div class=\"text\">";
+  if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.label); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</div>\r\n";
+  return buffer;
+  });;
+this["AppTemplate"] = this["AppTemplate"] || {};
+this["AppTemplate"]["reveal-blank"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div class=\"slides\">\r\n	<section>\r\n		<br />\r\n		<h2>";
+  if (helper = helpers.title) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.title); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</h2>\r\n		<br />\r\n		<p style=\"padding: 0 100px; text-align: right;\">\r\n			by\r\n			<span style=\"color: #13DAEC;\">";
+  if (helper = helpers.author) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.author); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\r\n		</p>\r\n	</section>\r\n</div>\r\n\r\n\r\n\r\n";
+  return buffer;
+  });;
+this["AppTemplate"] = this["AppTemplate"] || {};
 this["AppTemplate"]["reveal-export"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -47,13 +83,31 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<div class=\"properties\">\r\n	<div>\r\n		<label>Title</label>\r\n		<input type=\"text\" class=\"title\" placeholder=\"Browsercast\" />\r\n	</div>\r\n	<div>\r\n		<label>Author</label>\r\n		<input type=\"text\" class=\"author\" placeholder=\"Browsercast\" />\r\n	</div>\r\n	<div>\r\n		<label>Description</label>\r\n		<textarea class=\"description\"></textarea>\r\n	</div>\r\n</div>\r\n<div class=\"info\">\r\n	<div class=\"text\">\r\n		Downloading resources: <span class=\"percentage\"></span>\r\n	</div>\r\n	<progress class=\"progress\" max=\"100\" value=\"0\"></progress>\r\n</div>\r\n<div class=\"download-btn button\">Download</div>\r\n";
   });;
 this["AppTemplate"] = this["AppTemplate"] || {};
+this["AppTemplate"]["history-panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"properties\">\r\n	<div>\r\n		<label>Title</label>\r\n		<input type=\"text\" class=\"title\" placeholder=\"@title\" />\r\n	</div>\r\n</div>\r\n<div class=\"restore-btn button\"> Restore </div>\r\n";
+  });;
+this["AppTemplate"] = this["AppTemplate"] || {};
 this["AppTemplate"]["import-panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"info\"> Paste the HTML source of a reveal.js presentation below to import all contained slides. </div>\r\n<div id=\"import-editor\"></div>\r\n<div id=\"import-info\">\r\n	<span class=\"glyphicon glyphicon-ok\"></span>\r\n	<div id=\"import-slides-count\"></div>\r\n	<div id=\"import-slides\" class=\"button import\"> import </div>\r\n</div>";
+  return "<div class=\"info\"> Paste the HTML source of a reveal.js presentation below to import all contained slides. </div>\r\n<div id=\"import-editor\"></div>\r\n<div class=\"import-info\">\r\n	<span class=\"glyphicon glyphicon-ok\"></span>\r\n	<div class=\"import-slides-count\"></div>\r\n	<div class=\"import-btn button\"> import </div>\r\n</div>";
+  });;
+this["AppTemplate"] = this["AppTemplate"] || {};
+this["AppTemplate"]["new-presentation"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"properties\">\r\n	<div>\r\n		<label>Title</label>\r\n		<input type=\"text\" class=\"title\" placeholder=\"@title\" value=\"Title\"/>\r\n	</div>\r\n	<div>\r\n		<label>Author</label>\r\n		<input type=\"text\" class=\"author\" placeholder=\"@author\" value=\"@author\"/>\r\n	</div>\r\n	<div>\r\n		<label>Description</label>\r\n		<textarea class=\"description\"></textarea>\r\n	</div>\r\n</div>\r\n<div class=\"create-btn button\">Create</div>\r\n";
   });;
 this["AppTemplate"] = this["AppTemplate"] || {};
 this["AppTemplate"]["demo-about-audio"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

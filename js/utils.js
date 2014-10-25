@@ -1,7 +1,6 @@
 define(function(require, exports, module) {
 	"use strict";
 
-
 	function stopPropagation(e) {
 		e.stopPropagation();
 	}
@@ -28,9 +27,20 @@ define(function(require, exports, module) {
 	    return result;
 	}
 
+	function createNode(type, attrs) {
+		var elem = document.createElement(type);
+
+		attrs && Object.keys(attrs).forEach(function(attr) {
+			elem.setAttribute(attr, attrs[attr]);
+		});
+
+		return elem;
+	}
+
 
 	// Public API
 	exports.stopPropagation = stopPropagation;
 	exports.getChildsByTag = getChildsByTag;
 	exports.getURLParam = getURLParam;
+	exports.createNode = createNode;
 });
