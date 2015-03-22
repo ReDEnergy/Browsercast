@@ -6,16 +6,16 @@ Browsercast
 ===========
 
 The Browsercast project aims to offer a web-based slideshow composition tool with support for voice-over synchronization.
-The tool offers full playback functionality (play/stop/pause/resume) with perfect voice-over synchronization like a video
-but maintains a rich web environment: searchable text, images, links, interactivity, and styling.
+The tool offers full playback functionality (play/stop/pause/resume) with perfect voice-over synchronization like a video, but maintains a rich web environment: searchable text, images, links, interactivity, and styling.
 
 ## Demo
 
-http://redenergy.github.io/Browsercast
+[About Browsercast - Feature list](http://redenergy.github.io/Browsercast?demo=demo-about)
+[Prezentation with voice-over syncronization](http://redenergy.github.io/Browsercast)  
 
 ## Development
 
-Browsercast is a single page, client side HTML5 application. It works without an internet connection just by using local resources. That means, it also can be hosted and served statically from any server including github pages.
+Browsercast is a single page, client side HTML5 application. It works without an internet connection just by using local resources. That means, it can also be hosted and served statically from any server including github pages.
 
 #### Prerequisites
 - Node.js
