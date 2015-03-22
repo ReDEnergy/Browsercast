@@ -10,7 +10,7 @@ The tool offers full playback functionality (play/stop/pause/resume) with perfec
 
 ## Demo
 
-[About Browsercast - Feature list](http://redenergy.github.io/Browsercast?demo=demo-about)  
+[Browsercast - features list](http://redenergy.github.io/Browsercast?demo=demo-about)  
 [Prezentation with voice-over syncronization](http://redenergy.github.io/Browsercast)  
 
 ## Development
